@@ -37,6 +37,17 @@ Simply add the bundle "dn_printingenhanced" to your app.
 }
 ```
 
+##### Properties
+| Property                       | Type    | Possible Values                 | Default                              | Description                                  |
+|--------------------------------|---------|---------------------------------|--------------------------------------|----------------------------------------------|
+| showPrintPreview               | boolean | ```true``` &#124; ```false```   | ```true```                           | Enable the print preview                     |
+| layoutTemplatesInfoTaskName    | string  |                                 | ```Get Layout Templates Info Task``` | Layout templates task name                   |
+| defaultPageUnit                | string  |                                 | ```CENTIMETERS```                    | Default template unit (ArcGIS Server < 10.6) |
+| defaultFormat                  | boolean | ```true``` &#124; ```false```   | ```JPG```                            | Default print format                         |
+| defaultTemplate                | boolean | ```true``` &#124; ```false```   |                                      | Default print template                       |
+| hideFormats                    | Array   |                                 | ```[]```                             | Hided print formats                          |
+| hideTemplates                  | Array   |                                 | ```[]```                             | Hided print templates                        |
+
 ## Development Guide
 ### Define the mapapps remote base
 Before you can run the project you have to define the mapapps.remote.base property in the pom.xml-file:
