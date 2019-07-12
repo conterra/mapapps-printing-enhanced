@@ -16,6 +16,7 @@ Simply add the bundle "dn_printingenhanced" to your app.
 ```
 "dn_printingenhanced": {
     "Config": {
+        "showPrintPreview": true,
         "layoutTemplatesInfoTaskName": "Get Layout Templates Info Task",
         "defaultPageUnit": "CENTIMETERS"
     }

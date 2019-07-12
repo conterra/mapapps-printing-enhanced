@@ -32,6 +32,7 @@
                 "dn_printingenhanced.PrintingEnhancedController"
             ],
             "properties": {
+                "showPrintPreview": true,
                 "layoutTemplatesInfoTaskName": "Get Layout Templates Info Task",
                 "defaultPageUnit": "CENTIMETERS"
             },

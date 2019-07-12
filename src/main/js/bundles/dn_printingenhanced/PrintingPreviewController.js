@@ -127,7 +127,9 @@ export default class PrintingPreviewController {
     }
 
     _handleDrawTemplateDimensions() {
-        if (this._tool.active) {
+        const properties = this._properties;
+        const showPrintPreview = properties.showPrintPreview;
+        if (this._tool.active && showPrintPreview) {
             this._printingPreviewDrawer.drawTemplateDimensions(this[_printInfos], this[_templateOptions], this._properties.defaultPageUnit);
         }
     }
