@@ -1,0 +1,231 @@
+{
+    "properties": {
+        "title": "${apptitle}"
+    },
+    "load": {
+        "bundleLocations": [
+            "localbundles",
+            "bundles"
+        ],
+        "preFetchBundles": false,
+        "allowedBundles": [
+            "system",
+            "console",
+            "notifier",
+            "splashscreen",
+            "templatelayout",
+            "template-seasons",
+            "theme-everlasting",
+            "map-init",
+            "map-preload-2D",
+            "toolset",
+            "banner",
+            "basemaptoggler",
+            "mapnavigation",
+            "popups-default",
+            "scalebar",
+            "locateme",
+            "share-link",
+            "toc",
+            "printing",
+            "dn_printingenhanced"
+        ],
+        "require": [
+            "${app}.app"
+        ],
+        "i18n": [
+            "bundle"
+        ]
+    },
+    "bundles": {
+        "dn_printingenhanced": {
+            "Config": {
+                "layoutTemplatesInfoTaskName": "Get Layout Templates Info Task",
+                "defaultPageUnit": "CENTIMETERS"
+            }
+        },
+        "banner": {
+            "BannerWidget": {
+                "label": "Developer Network",
+                "image": "resource('${app}:/images/logo_conterra.png')",
+                "imageWidth": 200,
+                "imagePosition": "above",
+                "link": "http://developernetwork.conterra.de"
+            }
+        },
+        "basemaptoggler": {
+            "Config": {
+                "nextBasemap": "hybrid"
+            }
+        },
+        "map-init": {
+            "Config": {
+                "basemaps": [
+                    {
+                        "id": "esri_street",
+                        "title": "Straßenkarte (grau)",
+                        "thumbnailUrl": "resource('${app}:/images/streets.png')",
+                        "basemap": "gray-vector"
+                    },
+                    {
+                        "id": "esri_hybrid",
+                        "title": "Luftbild (hybrid)",
+                        "thumbnailUrl": "resource('${app}:/images/hybrid.png')",
+                        "basemap": "hybrid"
+                    },
+                    {
+                        "id": "esri_topo",
+                        "title": "Topographische Karte",
+                        "thumbnailUrl": "resource('${app}:/images/topo.png')",
+                        "selected": true,
+                        "basemap": {
+                            "type": "GROUP",
+                            "layers": [
+                                {
+                                    "basemap": "topo-vector",
+                                    "type": "AGS_VECTORTILE",
+                                    "url": "https://www.arcgis.com/sharing/rest/content/items/6f65bc1351b7411588a8cb43fe23dad7/resources/styles/root.json"
+                                },
+                                {
+                                    "id": "esri_topo1",
+                                    "type": "AGS_TILED",
+                                    "url": "https://services.arcgisonline.com/arcgis/rest/services/Elevation/World_Hillshade/MapServer"
+                                }
+                            ]
+                        }
+                    }
+                ],
+                "map": {
+                    "layers": [],
+                    "ground": {
+                        "url": "https://elevation3d.arcgis.com/arcgis/rest/services/WorldElevation3D/Terrain3D/ImageServer",
+                        "type": "ELEVATION"
+                    }
+                },
+                "view": {
+                    "viewmode": "2D",
+                    "extent": {
+                        "xmin": 600000,
+                        "ymin": 5800000,
+                        "xmax": 1700000,
+                        "ymax": 7600000,
+                        "spatialReference": 3857
+                    }
+                }
+            }
+        },
+        "templates": {
+            "TemplateModel": {
+                "_templates": [
+                    {
+                        "name": "seasons",
+                        "widgets": [
+                            {
+                                "widgetRole": "drawer_button",
+                                "attachTo": "map_topleft",
+                                "props": {
+                                    "layoutIndex": 0
+                                }
+                            },
+                            {
+                                "widgetRole": "sharelink",
+                                "window": {
+                                    "dockable": false,
+                                    "dockingBar": null
+                                }
+                            },
+                            {
+                                "widgetRole": "legend",
+                                "sublayout": [
+                                    "mobile_portrait",
+                                    "mobile_landscape"
+                                ],
+                                "window": {
+                                    "dockable": false,
+                                    "dockingBar": null
+                                }
+                            },
+                            {
+                                "widgetRole": "printing",
+                                "template": "seasons",
+                                "sublayouts": [
+                                    "desktop", "tablet_landscape", "tablet_portrait"
+                                ],
+                                "priority": 1,
+                                "noMerge": true,
+                                "window": {
+                                    "dockTool": "printingToggleTool",
+                                    "marginBox": {
+                                        "l": 20,
+                                        "t": 125,
+                                        "w": 435,
+                                        "h": 550
+                                    }
+                                }
+                            },
+
+                            {
+                                "widgetRole": "printing",
+                                "template": "seasons",
+                                "sublayout": [
+                                    "mobile_portrait"
+                                ],
+                                "attachTo": "full-screen-window",
+                                "nomerge": true,
+                                "priority": 1,
+                                "window": {
+                                    "dockable": true,
+                                    "dockTool": "printingToggleTool",
+                                    "dockingBar": "${id}-dockingBarBottomLeft"
+                                }
+                            },
+                            {
+                                "widgetRole": "banner",
+                                "sublayout": [
+                                    "mobile_portrait"
+                                ],
+                                "attachTo": "footer_right"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        "toolset": {
+            "ToolsetManager": {
+                "toolsets": [
+                    {
+                        "id": "mapview_tools",
+                        "tools": [
+                            "locateMeTool",
+                            "zoomInTool",
+                            "zoomOutTool",
+                            "compassTool",
+                            "restoreInitialViewTool"
+                        ],
+                        "registerWidget": {
+                            "widgetRole": "mapview_tools"
+                        },
+                        "container": "ignore",
+                        "windowType": "container",
+                        "cssClass": "muted"
+                    },
+                    {
+                        "id": "drawer_left",
+                        "title": "Werkzeuge",
+                        "cssClass": "ct-main-app-menu",
+                        "tools": [
+                            "tocToggleTool",
+                            "printingToggleTool"
+                        ],
+                        "registerWidget": {
+                            "widgetRole": "drawer_button"
+                        },
+                        "container": "ignore",
+                        "windowType": "drawer_left"
+                    }
+                ]
+            }
+        }
+    }
+}
