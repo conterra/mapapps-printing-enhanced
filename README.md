@@ -18,7 +18,21 @@ Simply add the bundle "dn_printingenhanced" to your app.
     "Config": {
         "showPrintPreview": true,
         "layoutTemplatesInfoTaskName": "Get Layout Templates Info Task",
-        "defaultPageUnit": "CENTIMETERS"
+        "defaultPageUnit": "CENTIMETERS",
+        "defaultFormat": "JPG",
+        "defaultTemplate": "A3 Portrait", 
+        "hideFormats": [
+            "GIF",
+            "EPS",
+            "SVG",
+            "SVGZ"
+        ],
+        "hideTemplates": [
+            "Letter ANSI A Landscape",
+            "Letter ANSI A Portrait",
+            "Tabloid ANSI B Landscape",
+            "Tabloid ANSI B Portrait"
+        ]
     }
 }
 ```

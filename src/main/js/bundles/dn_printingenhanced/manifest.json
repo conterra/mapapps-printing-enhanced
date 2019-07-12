@@ -34,7 +34,11 @@
             "properties": {
                 "showPrintPreview": true,
                 "layoutTemplatesInfoTaskName": "Get Layout Templates Info Task",
-                "defaultPageUnit": "CENTIMETERS"
+                "defaultPageUnit": "CENTIMETERS",
+                "defaultFormat": null,
+                "defaultTemplate": null,
+                "hideFormats": [],
+                "hideTemplates": []
             },
             "references": [
                 {

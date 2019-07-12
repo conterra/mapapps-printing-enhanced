@@ -40,9 +40,23 @@
     "bundles": {
         "dn_printingenhanced": {
             "Config": {
-                "showPrintPreview": false,
+                "showPrintPreview": true,
                 "layoutTemplatesInfoTaskName": "Get Layout Templates Info Task",
-                "defaultPageUnit": "CENTIMETERS"
+                "defaultPageUnit": "CENTIMETERS",
+                "defaultFormat": "JPG",
+                "defaultTemplate": "A3 Portrait",
+                "hideFormats": [
+                    "GIF",
+                    "EPS",
+                    "SVG",
+                    "SVGZ"
+                ],
+                "hideTemplates": [
+                    "Letter ANSI A Landscape",
+                    "Letter ANSI A Portrait",
+                    "Tabloid ANSI B Landscape",
+                    "Tabloid ANSI B Portrait"
+                ]
             }
         },
         "banner": {
