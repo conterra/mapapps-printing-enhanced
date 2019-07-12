@@ -40,11 +40,11 @@ Simply add the bundle "dn_printingenhanced" to your app.
 ##### Properties
 | Property                       | Type    | Possible Values                 | Default                              | Description                                  |
 |--------------------------------|---------|---------------------------------|--------------------------------------|----------------------------------------------|
-| showPrintPreview               | boolean | ```true``` &#124; ```false```   | ```true```                           | Enable the print preview                     |
-| layoutTemplatesInfoTaskName    | string  |                                 | ```Get Layout Templates Info Task``` | Layout templates task name                   |
-| defaultPageUnit                | string  |                                 | ```CENTIMETERS```                    | Default template unit (ArcGIS Server < 10.6) |
-| defaultFormat                  | boolean | ```true``` &#124; ```false```   | ```JPG```                            | Default print format                         |
-| defaultTemplate                | boolean | ```true``` &#124; ```false```   |                                      | Default print template                       |
+| showPrintPreview               | Boolean | ```true``` &#124; ```false```   | ```true```                           | Enable the print preview                     |
+| layoutTemplatesInfoTaskName    | String  |                                 | ```Get Layout Templates Info Task``` | Layout templates task name                   |
+| defaultPageUnit                | String  |                                 | ```CENTIMETERS```                    | Default template unit (ArcGIS Server < 10.6) |
+| defaultFormat                  | Boolean | ```true``` &#124; ```false```   | ```JPG```                            | Default print format                         |
+| defaultTemplate                | Boolean | ```true``` &#124; ```false```   |                                      | Default print template                       |
 | hideFormats                    | Array   |                                 | ```[]```                             | Hided print formats                          |
 | hideTemplates                  | Array   |                                 | ```[]```                             | Hided print templates                        |
 
