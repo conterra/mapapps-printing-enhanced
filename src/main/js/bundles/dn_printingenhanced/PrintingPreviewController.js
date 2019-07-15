@@ -13,13 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import ct_when from "ct/_when";
 import Connect from "ct/_Connect";
-import apprt_request from "apprt-request";
 import Observers from "apprt-core/Observers";
-import Deferred from "dojo/Deferred";
 import d_aspect from "dojo/aspect";
-import Geoprocessor from "esri/tasks/Geoprocessor";
+import ct_when from "ct/_when";
 
 const _templateOptions = Symbol("_templateOptions");
 const _printInfos = Symbol("_printInfos");
@@ -36,20 +33,22 @@ export default class PrintingPreviewController {
         const printViewModel = esriPrintWidget.viewModel;
 
         // get print infos
-        let url = this[_printServiceUrl] = esriPrintWidget.printServiceUrl;
-        this[_printInfos] = this._getPrintInfos(url).then(() => {
+        const url = this[_printServiceUrl] = esriPrintWidget.printServiceUrl;
+        this[_printInfos] = {};
+        ct_when(this._printingInfosAnalyzer.getPrintInfos(url), (printInfos) => {
+            this[_printInfos] = printInfos;
             this._handleDrawTemplateDimensions();
         });
 
         // watch for changes
         this[_observers] = new Observers();
-        this._watchForPrintTemplateChanges(esriPrintWidget);
+        this._watchForTemplateOptionsChanges(esriPrintWidget);
         this._watchForTemplateInfos(printViewModel);
 
         this._setDefaultValues(esriPrintWidget.templateOptions);
 
         // handle print preview before and after printing
-        d_aspect.before(printViewModel, "print", (args) => {
+        d_aspect.before(printViewModel, "print", () => {
             this._printingPreviewDrawer.removeGraphicFromView();
         });
         d_aspect.after(printViewModel, "print", (promise) => {
@@ -88,7 +87,7 @@ export default class PrintingPreviewController {
     }
 
     _setDefaultValues(templateOptions) {
-        const properties = this._properties;
+        const properties = this._printingEnhancedProperties._properties;
         if (properties.defaultFormat) {
             templateOptions.format = this._reformatValue(properties.defaultFormat);
         }
@@ -98,7 +97,7 @@ export default class PrintingPreviewController {
     }
 
     _filterChoiceLists(templatesInfo) {
-        const properties = this._properties;
+        const properties = this._printingEnhancedProperties._properties;
         templatesInfo.format.choiceList = this._filterChoiceList(templatesInfo.format.choiceList, properties.hideFormats);
         templatesInfo.layout.choiceList = this._filterChoiceList(templatesInfo.layout.choiceList, properties.hideTemplates);
         return templatesInfo;
@@ -111,8 +110,8 @@ export default class PrintingPreviewController {
         }));
     }
 
-    _watchForPrintTemplateChanges(esriPrintWidget) {
-        let templateOptions = this[_templateOptions] = esriPrintWidget.templateOptions;
+    _watchForTemplateOptionsChanges(esriPrintWidget) {
+        const templateOptions = this[_templateOptions] = esriPrintWidget.templateOptions;
         this[_observers].add(templateOptions.watch("layout", () => {
             this._handleDrawTemplateDimensions();
         }));
@@ -139,109 +138,13 @@ export default class PrintingPreviewController {
                 this._handleDrawTemplateDimensions();
             }
         }));
-        /*this[_observers].add(view.watch("interacting", (response) => {
-            if (response) {
-                this._printingPreviewDrawer.removeGraphicFromView();
-            }
-        }));*/
     }
 
     _handleDrawTemplateDimensions() {
-        const properties = this._properties;
+        const properties = this._printingEnhancedProperties._properties;
         const showPrintPreview = properties.showPrintPreview;
         if (this._tool.active && showPrintPreview) {
-            this._printingPreviewDrawer.drawTemplateDimensions(this[_printInfos], this[_templateOptions], this._properties.defaultPageUnit);
-        }
-    }
-
-    _getPrintInfos(url) {
-        // check if printInfos are cached
-        if (this[_printInfos]) {
-            return this[_printInfos];
-        }
-        // otherwise request them from server
-        return ct_when(apprt_request(url, {
-            "query": {
-                "f": "json"
-            }
-        }), function (printInfos) {
-            // side effect (cache infos and template infos)
-            this[_printInfos] = printInfos;
-            return ct_when(this._fetchTemplateInfos(url), function (templateInfos) {
-                printInfos.templateInfos = templateInfos;
-                return printInfos;
-            }, function () {
-                // ignore missing template info
-                return printInfos;
-            }, this);
-        }, function (error) {
-            this._printError(error);
-            this.onPrintInfosError({
-                src: this,
-                error: error
-            });
-            throw error;
-        }, this);
-    }
-
-    _fetchTemplateInfos(url) {
-        let that = this;
-        let properties = that._properties;
-        let printUrl = url;
-        let templateUrl = printUrl.substr(0, printUrl.lastIndexOf("/") + 1) + properties.layoutTemplatesInfoTaskName;
-        let gp = Geoprocessor(templateUrl);
-        if (this._isAsync()) {
-            return that._fetchTemplateInfosAsync(gp);
-        } else {
-            return that._fetchTemplateInfosSync(gp);
-        }
-    }
-
-    _fetchTemplateInfosSync(gp) {
-        return gp.execute({}).then((response) => {
-            return response.results[0].value;
-        });
-    }
-
-    _fetchTemplateInfosAsync(gp) {
-        let outputParamName = this._properties.layoutTemplatesInfoTaskResultParameter || "Output_JSON";
-        let deferred = new Deferred();
-        gp.submitJob({},
-            (jobInfo) => {
-                gp.getResultData(jobInfo.jobId, outputParamName, (results) => {
-                    deferred.resolve(results.value);
-                });
-            },
-            () => {
-                // progress ignored
-            },
-            (error) => {
-                // try to fetch sync
-                deferred.reject(error);
-            });
-        return deferred;
-    }
-
-    _isAsync() {
-        let infos = this._printInfos;
-        if (infos) {
-            return infos.executionType !== "esriExecutionTypeSynchronous";
-        }
-        // fallback to async flag
-        return !!this._properties.async;
-    }
-
-    _printError(error) {
-        let i18nErrors = this._i18n.get().ui.error;
-        let errorMsg = i18nErrors.unknown;
-        let errorCode = error.status;
-        let customError = i18nErrors["code" + errorCode];
-        if (customError) {
-            errorMsg = customError;
-        }
-        console.error(errorMsg, error);
-        if (this._logger) {
-            this._logger.error(errorMsg, error.toString(), error);
+            this._printingPreviewDrawer.drawTemplateDimensions(this[_printInfos], this[_templateOptions], properties.defaultPageUnit);
         }
     }
 

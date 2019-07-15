@@ -232,7 +232,8 @@
                         "cssClass": "ct-main-app-menu",
                         "tools": [
                             "tocToggleTool",
-                            "printingToggleTool"
+                            "printingToggleTool",
+                            "printingEnhancedToggleTool"
                         ],
                         "registerWidget": {
                             "widgetRole": "drawer_button"

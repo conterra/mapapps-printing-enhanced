@@ -23,28 +23,98 @@
             ]
         }
     ],
+    "layout-widgets": [
+        {
+            "widgetRole": "printingEnhancedWidget",
+            "sublayout": [
+                "desktop"
+            ],
+            "window": {
+                "title": "${windowTitle}",
+                "dockTool": "printingEnhancedToggleTool",
+                "closable": true,
+                "maximizable": true,
+                "minimizeOnClose": true,
+                "resizable": true,
+                "marginBox": {
+                    "w": 400,
+                    "h": 600,
+                    "t": 60,
+                    "l": 20
+                },
+                "minSize": {
+                    "w": 400,
+                    "h": 600
+                },
+                "windowClass": "printing-enhanced-widget"
+            }
+        },
+        {
+            "widgetRole": "printingEnhancedWidget",
+            "sublayout": [
+                "tablet_landscape",
+                "tablet_portrait"
+            ],
+            "window": {
+                "title": "${windowTitle}",
+                "dockTool": "printingEnhancedToggleTool",
+                "closable": true,
+                "maximizable": true,
+                "minimizeOnClose": true,
+                "resizable": false,
+                "marginBox": {
+                    "w": "100%",
+                    "h": 600,
+                    "b": 0
+                },
+                "windowClass": "printing-enhanced-widget"
+            }
+        },
+        {
+            "widgetRole": "printingEnhancedWidget",
+            "sublayout": [
+                "mobile_landscape",
+                "mobile_portrait"
+            ],
+            "window": {
+                "title": "${windowTitle}",
+                "dockTool": "printingEnhancedToggleTool",
+                "dockable": true,
+                "dockingBar": "${id}-dockingBarBottomLeft",
+                "closable": true,
+                "maximizable": true,
+                "minimizeOnClose": true,
+                "resizable": false,
+                "marginBox": {
+                    "w": "100%",
+                    "h": "100%",
+                    "b": 0
+                },
+                "windowClass": "printing-enhanced-widget"
+            }
+        }
+    ],
     "components": [
         {
-            "name": "Config",
-            "impl": "./PrintingPreviewController",
+            "name": "PrintingPreviewController",
             "immediate": true,
             "provides": [
                 "dn_printingenhanced.PrintingEnhancedController"
             ],
-            "properties": {
-                "showPrintPreview": true,
-                "layoutTemplatesInfoTaskName": "Get Layout Templates Info Task",
-                "defaultPageUnit": "CENTIMETERS",
-                "defaultFormat": null,
-                "defaultTemplate": null,
-                "hideFormats": [],
-                "hideTemplates": []
-            },
+            "properties": {},
             "references": [
                 {
                     "name": "_printingWidget",
                     "providing": "dijit.Widget",
                     "filter": "(widgetRole=printing)"
+                },
+                {
+                    "name": "_printingEnhancedProperties",
+                    "providing": "dn_printingenhanced.PrintingEnhancedProperties"
+                },
+                {
+                    "name": "_printingInfosAnalyzer",
+                    "providing": "dn_printingenhanced.PrintingInfosAnalyzer"
                 },
                 {
                     "name": "_printingPreviewDrawer",
@@ -69,6 +139,35 @@
             ]
         },
         {
+            "name": "Config",
+            "impl": "ct/Stateful",
+            "provides": [
+                "dn_printingenhanced.PrintingEnhancedProperties"
+            ],
+            "propertiesConstructor": true,
+            "properties": {
+                "showPrintPreview": true,
+                "layoutTemplatesInfoTaskName": "Get Layout Templates Info Task",
+                "defaultPageUnit": "CENTIMETERS",
+                "defaultFormat": null,
+                "defaultTemplate": null,
+                "hideFormats": [],
+                "hideTemplates": []
+            }
+        },
+        {
+            "name": "PrintingInfosAnalyzer",
+            "provides": [
+                "dn_printingenhanced.PrintingInfosAnalyzer"
+            ],
+            "references": [
+                {
+                    "name": "_printingEnhancedProperties",
+                    "providing": "dn_printingenhanced.PrintingEnhancedProperties"
+                }
+            ]
+        },
+        {
             "name": "PrintingPreviewDrawer",
             "provides": [
                 "dn_printingenhanced.PrintingPreviewDrawer"
@@ -83,6 +182,46 @@
                     "providing": "ct.api.coordinatetransformer.CoordinateTransformer"
                 }
             ]
+        },
+        {
+            "name": "PrintingEnhancedWidgetFactory",
+            "provides": [
+                "dijit.Widget"
+            ],
+            "instanceFactory": true,
+            "properties": {
+                "widgetRole": "printingEnhancedWidget"
+            },
+            "references": [
+                {
+                    "name": "_printingWidget",
+                    "providing": "dijit.Widget",
+                    "filter": "(widgetRole=printing)"
+                },
+                {
+                    "name": "_printingInfosAnalyzer",
+                    "providing": "dn_printingenhanced.PrintingInfosAnalyzer"
+                }
+            ]
+        },
+        {
+            "name": "PrintingEnhancedToggleTool",
+            "impl": "ct/tools/Tool",
+            "provides": [
+                "ct.tools.Tool"
+            ],
+            "propertiesConstructor": true,
+            "properties": {
+                "id": "printingEnhancedToggleTool",
+                "title": "${tool.title}",
+                "tooltip": "${tool.tooltip}",
+                "iconClass": "icon-time-clock",
+                "toolRole": "toolset",
+                "togglable": true,
+                "rules": {
+                    "noGroup": true
+                }
+            }
         }
     ]
 }

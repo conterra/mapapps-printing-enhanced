@@ -14,5 +14,8 @@
  * limitations under the License.
  */
 import ".";
+import "ct/tools/Tool";
 import "./PrintingPreviewController";
+import "./PrintingInfosAnalyzer";
 import "./PrintingPreviewDrawer";
+import "./PrintingEnhancedWidgetFactory";
