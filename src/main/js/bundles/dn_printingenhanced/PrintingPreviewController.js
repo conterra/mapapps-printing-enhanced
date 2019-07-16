@@ -21,7 +21,6 @@ import ct_when from "ct/_when";
 const _templateOptions = Symbol("_templateOptions");
 const _printInfos = Symbol("_printInfos");
 const _printServiceUrl = Symbol("_printServiceUrl");
-const _templatesInfo = Symbol("_templatesInfo");
 const _connect = Symbol("_connect");
 const _observers = Symbol("_observers");
 
@@ -43,9 +42,6 @@ export default class PrintingPreviewController {
         // watch for changes
         this[_observers] = new Observers();
         this._watchForTemplateOptionsChanges(esriPrintWidget);
-        this._watchForTemplateInfos(printViewModel);
-
-        this._setDefaultValues(esriPrintWidget.templateOptions);
 
         // handle print preview before and after printing
         d_aspect.before(printViewModel, "print", () => {
@@ -97,30 +93,6 @@ export default class PrintingPreviewController {
         });
     }
 
-    _setDefaultValues(templateOptions) {
-        const properties = this._printingEnhancedProperties._properties;
-        if (properties.defaultFormat) {
-            templateOptions.format = this._reformatValue(properties.defaultFormat);
-        }
-        if (properties.defaultTemplate) {
-            templateOptions.layout = this._reformatValue(properties.defaultTemplate);
-        }
-    }
-
-    _filterChoiceLists(templatesInfo) {
-        const properties = this._printingEnhancedProperties._properties;
-        templatesInfo.format.choiceList = this._filterChoiceList(templatesInfo.format.choiceList, properties.hideFormats);
-        templatesInfo.layout.choiceList = this._filterChoiceList(templatesInfo.layout.choiceList, properties.hideTemplates);
-        return templatesInfo;
-    }
-
-    _watchForTemplateInfos(printViewModel) {
-        this[_observers].add(printViewModel.watch("templatesInfo", (value) => {
-            value = this._filterChoiceLists(value);
-            this[_templatesInfo] = value;
-        }));
-    }
-
     _watchForTemplateOptionsChanges(esriPrintWidget) {
         const templateOptions = this[_templateOptions] = esriPrintWidget.templateOptions;
         this[_observers].add(templateOptions.watch("layout", () => {
@@ -156,19 +128,6 @@ export default class PrintingPreviewController {
         const showPrintPreview = properties.showPrintPreview;
         if ((this._printingToggleTool.active || this._printingEnhancedToggleTool.active) && showPrintPreview) {
             this._printingPreviewDrawer.drawTemplateDimensions(this[_printInfos], this[_templateOptions], properties.defaultPageUnit);
-        }
-    }
-
-    _filterChoiceList(choiceList, filterList) {
-        if (filterList && filterList.length) {
-            filterList = filterList.map((format) => {
-                return this._reformatValue(format);
-            });
-            return choiceList.filter((format) => {
-                return !filterList.includes(format);
-            });
-        } else {
-            return choiceList;
         }
     }
 

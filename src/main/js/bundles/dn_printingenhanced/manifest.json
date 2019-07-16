@@ -162,6 +162,24 @@
             }
         },
         {
+            "name": "PrintingPropertiesOverWriter",
+            "immediate": true,
+            "provides": [
+                "dn_printingenhanced.PrintingPropertiesOverWriter"
+            ],
+            "references": [
+                {
+                    "name": "_printingWidget",
+                    "providing": "dijit.Widget",
+                    "filter": "(widgetRole=printing)"
+                },
+                {
+                    "name": "_printingEnhancedProperties",
+                    "providing": "dn_printingenhanced.PrintingEnhancedProperties"
+                }
+            ]
+        },
+        {
             "name": "PrintingInfosAnalyzer",
             "provides": [
                 "dn_printingenhanced.PrintingInfosAnalyzer"

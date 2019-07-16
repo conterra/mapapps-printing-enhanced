@@ -17,5 +17,6 @@ import ".";
 import "ct/tools/Tool";
 import "./PrintingPreviewController";
 import "./PrintingInfosAnalyzer";
+import "./PrintingPropertiesOverWriter";
 import "./PrintingPreviewDrawer";
 import "./PrintingEnhancedWidgetFactory";

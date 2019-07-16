@@ -20,7 +20,7 @@ import Geoprocessor from "esri/tasks/Geoprocessor";
 
 const _printInfos = Symbol("_printInfos");
 
-export default class PrintingPreviewController {
+export default class PrintingInfosAnalyzer {
 
     getPrintInfos(url) {
         // check if printInfos are cached
