@@ -43,6 +43,7 @@ export default class PrintingEnhancedWidgetFactory {
                 id: item.count,
                 name: item.formattedName,
                 loading: true,
+                error: false,
                 url: ""
             };
             vm.exportedLinks.push(exportedItem);
@@ -53,6 +54,7 @@ export default class PrintingEnhancedWidgetFactory {
                 } else if (state === "error") {
                     exportedItem.loading = false;
                     exportedItem.url = null;
+                    exportedItem.error = true;
                 }
             });
         });

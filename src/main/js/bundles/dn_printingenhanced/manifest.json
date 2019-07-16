@@ -121,9 +121,15 @@
                     "providing": "dn_printingenhanced.PrintingPreviewDrawer"
                 },
                 {
-                    "name": "tool",
+                    "name": "printingToggleTool",
                     "providing": "ct.tools.Tool",
                     "filter": "(id=printingToggleTool)",
+                    "cardinality": "0..1"
+                },
+                {
+                    "name": "printingEnhancedToggleTool",
+                    "providing": "ct.tools.Tool",
+                    "filter": "(id=printingEnhancedToggleTool)",
                     "cardinality": "0..1"
                 },
                 {

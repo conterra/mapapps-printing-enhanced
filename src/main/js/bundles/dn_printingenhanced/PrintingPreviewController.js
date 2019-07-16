@@ -75,8 +75,19 @@ export default class PrintingPreviewController {
         }
     }
 
-    setTool(tool) {
-        this._tool = tool;
+    setPrintingToggleTool(tool) {
+        this._printingToggleTool = tool;
+        const connect = this[_connect] = new Connect();
+        connect.connect(tool, "onActivate", () => {
+            this._handleDrawTemplateDimensions();
+        });
+        connect.connect(tool, "onDeactivate", () => {
+            this._printingPreviewDrawer.removeGraphicFromView();
+        });
+    }
+
+    setPrintingEnhancedToggleTool(tool) {
+        this._printingEnhancedToggleTool = tool;
         const connect = this[_connect] = new Connect();
         connect.connect(tool, "onActivate", () => {
             this._handleDrawTemplateDimensions();
@@ -143,7 +154,7 @@ export default class PrintingPreviewController {
     _handleDrawTemplateDimensions() {
         const properties = this._printingEnhancedProperties._properties;
         const showPrintPreview = properties.showPrintPreview;
-        if (this._tool.active && showPrintPreview) {
+        if ((this._printingToggleTool.active || this._printingEnhancedToggleTool.active) && showPrintPreview) {
             this._printingPreviewDrawer.drawTemplateDimensions(this[_printInfos], this[_templateOptions], properties.defaultPageUnit);
         }
     }

@@ -28,7 +28,11 @@ module.exports = {
             format: "Format",
             onlyMap: "Only Map",
             title: "Title",
-            titlePlaceholder: "File name",
+            titlePlaceholder: "Print title",
+            file: "File",
+            filePlaceholder: "File name",
+            width: "Width",
+            height: "Height",
             errors: {
                 unknown: "AGS Printing: An unknown error occurred!",
                 code403: "AGS Printing: The configured printing service URL has to be in your proxy whitelist!",

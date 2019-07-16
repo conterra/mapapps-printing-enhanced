@@ -27,7 +27,11 @@ module.exports = {
         format: "Dateiformat",
         onlyMap: "Nur Karte",
         title: "Titel",
-        titlePlaceholder: "Name der Datei",
+        titlePlaceholder: "Titel des Drucks",
+        file: "Datei",
+        filePlaceholder: "Dateiname",
+        width: "Breite",
+        height: "Höhe",
         errors: {
             unknown: "ArcGIS Server Drucken: Ein unbekannter Fehler ist aufgetreten!",
             code403: "ArcGIS Server Drucken: Die konfigurierte Print-Service URL muss in ihrem Proxy als erlaubt deklariert sein!",
