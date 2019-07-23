@@ -52,6 +52,92 @@
                             ></v-select>
                         </v-flex>
                     </v-layout>
+                    <v-checkbox
+                        v-model="advancedOptions"
+                        :label="i18n.advancedOptions"
+                        color="primary"
+                        hide-details
+                        class="mb-2"
+                    ></v-checkbox>
+                    <v-card
+                        v-if="advancedOptions"
+                        class="pa-2">
+                        <v-layout
+                            row
+                            wrap>
+                            <v-flex
+                                md12>
+                                <v-checkbox
+                                    v-model="scaleEnabled"
+                                    :label="i18n.scaleEnabled"
+                                    color="primary"
+                                    hide-details
+                                    class="pa-0 ma-0"
+                                ></v-checkbox>
+                            </v-flex>
+                            <v-flex
+                                md10>
+                                <v-text-field
+                                    v-model="scale"
+                                    :label="i18n.scale"
+                                    :disabled="!scaleEnabled"
+                                    step="1"
+                                    type="number"
+                                    hide-details
+                                />
+                            </v-flex>
+                            <v-flex
+                                md2>
+                                <v-btn
+                                    flat
+                                    icon
+                                    color="primary"
+                                    :disabled="!scaleEnabled"
+                                    @click="$emit('resetScale')">
+                                    <v-icon>replay</v-icon>
+                                </v-btn>
+                            </v-flex>
+                            <v-flex
+                                md12>
+                                <v-text-field
+                                    v-model="author"
+                                    :label="i18n.author"
+                                    :placeholder="i18n.authorPlaceholder"
+                                    hide-details
+                                ></v-text-field>
+                            </v-flex>
+                            <v-flex
+                                md12>
+                                <v-text-field
+                                    v-model="copyright"
+                                    :label="i18n.copyright"
+                                    :placeholder="i18n.copyrightPlaceholder"
+                                    hide-details
+                                ></v-text-field>
+                            </v-flex>
+                            <v-flex
+                                md12>
+                                <v-text-field
+                                    v-model="dpi"
+                                    :label="i18n.dpi"
+                                    step="1"
+                                    type="number"
+                                    suffix="dpi"
+                                    hide-details
+                                />
+                            </v-flex>
+                            <v-flex
+                                md12>
+                                <v-checkbox
+                                    v-model="legendEnabled"
+                                    :label="i18n.legendEnabled"
+                                    color="primary"
+                                    hide-details
+                                    class="pa-0 ma-0"
+                                ></v-checkbox>
+                            </v-flex>
+                        </v-layout>
+                    </v-card>
                 </v-container>
             </v-tab-item>
             <v-tab-item>
@@ -113,6 +199,74 @@
                             </v-btn>
                         </v-flex>
                     </v-layout>
+                    <v-checkbox
+                        v-model="advancedOptions"
+                        :label="i18n.advancedOptions"
+                        color="primary"
+                        hide-details
+                        class="mb-2"
+                    ></v-checkbox>
+                    <v-card
+                        v-if="advancedOptions"
+                        class="pa-2">
+                        <v-layout
+                            row
+                            wrap>
+                            <v-flex
+                                md12>
+                                <v-checkbox
+                                    v-model="scaleEnabled"
+                                    :label="i18n.scaleEnabled"
+                                    color="primary"
+                                    hide-details
+                                    class="pa-0 ma-0"
+                                ></v-checkbox>
+                            </v-flex>
+                            <v-flex
+                                md10>
+                                <v-text-field
+                                    v-model="scale"
+                                    :label="i18n.scale"
+                                    :disabled="!scaleEnabled"
+                                    step="1"
+                                    type="number"
+                                    hide-details
+                                />
+                            </v-flex>
+                            <v-flex
+                                md2>
+                                <v-btn
+                                    flat
+                                    icon
+                                    color="primary"
+                                    :disabled="!scaleEnabled"
+                                    @click="$emit('resetScale')">
+                                    <v-icon>replay</v-icon>
+                                </v-btn>
+                            </v-flex>
+                            <v-flex
+                                md12>
+                                <v-text-field
+                                    v-model="dpi"
+                                    :label="i18n.dpi"
+                                    step="1"
+                                    type="number"
+                                    suffix="dpi"
+                                    hide-details
+                                />
+                            </v-flex>
+                            <v-flex
+                                md12>
+                                <v-checkbox
+                                    v-model="legendEnabled"
+                                    :label="i18n.legendEnabled"
+                                    color="primary"
+                                    hide-details
+                                    class="pa-0 ma-0"
+                                ></v-checkbox>
+                            </v-flex>
+                        </v-layout>
+                    </v-card>
                 </v-container>
             </v-tab-item>
         </v-tabs>
@@ -213,6 +367,10 @@
                 type: Boolean,
                 default: true
             },
+            scale: {
+                type: Number,
+                default: 0
+            },
             scaleEnabled: {
                 type: Boolean,
                 default: false
@@ -245,7 +403,8 @@
         },
         data() {
             return {
-                activeTab: null
+                activeTab: null,
+                advancedOptions: false
             }
         },
         watch: {
