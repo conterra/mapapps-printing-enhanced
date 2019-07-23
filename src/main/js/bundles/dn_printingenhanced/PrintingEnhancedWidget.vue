@@ -421,18 +421,26 @@
         },
         data() {
             return {
-                activeTab: null,
                 advancedOptions: false
             }
         },
-        watch: {
-            activeTab: function (tab) {
-                if (tab === 1) {
-                    this.lastLayout = this.layout;
-                    this.layout = "MAP_ONLY";
-                } else {
-                    if (this.lastLayout) {
-                        this.layout = this.lastLayout;
+        computed: {
+            activeTab: {
+                get: function () {
+                    if (this.layout === "MAP_ONLY") {
+                        return 1;
+                    } else {
+                        return 0;
+                    }
+                },
+                set: function (tab) {
+                    if (tab === 1) {
+                        this.lastLayout = this.layout;
+                        this.layout = "MAP_ONLY";
+                    } else {
+                        if (this.lastLayout) {
+                            this.layout = this.lastLayout;
+                        }
                     }
                 }
             }
