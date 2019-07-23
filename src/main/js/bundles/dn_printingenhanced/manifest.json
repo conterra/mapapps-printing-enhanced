@@ -37,14 +37,14 @@
                 "minimizeOnClose": true,
                 "resizable": true,
                 "marginBox": {
-                    "w": 400,
-                    "h": 600,
+                    "w": 435,
+                    "h": 550,
                     "t": 60,
                     "l": 20
                 },
                 "minSize": {
-                    "w": 400,
-                    "h": 600
+                    "w": 435,
+                    "h": 550
                 },
                 "windowClass": "printing-enhanced-widget"
             }
