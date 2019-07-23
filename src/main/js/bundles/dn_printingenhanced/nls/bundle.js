@@ -29,7 +29,7 @@ module.exports = {
             onlyMap: "Only Map",
             title: "Title",
             titlePlaceholder: "Print title",
-            file: "File",
+            file: "File name",
             filePlaceholder: "File name",
             author: "Author",
             authorPlaceholder: "Author",

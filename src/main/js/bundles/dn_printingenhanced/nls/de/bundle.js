@@ -28,7 +28,7 @@ module.exports = {
         onlyMap: "Nur Karte",
         title: "Titel",
         titlePlaceholder: "Titel des Drucks",
-        file: "Datei",
+        file: "Dateiname",
         filePlaceholder: "Dateiname",
         author: "Autor",
         authorPlaceholder: "Autor",
