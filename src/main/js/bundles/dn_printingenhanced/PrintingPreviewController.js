@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import {declare} from "apprt-core/Mutable";
 import Connect from "ct/_Connect";
 import Observers from "apprt-core/Observers";
 import d_aspect from "dojo/aspect";
@@ -24,12 +25,16 @@ const _printServiceUrl = Symbol("_printServiceUrl");
 const _connect = Symbol("_connect");
 const _observers = Symbol("_observers");
 
-export default class PrintingPreviewController {
+export default declare({
+
+    showPrintPreview: false,
 
     activate() {
         const printWidget = this._printingWidget;
         const esriPrintWidget = printWidget._esriWidget;
         const printViewModel = esriPrintWidget.viewModel;
+        const properties = this._printingEnhancedProperties._properties;
+        this.showPrintPreview = properties.showPrintPreview;
 
         // get print infos
         const url = this[_printServiceUrl] = esriPrintWidget.printServiceUrl;
@@ -53,13 +58,17 @@ export default class PrintingPreviewController {
             });
             return promise;
         });
-    }
+
+        this.watch("showPrintPreview", (args) => {
+            this._handleDrawTemplateDimensions();
+        })
+    },
 
     deactivate() {
         this._printingPreviewDrawer.removeGraphicFromView();
         this[_connect].disconnect();
         this[_observers].destroy();
-    }
+    },
 
     setMapWidgetModel(mapWidgetModel) {
         if (mapWidgetModel.view) {
@@ -69,7 +78,7 @@ export default class PrintingPreviewController {
                 this._watchForExtentChange(view)
             });
         }
-    }
+    },
 
     setPrintingToggleTool(tool) {
         this._printingToggleTool = tool;
@@ -80,7 +89,7 @@ export default class PrintingPreviewController {
         connect.connect(tool, "onDeactivate", () => {
             this._printingPreviewDrawer.removeGraphicFromView();
         });
-    }
+    },
 
     setPrintingEnhancedToggleTool(tool) {
         this._printingEnhancedToggleTool = tool;
@@ -91,7 +100,7 @@ export default class PrintingPreviewController {
         connect.connect(tool, "onDeactivate", () => {
             this._printingPreviewDrawer.removeGraphicFromView();
         });
-    }
+    },
 
     _watchForTemplateOptionsChanges(esriPrintWidget) {
         const templateOptions = this[_templateOptions] = esriPrintWidget.templateOptions;
@@ -113,7 +122,7 @@ export default class PrintingPreviewController {
         this[_observers].add(templateOptions.watch("dpi", () => {
             this._handleDrawTemplateDimensions();
         }));
-    }
+    },
 
     _watchForExtentChange(view) {
         this[_observers].add(view.watch("stationary", (response) => {
@@ -121,18 +130,18 @@ export default class PrintingPreviewController {
                 this._handleDrawTemplateDimensions();
             }
         }));
-    }
+    },
 
     _handleDrawTemplateDimensions() {
+        this._printingPreviewDrawer.removeGraphicFromView();
         const properties = this._printingEnhancedProperties._properties;
-        const showPrintPreview = properties.showPrintPreview;
-        if ((this._printingToggleTool.active || this._printingEnhancedToggleTool.active) && showPrintPreview) {
+        if ((this._printingToggleTool.active || this._printingEnhancedToggleTool.active) && this.showPrintPreview) {
             this._printingPreviewDrawer.drawTemplateDimensions(this[_printInfos], this[_templateOptions], properties.defaultPageUnit);
         }
-    }
+    },
 
     _reformatValue(value) {
         value = value.toLowerCase();
         return value.replace(new RegExp(" ", 'g'), "-");
     }
-}
+});

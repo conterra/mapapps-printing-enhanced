@@ -53,6 +53,13 @@
                         </v-flex>
                     </v-layout>
                     <v-checkbox
+                        v-model="showPrintPreview"
+                        :label="i18n.showPrintPreview"
+                        color="primary"
+                        hide-details
+                        class="mb-2"
+                    ></v-checkbox>
+                    <v-checkbox
                         v-model="advancedOptions"
                         :label="i18n.advancedOptions"
                         color="primary"
@@ -200,6 +207,13 @@
                         </v-flex>
                     </v-layout>
                     <v-checkbox
+                        v-model="showPrintPreview"
+                        :label="i18n.showPrintPreview"
+                        color="primary"
+                        hide-details
+                        class="mb-2"
+                    ></v-checkbox>
+                    <v-checkbox
                         v-model="advancedOptions"
                         :label="i18n.advancedOptions"
                         color="primary"
@@ -258,8 +272,8 @@
                             <v-flex
                                 md12>
                                 <v-checkbox
-                                    v-model="legendEnabled"
-                                    :label="i18n.legendEnabled"
+                                    v-model="attributionEnabled"
+                                    :label="i18n.attributionEnabled"
                                     color="primary"
                                     hide-details
                                     class="pa-0 ma-0"
@@ -283,7 +297,7 @@
             {{ i18n.print }}
         </v-btn>
         <v-divider class="my-3"></v-divider>
-        <h3 v-if="exportedLinks.length">Exports</h3>
+        <h3 v-if="exportedLinks.length">{{ i18n.exports}}</h3>
         <v-list
             dense>
             <v-list-tile
@@ -399,6 +413,10 @@
             exportedLinks: {
                 type: Array,
                 default: () => []
+            },
+            showPrintPreview: {
+                type: Boolean,
+                default: false
             }
         },
         data() {

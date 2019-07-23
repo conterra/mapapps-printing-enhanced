@@ -16,10 +16,10 @@
 module.exports = {
     bundleName: "Printing Bundle Erweiterung",
     bundleDescription: "Dieses Bundle erweitert das Drucken über das Printing Bundle.",
-    windowTitle: "Drucken",
+    windowTitle: "Erweitertes Drucken",
     tool: {
-        title: "Drucken",
-        tooltip: "Drucken"
+        title: "Erweitertes Drucken",
+        tooltip: "Erweitertes Drucken"
     },
     ui: {
         print: "Exportieren",
@@ -40,7 +40,10 @@ module.exports = {
         scale: "Maßstab",
         scaleEnabled: "Maßstab festlegen",
         legendEnabled: "Legende einbeziehen",
+        attributionEnabled: "Quellennachweis einfügen",
         dpi: "DPI",
+        showPrintPreview: "Druckrahmen anzeigen",
+        exports: "Exportierte Dateien",
         errors: {
             unknown: "ArcGIS Server Drucken: Ein unbekannter Fehler ist aufgetreten!",
             code403: "ArcGIS Server Drucken: Die konfigurierte Print-Service URL muss in ihrem Proxy als erlaubt deklariert sein!",

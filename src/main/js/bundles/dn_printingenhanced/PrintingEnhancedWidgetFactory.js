@@ -32,6 +32,7 @@ export default class PrintingEnhancedWidgetFactory {
     _initComponent() {
         const vm = this.vm = new Vue(TimeSliderWidget);
         const printWidget = this._printingWidget;
+        const printingPreviewController = this._printingPreviewController;
         const esriPrintWidget = printWidget._esriWidget;
         const printViewModel = esriPrintWidget.viewModel;
         const templateOptions = esriPrintWidget.templateOptions;
@@ -81,6 +82,11 @@ export default class PrintingEnhancedWidgetFactory {
         vm.$on('resetScale', () => {
             esriPrintWidget._resetToCurrentScale();
         });
+
+        Binding.for(vm, printingPreviewController)
+            .syncAll("showPrintPreview")
+            .enable()
+            .syncToLeftNow();
 
         Binding.for(vm, printViewModel)
             .syncAllToLeft("templatesInfo")

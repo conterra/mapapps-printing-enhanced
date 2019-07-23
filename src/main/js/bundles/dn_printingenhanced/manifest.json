@@ -99,7 +99,7 @@
             "name": "PrintingPreviewController",
             "immediate": true,
             "provides": [
-                "dn_printingenhanced.PrintingEnhancedController"
+                "dn_printingenhanced.PrintingPreviewController"
             ],
             "properties": {},
             "references": [
@@ -225,6 +225,10 @@
                 {
                     "name": "_printingInfosAnalyzer",
                     "providing": "dn_printingenhanced.PrintingInfosAnalyzer"
+                },
+                {
+                    "name": "_printingPreviewController",
+                    "providing": "dn_printingenhanced.PrintingPreviewController"
                 }
             ]
         },
@@ -239,7 +243,7 @@
                 "id": "printingEnhancedToggleTool",
                 "title": "${tool.title}",
                 "tooltip": "${tool.tooltip}",
-                "iconClass": "icon-time-clock",
+                "iconClass": "icon-print",
                 "toolRole": "toolset",
                 "togglable": true,
                 "rules": {

@@ -17,10 +17,10 @@ module.exports = {
     root: {
         bundleName: "Printing Enhanced Bundle",
         bundleDescription: "This bundle extends Printing bundle.",
-        windowTitle: "Printing",
+        windowTitle: "Printing Enhanced",
         tool: {
-            title: "Printing",
-            tooltip: "Printing"
+            title: "Printing Enhanced",
+            tooltip: "Printing Enhanced"
         },
         ui: {
             print: "Export",
@@ -41,7 +41,10 @@ module.exports = {
             scale: "Scale",
             scaleEnabled: "Set scale",
             legendEnabled: "Enable legend",
+            attributionEnabled: "Enable attribution",
             dpi: "DPI",
+            showPrintPreview: "Show print preview",
+            exports: "Exports",
             errors: {
                 unknown: "AGS Printing: An unknown error occurred!",
                 code403: "AGS Printing: The configured printing service URL has to be in your proxy whitelist!",
