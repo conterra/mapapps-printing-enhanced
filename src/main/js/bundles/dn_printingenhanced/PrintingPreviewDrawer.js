@@ -31,16 +31,14 @@ export default class PrintingPreviewDrawer {
         }
         let width = printSize.width;
         let height = printSize.height;
-        let scale = mapWidgetModel.scale;
 
-        let widgetParams = {
+        let geometryParams = {
             width: width,
             height: height,
-            rotation: 0,
-            scale: scale
+            rotation: mapWidgetModel.rotation
         };
 
-        let geometry = this._getMainFrameGeometry(widgetParams);
+        let geometry = this._getMainFrameGeometry(geometryParams);
         this.removeGraphicFromView();
         this.addGraphicToView(geometry);
     }
@@ -98,15 +96,15 @@ export default class PrintingPreviewDrawer {
         return value * scale / factor;
     }
 
-    _getMainFrameGeometry(widgetParams) {
+    _getMainFrameGeometry(geometryParams) {
         const mapWidgetModel = this._mapWidgetModel;
         const view = mapWidgetModel.view;
         const centerPoint = mapWidgetModel.center;
 
         let x = centerPoint.x;
         let y = centerPoint.y;
-        let halfWidth = widgetParams.width / 2;
-        let halfHeight = widgetParams.height / 2;
+        let halfWidth = geometryParams.width / 2;
+        let halfHeight = geometryParams.height / 2;
 
         const rings = [
             [x - halfWidth, y - halfHeight],
@@ -120,7 +118,7 @@ export default class PrintingPreviewDrawer {
             rings: rings,
             spatialReference: view.spatialReference
         });
-        return geometryEngine.rotate(polygon, widgetParams.rotation);
+        return geometryEngine.rotate(polygon, geometryParams.rotation);
     }
 
     addGraphicToView(geometry) {
