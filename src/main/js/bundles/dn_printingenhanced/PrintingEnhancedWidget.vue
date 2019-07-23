@@ -371,7 +371,7 @@
             },
             height: {
                 type: Number,
-                default: 800
+                default: 1100
             },
             layout: {
                 type: String,
