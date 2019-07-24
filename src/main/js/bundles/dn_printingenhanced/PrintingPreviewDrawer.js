@@ -17,8 +17,26 @@ import Polygon from "esri/geometry/Polygon";
 import Graphic from "esri/Graphic";
 import * as geometryEngine from "esri/geometry/geometryEngine";
 import geometry from "ct/mapping/geometry";
+import GraphicsLayer from "esri/layers/GraphicsLayer";
 
 export default class PrintingPreviewDrawer {
+
+    activate() {
+        const mapWidgetModel = this._mapWidgetModel;
+        if (mapWidgetModel.map) {
+            this._addGraphicsLayerToMap(mapWidgetModel.map);
+        } else {
+            mapWidgetModel.watch("map", ({value: map}) => {
+                this._addGraphicsLayerToMap(map);
+            });
+        }
+    }
+
+    deactivate() {
+        const mapWidgetModel = this._mapWidgetModel;
+        const map = mapWidgetModel.map;
+        this._removeGraphicsLayerFromMap(map);
+    }
 
     drawTemplateDimensions(printInfos, templateOptions, defaultPageUnit) {
         const mapWidgetModel = this._mapWidgetModel;
@@ -39,8 +57,8 @@ export default class PrintingPreviewDrawer {
         };
 
         const geometry = this._getMainFrameGeometry(geometryParams);
-        this.removeGraphicFromView();
-        this.addGraphicToView(geometry);
+        this._removeGraphicFromView();
+        this._addGraphicToView(geometry);
     }
 
     _getPrintSize(printInfos, templateOptions, defaultPageUnit) {
@@ -121,8 +139,16 @@ export default class PrintingPreviewDrawer {
         return geometryEngine.rotate(polygon, geometryParams.rotation);
     }
 
-    addGraphicToView(geometry) {
-        const view = this._mapWidgetModel.get("view");
+    _addGraphicsLayerToMap(map) {
+        const graphicsLayer = this.graphicsLayer = new GraphicsLayer();
+        map.add(graphicsLayer);
+    }
+
+    _removeGraphicsLayerFromMap(map) {
+        map.remove(this.graphicsLayer);
+    }
+
+    _addGraphicToView(geometry) {
         const symbol = {
             type: "simple-fill",
             color: [255, 0, 0, 0.25],
@@ -136,13 +162,12 @@ export default class PrintingPreviewDrawer {
             geometry: geometry,
             symbol: symbol
         });
-        view.graphics.add(graphic);
+        this.graphicsLayer.add(graphic);
     }
 
-    removeGraphicFromView() {
+    _removeGraphicFromView() {
         if (this.graphic) {
-            const view = this._mapWidgetModel.get("view");
-            view.graphics.remove(this.graphic);
+            this.graphicsLayer.remove(this.graphic);
         }
     }
 }
