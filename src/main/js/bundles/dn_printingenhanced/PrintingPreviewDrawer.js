@@ -25,54 +25,54 @@ export default class PrintingPreviewDrawer {
         if (!printInfos.templateInfos) {
             return;
         }
-        let printSize = this._getPrintSize(printInfos, templateOptions, defaultPageUnit);
+        const printSize = this._getPrintSize(printInfos, templateOptions, defaultPageUnit);
         if (!printSize) {
             return;
         }
-        let width = printSize.width;
-        let height = printSize.height;
+        const width = printSize.width;
+        const height = printSize.height;
 
-        let geometryParams = {
+        const geometryParams = {
             width: width,
             height: height,
             rotation: mapWidgetModel.rotation
         };
 
-        let geometry = this._getMainFrameGeometry(geometryParams);
+        const geometry = this._getMainFrameGeometry(geometryParams);
         this.removeGraphicFromView();
         this.addGraphicToView(geometry);
     }
 
     _getPrintSize(printInfos, templateOptions, defaultPageUnit) {
-        let printSize = {};
+        const printSize = {};
         let templateWidth;
         let templateHeight;
-        let printScale = templateOptions.scale;
-        let dpi = templateOptions.dpi;
+        const printScale = templateOptions.scale;
+        const dpi = templateOptions.dpi;
         const mapWidgetModel = this._mapWidgetModel;
         const spatialReference = mapWidgetModel.spatialReference;
 
         // get templateinfo
-        let templateInfos = printInfos.templateInfos;
-        let layout = templateOptions.layout;
+        const templateInfos = printInfos.templateInfos;
+        const layout = templateOptions.layout;
         if (!layout || layout && layout === "MAP_ONLY") {
-            let resolution = geometry.calcPixelResolutionAtScale(printScale, spatialReference, dpi);
+            const resolution = geometry.calcPixelResolutionAtScale(printScale, spatialReference, dpi);
             templateWidth = templateOptions.width;
             templateHeight = templateOptions.height;
             printSize.width = (templateWidth * resolution);
             printSize.height = (templateHeight * resolution);
         } else {
-            let templateInfo = templateInfos.find((templateInfo) => {
+            const templateInfo = templateInfos.find((templateInfo) => {
                 let layoutName = templateInfo.layoutTemplate.toLowerCase();
                 layoutName = layoutName.replace(new RegExp(" ", 'g'), "-");
                 return layoutName === layout
             });
-            let frameSize = templateInfo.activeDataFrameSize || templateInfo.webMapFrameSize;
+            const frameSize = templateInfo.activeDataFrameSize || templateInfo.webMapFrameSize;
             templateWidth = frameSize[0];
             templateHeight = frameSize[1];
 
             // currently only meter is supported
-            let templateUnit = templateInfo.pageUnits || defaultPageUnit;
+            const templateUnit = templateInfo.pageUnits || defaultPageUnit;
 
             printSize.width = this._convertTemplateSizeTo(templateWidth, printScale, templateUnit);
             printSize.height = this._convertTemplateSizeTo(templateHeight, printScale, templateUnit);
@@ -101,10 +101,10 @@ export default class PrintingPreviewDrawer {
         const view = mapWidgetModel.view;
         const centerPoint = mapWidgetModel.center;
 
-        let x = centerPoint.x;
-        let y = centerPoint.y;
-        let halfWidth = geometryParams.width / 2;
-        let halfHeight = geometryParams.height / 2;
+        const x = centerPoint.x;
+        const y = centerPoint.y;
+        const halfWidth = geometryParams.width / 2;
+        const halfHeight = geometryParams.height / 2;
 
         const rings = [
             [x - halfWidth, y - halfHeight],
@@ -114,7 +114,7 @@ export default class PrintingPreviewDrawer {
             [x - halfWidth, y - halfHeight]
         ];
 
-        let polygon = new Polygon({
+        const polygon = new Polygon({
             rings: rings,
             spatialReference: view.spatialReference
         });
@@ -122,8 +122,8 @@ export default class PrintingPreviewDrawer {
     }
 
     addGraphicToView(geometry) {
-        let view = this._mapWidgetModel.get("view");
-        let symbol = {
+        const view = this._mapWidgetModel.get("view");
+        const symbol = {
             type: "simple-fill",
             color: [255, 0, 0, 0.25],
             style: "solid",
@@ -132,7 +132,7 @@ export default class PrintingPreviewDrawer {
                 width: "2px"
             }
         };
-        let graphic = this.graphic = new Graphic({
+        const graphic = this.graphic = new Graphic({
             geometry: geometry,
             symbol: symbol
         });
@@ -141,7 +141,7 @@ export default class PrintingPreviewDrawer {
 
     removeGraphicFromView() {
         if (this.graphic) {
-            let view = this._mapWidgetModel.get("view");
+            const view = this._mapWidgetModel.get("view");
             view.graphics.remove(this.graphic);
         }
     }
