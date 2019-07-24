@@ -37,7 +37,7 @@ module.exports = {
             copyrightPlaceholder: "Copyright",
             width: "Width",
             height: "Height",
-            advancedOptions: "Show advanced options",
+            advancedOptions: "Advanced options",
             scale: "Scale",
             scaleEnabled: "Set scale",
             legendEnabled: "Enable legend",

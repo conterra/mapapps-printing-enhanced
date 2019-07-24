@@ -36,7 +36,7 @@ module.exports = {
         copyrightPlaceholder: "Urheberrecht",
         width: "Breite",
         height: "Höhe",
-        advancedOptions: "Erweiterte Optionen anzeigen",
+        advancedOptions: "Erweiterte Optionen",
         scale: "Maßstab",
         scaleEnabled: "Maßstab festlegen",
         legendEnabled: "Legende einbeziehen",
