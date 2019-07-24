@@ -103,13 +103,14 @@ export default class PrintingEnhancedWidgetFactory {
         this.vm.formatList = templatesInfo.format.choiceList.map((format) => {
             return {
                 value: format,
-                text: format
+                text: format.toUpperCase()
             }
         });
+        const layoutStrings = this._i18n.get().ui.layouts;
         this.vm.layoutList = templatesInfo.layout.choiceList.map((layout) => {
             return {
                 value: layout,
-                text: layout
+                text: layoutStrings[layout] || layout
             }
         });
     }

@@ -45,9 +45,19 @@ module.exports = {
         showPrintPreview: "Druckrahmen anzeigen",
         exports: "Exportierte Dateien",
         errors: {
-            unknown: "ArcGIS Server Drucken: Ein unbekannter Fehler ist aufgetreten!",
-            code403: "ArcGIS Server Drucken: Die konfigurierte Print-Service URL muss in ihrem Proxy als erlaubt deklariert sein!",
-            code404: "ArcGIS Server Drucken: Es konnte kein Print-Service f\u00FCr die angegebene URL gefunden werden!"
+            unknown: "Drucken: Ein unbekannter Fehler ist aufgetreten!",
+            code403: "Drucken: Die konfigurierte Print-Service URL muss in ihrem Proxy als erlaubt deklariert sein!",
+            code404: "Drucken: Es konnte kein Print-Service f\u00FCr die angegebene URL gefunden werden!"
+        },
+        layouts: {
+            "a3-landscape": "A3 Querformat",
+            "a3-portrait": "A3 Hochformat",
+            "a4-landscape": "A4 Querformat",
+            "a4-portrait": "A4 Hochformat",
+            "letter-ansi-a-landscape": "Letter ANSI A Querformat",
+            "letter-ansi-a-portrait": "Letter ANSI A Hochformat",
+            "tabloid-ansi-b-landscape": "Tabloid ANSI B Querformat",
+            "tabloid-ansi-b-portrait": "Tabloid ANSI B Hochformat"
         }
     }
 };

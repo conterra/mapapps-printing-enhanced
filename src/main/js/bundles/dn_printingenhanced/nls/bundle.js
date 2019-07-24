@@ -46,9 +46,19 @@ module.exports = {
             showPrintPreview: "Show print preview",
             exports: "Exports",
             errors: {
-                unknown: "AGS Printing: An unknown error occurred!",
-                code403: "AGS Printing: The configured printing service URL has to be in your proxy whitelist!",
-                code404: "AGS Printing: The printing service could not be resolved for the configured URL!"
+                unknown: "Printing: An unknown error occurred!",
+                code403: "Printing: The configured printing service URL has to be in your proxy whitelist!",
+                code404: "Printing: The printing service could not be resolved for the configured URL!"
+            },
+            layouts: {
+                "a3-landscape": "A3 Landscape",
+                "a3-portrait": "A3 Portrait",
+                "a4-landscape": "A4 Landscape",
+                "a4-portrait": "A4 Portrait",
+                "letter-ansi-a-landscape": "Letter ANSI A Landscape",
+                "letter-ansi-a-portrait": "Letter ANSI A Portrait",
+                "tabloid-ansi-b-landscape": "Tabloid ANSI B Landscape",
+                "tabloid-ansi-b-portrait": "Tabloid ANSI B Portrait"
             }
         }
     },
