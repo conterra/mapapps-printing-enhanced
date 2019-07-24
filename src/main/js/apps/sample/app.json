@@ -42,7 +42,7 @@
                 "showPrintPreview": true,
                 "layoutTemplatesInfoTaskName": "Get Layout Templates Info Task",
                 "defaultPageUnit": "CENTIMETERS",
-                "defaultFormat": "JPG",
+                "defaultFormat": "PDF",
                 "defaultTemplate": "A3 Portrait",
                 "hideFormats": [
                     "GIF",
