@@ -15,8 +15,7 @@
  */
 module.exports = {
     root: {
-        apptitle: "map.apps 4 Sample",
-        map: {}
+        apptitle: "Printing Enhanced Sample"
     },
     "de": true
 };

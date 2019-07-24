@@ -14,6 +14,5 @@
  * limitations under the License.
  */
 module.exports = {
-    apptitle: "map.apps 4 Sample",
-    map: {}
+    apptitle: "Erweitertes Drucken Sample"
 };

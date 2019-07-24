@@ -17,10 +17,10 @@ module.exports = {
     root: {
         bundleName: "Printing Enhanced Bundle",
         bundleDescription: "This bundle extends Printing bundle.",
-        windowTitle: "Printing Enhanced",
+        windowTitle: "Printing",
         tool: {
-            title: "Printing Enhanced",
-            tooltip: "Printing Enhanced"
+            title: "Printing",
+            tooltip: "Printing"
         },
         ui: {
             print: "Export",

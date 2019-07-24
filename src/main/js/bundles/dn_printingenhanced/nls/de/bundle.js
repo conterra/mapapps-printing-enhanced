@@ -16,10 +16,10 @@
 module.exports = {
     bundleName: "Printing Bundle Erweiterung",
     bundleDescription: "Dieses Bundle erweitert das Drucken über das Printing Bundle.",
-    windowTitle: "Erweitertes Drucken",
+    windowTitle: "Drucken",
     tool: {
-        title: "Erweitertes Drucken",
-        tooltip: "Erweitertes Drucken"
+        title: "Drucken",
+        tooltip: "Drucken"
     },
     ui: {
         print: "Exportieren",
