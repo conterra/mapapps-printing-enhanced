@@ -53,9 +53,12 @@ export default declare({
             this._printingPreviewDrawer.removeGraphicFromView();
         });
         d_aspect.after(printViewModel, "print", (promise) => {
-            promise.then(() => {
+            /*promise.then(() => {
                 this._handleDrawTemplateDimensions();
-            });
+            });*/
+            setTimeout(() => {
+                this._handleDrawTemplateDimensions();
+            }, 1000);
             return promise;
         });
 
