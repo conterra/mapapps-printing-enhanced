@@ -44,6 +44,7 @@
                 "defaultPageUnit": "CENTIMETERS",
                 "defaultFormat": "PDF",
                 "defaultTemplate": "A3 Portrait",
+                "defaultDPI": 96,
                 "hideFormats": [
                     "GIF",
                     "EPS",

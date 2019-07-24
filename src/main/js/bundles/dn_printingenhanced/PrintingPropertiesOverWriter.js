@@ -42,6 +42,9 @@ export default class PrintingPropertiesOverWriter {
         if (properties.defaultTemplate) {
             templateOptions.layout = this._reformatValue(properties.defaultTemplate);
         }
+        if (properties.defaultDPI) {
+            templateOptions.dpi = properties.defaultDPI;
+        }
     }
 
     _filterChoiceLists(templatesInfo) {
