@@ -223,6 +223,11 @@
             showPrintPreview: function () {
                 this.$emit('update:show-print-preview', this.showPrintPreview);
             }
+        },
+        methods: {
+            rotate: function () {
+                this.$emit('rotate');
+            }
         }
     };
 </script>

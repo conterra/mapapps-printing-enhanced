@@ -44,7 +44,8 @@
                     :scale-enabled.sync="scaleEnabled"
                     :title.sync="title"
                     :format-list="formatList"
-                    :show-print-preview.sync="showPrintPreview"/>
+                    :show-print-preview.sync="showPrintPreview"
+                    @rotate="rotate"/>
             </v-tab-item>
         </v-tabs>
         <v-btn
@@ -218,10 +219,7 @@
         },
         methods: {
             rotate: function () {
-                const height = this.height;
-                const width = this.width;
-                this.height = width;
-                this.width = height;
+                [this.height, this.width] = [this.width, this.height]
             }
         }
     };
