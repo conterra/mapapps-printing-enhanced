@@ -33,7 +33,26 @@ Simply add the bundle "dn_printingenhanced" to your app.
             "Letter ANSI A Portrait",
             "Tabloid ANSI B Landscape",
             "Tabloid ANSI B Portrait"
-        ]
+        ],
+        "printingPreviewSymbol": {
+            "type": "simple-fill",
+            "color": [
+                255,
+                0,
+                0,
+                0.25
+            ],
+            "style": "solid",
+            "outline": {
+                "color": [
+                    255,
+                    0,
+                    0,
+                    1
+                ],
+                "width": "2px"
+            }
+        }
     }
 }
 ```
@@ -49,6 +68,7 @@ Simply add the bundle "dn_printingenhanced" to your app.
 | defaultDPI                     | Number  |                                 | ```96```                             | Default DPI value                            |
 | hideFormats                    | Array   |                                 | ```[]```                             | Hided print formats                          |
 | hideTemplates                  | Array   |                                 | ```[]```                             | Hided print templates                        |
+| printingPreviewSymbol          | Object  |                                 |                                      | Print preview symbol                         |
 
 ## Development Guide
 ### Define the mapapps remote base

@@ -149,15 +149,8 @@ export default class PrintingPreviewDrawer {
     }
 
     _addGraphicToView(geometry) {
-        const symbol = {
-            type: "simple-fill",
-            color: [255, 0, 0, 0.25],
-            style: "solid",
-            outline: {
-                color: [255, 0, 0, 1],
-                width: "2px"
-            }
-        };
+        const properties = this._printingEnhancedProperties;
+        const symbol = properties.printingPreviewSymbol;
         const graphic = this.graphic = new Graphic({
             geometry: geometry,
             symbol: symbol

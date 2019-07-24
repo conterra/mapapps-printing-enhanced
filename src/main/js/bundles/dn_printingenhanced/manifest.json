@@ -159,7 +159,26 @@
                 "defaultTemplate": "A3 Portrait",
                 "defaultDPI": 96,
                 "hideFormats": [],
-                "hideTemplates": []
+                "hideTemplates": [],
+                "printingPreviewSymbol": {
+                    "type": "simple-fill",
+                    "color": [
+                        255,
+                        0,
+                        0,
+                        0.25
+                    ],
+                    "style": "solid",
+                    "outline": {
+                        "color": [
+                            255,
+                            0,
+                            0,
+                            1
+                        ],
+                        "width": "2px"
+                    }
+                }
             }
         },
         {
@@ -205,6 +224,10 @@
                 {
                     "name": "_coordinateTransformer",
                     "providing": "ct.api.coordinatetransformer.CoordinateTransformer"
+                },
+                {
+                    "name": "_printingEnhancedProperties",
+                    "providing": "dn_printingenhanced.PrintingEnhancedProperties"
                 }
             ]
         },
