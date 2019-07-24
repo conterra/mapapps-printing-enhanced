@@ -139,9 +139,7 @@
             i18n: {
                 type: Object,
                 default: function () {
-                    return {
-                        layer: "Layer:"
-                    }
+                    return {}
                 }
             },
             author: {
@@ -162,7 +160,7 @@
             },
             layout: {
                 type: String,
-                default: "a3-landscape"
+                default: "a3-portrait"
             },
             legendEnabled: {
                 type: Boolean,

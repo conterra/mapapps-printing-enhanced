@@ -144,9 +144,7 @@
             i18n: {
                 type: Object,
                 default: function () {
-                    return {
-                        layer: "Layer:"
-                    }
+                    return {}
                 }
             },
             attributionEnabled: {
