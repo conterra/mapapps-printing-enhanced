@@ -58,8 +58,8 @@
             </v-flex>
         </v-layout>
         <v-checkbox
-            v-model="hidePrintPreview"
-            :label="i18n.hidePrintPreview"
+            v-model="showPrintPreview"
+            :label="i18n.showPrintPreview"
             color="primary"
             hide-details
             class="mb-2"
@@ -186,7 +186,7 @@
                 type: Array,
                 default: () => []
             },
-            hidePrintPreview: {
+            showPrintPreview: {
                 type: Boolean,
                 default: false
             },
@@ -225,8 +225,8 @@
             title: function () {
                 this.$emit('update:title', this.title);
             },
-            hidePrintPreview: function () {
-                this.$emit('update:show-print-preview', this.hidePrintPreview);
+            showPrintPreview: function () {
+                this.$emit('update:show-print-preview', this.showPrintPreview);
             }
         },
         methods: {

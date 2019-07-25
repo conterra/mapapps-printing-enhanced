@@ -87,7 +87,7 @@ export default class PrintingEnhancedWidgetFactory {
         });
 
         Binding.for(vm, printingPreviewController)
-            .syncAll("hidePrintPreview")
+            .syncAll("showPrintPreview")
             .enable()
             .syncToLeftNow();
 
