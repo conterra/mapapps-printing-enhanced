@@ -18,6 +18,10 @@ import Graphic from "esri/Graphic";
 import * as geometryEngine from "esri/geometry/geometryEngine";
 import geometry from "ct/mapping/geometry";
 import GraphicsLayer from "esri/layers/GraphicsLayer";
+import SketchViewModel from "esri/widgets/Sketch/SketchViewModel";
+
+const _geometry = Symbol("_geometry");
+const _sketchViewModel = Symbol("_sketchViewModel");
 
 export default class PrintingPreviewDrawer {
 
@@ -30,6 +34,7 @@ export default class PrintingPreviewDrawer {
                 this._addGraphicsLayerToMap(map);
             });
         }
+        this[_geometry] = null;
     }
 
     deactivate() {
@@ -38,7 +43,7 @@ export default class PrintingPreviewDrawer {
         this._removeGraphicsLayerFromMap(map);
     }
 
-    drawTemplateDimensions(printInfos, templateOptions, defaultPageUnit) {
+    drawTemplateDimensions(printInfos, templateOptions, defaultPageUnit, showOldPreview) {
         const mapWidgetModel = this._mapWidgetModel;
         if (!printInfos.templateInfos) {
             return;
@@ -55,8 +60,12 @@ export default class PrintingPreviewDrawer {
             height: height,
             rotation: mapWidgetModel.rotation
         };
-
-        const geometry = this._getMainFrameGeometry(geometryParams);
+        let geometry;
+        if (showOldPreview && this[_geometry]) {
+            geometry = this[_geometry];
+        } else {
+            geometry = this._getMainFrameGeometry(geometryParams);
+        }
         this._removeGraphicFromView();
         this._addGraphicToView(geometry);
     }
@@ -140,12 +149,47 @@ export default class PrintingPreviewDrawer {
     }
 
     _addGraphicsLayerToMap(map) {
+        const mapWidgetModel = this._mapWidgetModel;
         const graphicsLayer = this.graphicsLayer = new GraphicsLayer();
         map.add(graphicsLayer);
+        const properties = this._printingEnhancedProperties;
+        if (!properties.allowSketching) {
+            return;
+        }
+        if (mapWidgetModel.view) {
+            this._createSketchViewModel(graphicsLayer, mapWidgetModel.view);
+        } else {
+            mapWidgetModel.watch("view", ({value: view}) => {
+                this._createSketchViewModel(graphicsLayer, view);
+            });
+        }
     }
 
     _removeGraphicsLayerFromMap(map) {
         map.remove(this.graphicsLayer);
+    }
+
+    _createSketchViewModel(graphicsLayer, view) {
+        const sketchViewModel = this[_sketchViewModel] = new SketchViewModel({
+            view: view,
+            layer: graphicsLayer,
+            updateOnGraphicClick: true,
+            defaultUpdateOptions: {
+                toggleToolOnClick: false,
+                enableRotation: true,
+                enableScaling: false,
+                multipleSelectionEnabled: false
+            }
+        });
+        sketchViewModel.on("update", (event) => {
+            const graphics = event.graphics;
+            if (graphics.length) {
+                const graphic = graphics[0];
+                const geometry = graphic.geometry;
+                this[_geometry] = geometry;
+                this._eventService.postEvent("dn_printingenhanced/PRINTSETTINGS", {geometry: geometry});
+            }
+        });
     }
 
     _addGraphicToView(geometry) {
@@ -162,5 +206,7 @@ export default class PrintingPreviewDrawer {
         if (this.graphic) {
             this.graphicsLayer.remove(this.graphic);
         }
+        const sketchViewModel = this[_sketchViewModel];
+        sketchViewModel && sketchViewModel.complete();
     }
 }

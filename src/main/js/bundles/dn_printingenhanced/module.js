@@ -20,3 +20,4 @@ import "./PrintingInfosAnalyzer";
 import "./PrintingPropertiesOverWriter";
 import "./PrintingPreviewDrawer";
 import "./PrintingEnhancedWidgetFactory";
+import "./PrintViewModelPatch";

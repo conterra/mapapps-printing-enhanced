@@ -57,7 +57,7 @@ export default declare({
                 this._handleDrawTemplateDimensions();
             });*/
             setTimeout(() => {
-                this._handleDrawTemplateDimensions();
+                this._handleDrawTemplateDimensions(true);
             }, 1000);
             return promise;
         });
@@ -128,18 +128,21 @@ export default declare({
     },
 
     _watchForExtentChange(view) {
-        this[_observers].add(view.watch("stationary", (response) => {
-            if (response) {
-                this._handleDrawTemplateDimensions();
-            }
-        }));
+        const properties = this._printingEnhancedProperties;
+        if (!properties.allowSketching) {
+            this[_observers].add(view.watch("stationary", (response) => {
+                if (response) {
+                    this._handleDrawTemplateDimensions();
+                }
+            }));
+        }
     },
 
-    _handleDrawTemplateDimensions() {
+    _handleDrawTemplateDimensions(showOldPreview) {
         this._printingPreviewDrawer._removeGraphicFromView();
         const properties = this._printingEnhancedProperties._properties;
         if ((this._printingToggleTool.active || this._printingEnhancedToggleTool.active) && this.showPrintPreview) {
-            this._printingPreviewDrawer.drawTemplateDimensions(this[_printInfos], this[_templateOptions], properties.defaultPageUnit);
+            this._printingPreviewDrawer.drawTemplateDimensions(this[_printInfos], this[_templateOptions], properties.defaultPageUnit, showOldPreview);
         }
     },
 
