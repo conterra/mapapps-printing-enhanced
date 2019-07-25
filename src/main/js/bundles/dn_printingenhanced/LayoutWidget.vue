@@ -191,7 +191,7 @@
             },
             showPrintPreview: {
                 type: Boolean,
-                default: false
+                default: true
             },
             showAdvancedOptions: {
                 type: Boolean,
