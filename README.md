@@ -2,8 +2,10 @@
 The Printing Enhanced Bundle extends the Printing bundle by further capabilities.
 Printing documentation: https://developernetwork.conterra.de/en/documentation/mapapps/39/developers-documentation/ags-printing
 
+![Screenshot App](https://github.com/conterra/mapapps-printing-enhanced/blob/master/screenshot.JPG)
+
 ## Sample App
-https://demos.conterra.de/mapapps/resources/apps/downloads_agsprinting_enhanced4/index.html
+https://demos.conterra.de/mapapps/resources/apps/downloads_printingenhanced/index.html
 
 ## Installation Guide
 **Requirements:**
