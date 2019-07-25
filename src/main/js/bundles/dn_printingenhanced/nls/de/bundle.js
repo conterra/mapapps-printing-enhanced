@@ -42,7 +42,7 @@ module.exports = {
         legendEnabled: "Legende einbeziehen",
         attributionEnabled: "Quellennachweis einfügen",
         dpi: "DPI",
-        showPrintPreview: "Druckrahmen anzeigen",
+        hidePrintPreview: "Druckrahmen anzeigen",
         exports: "Exportierte Dateien",
         errors: {
             unknown: "Drucken: Ein unbekannter Fehler ist aufgetreten!",

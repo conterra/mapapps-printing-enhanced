@@ -152,7 +152,7 @@
             ],
             "propertiesConstructor": true,
             "properties": {
-                "showPrintPreview": true,
+                "hidePrintPreview": false,
                 "showAdvancedOptions": true,
                 "layoutTemplatesInfoTaskName": "Get Layout Templates Info Task",
                 "defaultPageUnit": "CENTIMETERS",

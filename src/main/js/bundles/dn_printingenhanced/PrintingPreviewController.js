@@ -27,14 +27,14 @@ const _observers = Symbol("_observers");
 
 export default declare({
 
-    showPrintPreview: false,
+    hidePrintPreview: false,
 
     activate() {
         const printWidget = this._printingWidget;
         const esriPrintWidget = printWidget._esriWidget;
         const printViewModel = esriPrintWidget.viewModel;
         const properties = this._printingEnhancedProperties._properties;
-        this.showPrintPreview = properties.showPrintPreview;
+        this.hidePrintPreview = properties.hidePrintPreview;
 
         // get print infos
         const url = this[_printServiceUrl] = esriPrintWidget.printServiceUrl;
@@ -62,7 +62,7 @@ export default declare({
             return promise;
         });
 
-        this.watch("showPrintPreview", (args) => {
+        this.watch("hidePrintPreview", (args) => {
             this._handleDrawTemplateDimensions();
         })
     },
@@ -141,7 +141,7 @@ export default declare({
     _handleDrawTemplateDimensions(showOldPreview) {
         this._printingPreviewDrawer._removeGraphicFromView();
         const properties = this._printingEnhancedProperties._properties;
-        if ((this._printingToggleTool.active || this._printingEnhancedToggleTool.active) && this.showPrintPreview) {
+        if ((this._printingToggleTool.active || this._printingEnhancedToggleTool.active) && !this.hidePrintPreview) {
             this._printingPreviewDrawer.drawTemplateDimensions(this[_printInfos], this[_templateOptions], properties.defaultPageUnit, showOldPreview);
         }
     },

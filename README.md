@@ -16,7 +16,7 @@ Simply add the bundle "dn_printingenhanced" to your app.
 ```
 "dn_printingenhanced": {
     "Config": {
-        "showPrintPreview": true,
+        "hidePrintPreview": false,
         "showAdvancedOptions": true,
         "layoutTemplatesInfoTaskName": "Get Layout Templates Info Task",
         "defaultPageUnit": "CENTIMETERS",
@@ -75,7 +75,7 @@ Simply add the bundle "dn_printingenhanced" to your app.
 ##### Properties
 | Property                       | Type    | Possible Values                 | Default                              | Description                                  |
 |--------------------------------|---------|---------------------------------|--------------------------------------|----------------------------------------------|
-| showPrintPreview               | Boolean | ```true``` &#124; ```false```   | ```true```                           | Enable the print preview                     |
+| hidePrintPreview               | Boolean | ```true``` &#124; ```false```   | ```false```                          | Hide the print preview                       |
 | showAdvancedOptions            | Boolean | ```true``` &#124; ```false```   | ```true```                           | Show advanced options                        |
 | layoutTemplatesInfoTaskName    | String  |                                 | ```Get Layout Templates Info Task``` | Layout templates task name                   |
 | defaultPageUnit                | String  |                                 | ```CENTIMETERS```                    | Default template unit (ArcGIS Server < 10.6) |

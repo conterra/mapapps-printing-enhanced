@@ -31,7 +31,7 @@
                     :title.sync="title"
                     :format-list="formatList"
                     :layout-list="layoutList"
-                    :show-print-preview.sync="showPrintPreview"
+                    :show-print-preview.sync="hidePrintPreview"
                     :show-advanced-options="showAdvancedOptions"/>
             </v-tab-item>
             <v-tab-item>
@@ -47,7 +47,7 @@
                     :scale-enabled.sync="scaleEnabled"
                     :title.sync="title"
                     :format-list="formatList"
-                    :show-print-preview.sync="showPrintPreview"
+                    :show-print-preview.sync="hidePrintPreview"
                     :show-advanced-options="showAdvancedOptions"
                     @rotate="rotate"/>
             </v-tab-item>
@@ -189,7 +189,7 @@
                 type: Array,
                 default: () => []
             },
-            showPrintPreview: {
+            hidePrintPreview: {
                 type: Boolean,
                 default: false
             },

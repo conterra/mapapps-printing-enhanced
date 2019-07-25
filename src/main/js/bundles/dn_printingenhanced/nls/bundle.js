@@ -43,7 +43,7 @@ module.exports = {
             legendEnabled: "Enable legend",
             attributionEnabled: "Enable attribution",
             dpi: "DPI",
-            showPrintPreview: "Show print preview",
+            hidePrintPreview: "Show print preview",
             exports: "Exports",
             errors: {
                 unknown: "Printing: An unknown error occurred!",

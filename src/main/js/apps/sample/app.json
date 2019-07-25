@@ -39,7 +39,7 @@
     "bundles": {
         "dn_printingenhanced": {
             "Config": {
-                "showPrintPreview": true,
+                "hidePrintPreview": false,
                 "showAdvancedOptions": true,
                 "layoutTemplatesInfoTaskName": "Get Layout Templates Info Task",
                 "defaultPageUnit": "CENTIMETERS",
