@@ -32,7 +32,7 @@
                     :format-list="formatList"
                     :layout-list="layoutList"
                     :show-print-preview.sync="hidePrintPreview"
-                    :show-advanced-options="hideAdvancedOptions"/>
+                    :show-advanced-options="showAdvancedOptions"/>
             </v-tab-item>
             <v-tab-item>
                 <map-only-widget
@@ -48,7 +48,7 @@
                     :title.sync="title"
                     :format-list="formatList"
                     :show-print-preview.sync="hidePrintPreview"
-                    :show-advanced-options="hideAdvancedOptions"
+                    :show-advanced-options="showAdvancedOptions"
                     @rotate="rotate"/>
             </v-tab-item>
         </v-tabs>
@@ -193,9 +193,9 @@
                 type: Boolean,
                 default: false
             },
-            hideAdvancedOptions: {
+            showAdvancedOptions: {
                 type: Boolean,
-                default: false
+                default: true
             }
         },
         data() {

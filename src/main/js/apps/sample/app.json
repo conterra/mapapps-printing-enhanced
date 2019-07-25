@@ -40,7 +40,7 @@
         "dn_printingenhanced": {
             "Config": {
                 "hidePrintPreview": false,
-                "hideAdvancedOptions": true,
+                "showAdvancedOptions": true,
                 "layoutTemplatesInfoTaskName": "Get Layout Templates Info Task",
                 "defaultPageUnit": "CENTIMETERS",
                 "defaultFormat": "PDF",
