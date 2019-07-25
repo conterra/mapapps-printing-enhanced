@@ -20,7 +20,7 @@ Simply add the bundle "dn_printingenhanced" to your app.
         "layoutTemplatesInfoTaskName": "Get Layout Templates Info Task",
         "defaultPageUnit": "CENTIMETERS",
         "defaultFormat": "JPG",
-        "defaultTemplate": "A3 Portrait", 
+        "defaultTemplate": "A4 Portrait", 
         "defaultDPI": 96,
         "hideFormats": [
             "GIF",
@@ -63,8 +63,8 @@ Simply add the bundle "dn_printingenhanced" to your app.
 | showPrintPreview               | Boolean | ```true``` &#124; ```false```   | ```true```                           | Enable the print preview                     |
 | layoutTemplatesInfoTaskName    | String  |                                 | ```Get Layout Templates Info Task``` | Layout templates task name                   |
 | defaultPageUnit                | String  |                                 | ```CENTIMETERS```                    | Default template unit (ArcGIS Server < 10.6) |
-| defaultFormat                  | Boolean | ```true``` &#124; ```false```   | ```JPG```                            | Default print format                         |
-| defaultTemplate                | Boolean | ```true``` &#124; ```false```   |                                      | Default print template                       |
+| defaultFormat                  | String  |                                 | ```JPG```                            | Default print format                         |
+| defaultTemplate                | String  |                                 |                                      | Default print template                       |
 | defaultDPI                     | Number  |                                 | ```96```                             | Default DPI value                            |
 | hideFormats                    | Array   |                                 | ```[]```                             | Hided print formats                          |
 | hideTemplates                  | Array   |                                 | ```[]```                             | Hided print templates                        |

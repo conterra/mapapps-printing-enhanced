@@ -156,7 +156,7 @@
                 "layoutTemplatesInfoTaskName": "Get Layout Templates Info Task",
                 "defaultPageUnit": "CENTIMETERS",
                 "defaultFormat": "PDF",
-                "defaultTemplate": "A3 Portrait",
+                "defaultTemplate": "A4 Portrait",
                 "defaultDPI": 96,
                 "hideFormats": [],
                 "hideTemplates": [],
