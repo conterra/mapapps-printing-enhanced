@@ -37,6 +37,7 @@ export default class PrintingEnhancedWidgetFactory {
         const printViewModel = esriPrintWidget.viewModel;
         const templateOptions = esriPrintWidget.templateOptions;
         const url = esriPrintWidget.printServiceUrl;
+        const properties = this._printingEnhancedProperties;
 
         esriPrintWidget.exportedLinks.on("after-add", function (event) {
             const item = event.item;
@@ -72,6 +73,7 @@ export default class PrintingEnhancedWidgetFactory {
 
         vm.i18n = this._i18n.get().ui;
         vm.exportedItems = [];
+        vm.showAdvancedOptions = properties.showAdvancedOptions;
         // listen to view model methods
         vm.$on('startup', () => {
 

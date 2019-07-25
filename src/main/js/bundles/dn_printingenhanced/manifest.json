@@ -153,6 +153,7 @@
             "propertiesConstructor": true,
             "properties": {
                 "showPrintPreview": true,
+                "showAdvancedOptions": true,
                 "layoutTemplatesInfoTaskName": "Get Layout Templates Info Task",
                 "defaultPageUnit": "CENTIMETERS",
                 "defaultFormat": "PDF",
@@ -258,6 +259,10 @@
                 {
                     "name": "_printingPreviewController",
                     "providing": "dn_printingenhanced.PrintingPreviewController"
+                },
+                {
+                    "name": "_printingEnhancedProperties",
+                    "providing": "dn_printingenhanced.PrintingEnhancedProperties"
                 }
             ]
         },

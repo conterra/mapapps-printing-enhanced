@@ -42,6 +42,7 @@
             class="mb-2"
         ></v-checkbox>
         <v-expansion-panel
+            v-if="showAdvancedOptions"
             v-model="advancedOptions">
             <v-expansion-panel-content>
                 <template v-slot:header>
@@ -189,6 +190,10 @@
             showPrintPreview: {
                 type: Boolean,
                 default: false
+            },
+            showAdvancedOptions: {
+                type: Boolean,
+                default: true
             }
         },
         data() {

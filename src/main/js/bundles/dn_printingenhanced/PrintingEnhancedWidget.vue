@@ -30,7 +30,8 @@
                     :title.sync="title"
                     :format-list="formatList"
                     :layout-list="layoutList"
-                    :show-print-preview.sync="showPrintPreview"/>
+                    :show-print-preview.sync="showPrintPreview"
+                    :show-advanced-options="showAdvancedOptions"/>
             </v-tab-item>
             <v-tab-item>
                 <map-only-widget
@@ -45,6 +46,7 @@
                     :title.sync="title"
                     :format-list="formatList"
                     :show-print-preview.sync="showPrintPreview"
+                    :show-advanced-options="showAdvancedOptions"
                     @rotate="rotate"/>
             </v-tab-item>
         </v-tabs>
@@ -184,6 +186,10 @@
             showPrintPreview: {
                 type: Boolean,
                 default: false
+            },
+            showAdvancedOptions: {
+                type: Boolean,
+                default: true
             }
         },
         data() {
