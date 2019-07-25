@@ -32,6 +32,7 @@
                     :format-list="formatList"
                     :layout-list="layoutList"
                     :show-print-preview.sync="showPrintPreview"
+                    :show-dpi-select="showDpiSelect"
                     :show-advanced-options="showAdvancedOptions"/>
             </v-tab-item>
             <v-tab-item>
@@ -48,6 +49,7 @@
                     :title.sync="title"
                     :format-list="formatList"
                     :show-print-preview.sync="showPrintPreview"
+                    :show-dpi-select="showDpiSelect"
                     :show-advanced-options="showAdvancedOptions"
                     @rotate="rotate"/>
             </v-tab-item>
@@ -194,6 +196,10 @@
                 default: true
             },
             showAdvancedOptions: {
+                type: Boolean,
+                default: true
+            },
+            showDpiSelect: {
                 type: Boolean,
                 default: true
             }

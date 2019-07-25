@@ -154,6 +154,7 @@
             "properties": {
                 "showPrintPreview": true,
                 "showAdvancedOptions": true,
+                "showDpiSelect": true,
                 "layoutTemplatesInfoTaskName": "Get Layout Templates Info Task",
                 "defaultPageUnit": "CENTIMETERS",
                 "defaultFormat": "PDF",

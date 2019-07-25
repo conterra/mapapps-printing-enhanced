@@ -104,6 +104,7 @@
                             ></v-text-field>
                         </v-flex>
                         <v-flex
+                            v-if="showDpiSelect"
                             md12>
                             <v-select
                                 v-model="dpi"
@@ -194,6 +195,10 @@
                 default: true
             },
             showAdvancedOptions: {
+                type: Boolean,
+                default: true
+            },
+            showDpiSelect: {
                 type: Boolean,
                 default: true
             }

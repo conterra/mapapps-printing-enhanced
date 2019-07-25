@@ -74,6 +74,7 @@ export default class PrintingEnhancedWidgetFactory {
         vm.i18n = this._i18n.get().ui;
         vm.exportedItems = [];
         vm.showAdvancedOptions = properties.showAdvancedOptions;
+        vm.showDpiSelect = properties.showDpiSelect;
         vm.dpiValues = properties.dpiValues;
         // listen to view model methods
         vm.$on('startup', () => {
