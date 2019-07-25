@@ -110,14 +110,12 @@
                         </v-flex>
                         <v-flex
                             md12>
-                            <v-text-field
+                            <v-select
                                 v-model="dpi"
+                                :items="dpiValues"
                                 :label="i18n.dpi"
-                                step="1"
-                                type="number"
-                                suffix="dpi"
                                 hide-details
-                            />
+                            ></v-select>
                         </v-flex>
                         <v-flex
                             md12>
@@ -155,6 +153,10 @@
             dpi: {
                 type: Number,
                 default: 96
+            },
+            dpiValues: {
+                type: Array,
+                default: () => []
             },
             format: {
                 type: String,

@@ -23,6 +23,20 @@ Simply add the bundle "dn_printingenhanced" to your app.
         "defaultFormat": "JPG",
         "defaultTemplate": "A4 Portrait", 
         "defaultDPI": 96,
+        "dpiValues": [
+            {
+                "value": 96,
+                "text": "96"
+            },
+            {
+                "value": 150,
+                "text": "150"
+            },
+            {
+                "value": 300,
+                "text": "300"
+            }
+        ],
         "hideFormats": [
             "GIF",
             "EPS",
@@ -66,8 +80,9 @@ Simply add the bundle "dn_printingenhanced" to your app.
 | layoutTemplatesInfoTaskName    | String  |                                 | ```Get Layout Templates Info Task``` | Layout templates task name                   |
 | defaultPageUnit                | String  |                                 | ```CENTIMETERS```                    | Default template unit (ArcGIS Server < 10.6) |
 | defaultFormat                  | String  |                                 | ```JPG```                            | Default print format                         |
-| defaultTemplate                | String  |                                 |                                      | Default print template                       |
+| defaultTemplate                | String  |                                 | ```A4 Portrait```                    | Default print template                       |
 | defaultDPI                     | Number  |                                 | ```96```                             | Default DPI value                            |
+| dpiValues                      | Array   |                                 | ```[]```                             | Available DPI values                         |
 | hideFormats                    | Array   |                                 | ```[]```                             | Hided print formats                          |
 | hideTemplates                  | Array   |                                 | ```[]```                             | Hided print templates                        |
 | printingPreviewSymbol          | Object  |                                 |                                      | Print preview symbol                         |

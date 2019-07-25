@@ -40,11 +40,26 @@
         "dn_printingenhanced": {
             "Config": {
                 "showPrintPreview": true,
+                "showAdvancedOptions": true,
                 "layoutTemplatesInfoTaskName": "Get Layout Templates Info Task",
                 "defaultPageUnit": "CENTIMETERS",
                 "defaultFormat": "PDF",
                 "defaultTemplate": "A4 Portrait",
                 "defaultDPI": 96,
+                "dpiValues": [
+                    {
+                        "value": 96,
+                        "text": "96"
+                    },
+                    {
+                        "value": 150,
+                        "text": "150"
+                    },
+                    {
+                        "value": 300,
+                        "text": "300"
+                    }
+                ],
                 "hideFormats": [
                     "GIF",
                     "EPS",

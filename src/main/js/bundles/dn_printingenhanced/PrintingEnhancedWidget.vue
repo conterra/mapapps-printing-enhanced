@@ -22,6 +22,7 @@
                     :author.sync="author"
                     :copyright.sync="copyright"
                     :dpi.sync="dpi"
+                    :dpi-values="dpiValues"
                     :format.sync="format"
                     :layout.sync="layout"
                     :legend-enabled.sync="legendEnabled"
@@ -38,6 +39,7 @@
                     :i18n="i18n"
                     :attribution-enabled.sync="attributionEnabled"
                     :dpi.sync="dpi"
+                    :dpi-values="dpiValues"
                     :format.sync="format"
                     :width.sync="width"
                     :height.sync="height"
@@ -129,6 +131,10 @@
             dpi: {
                 type: Number,
                 default: 96
+            },
+            dpiValues: {
+                type: Array,
+                default: () => []
             },
             forceFeatureAttributes: {
                 type: Boolean,
