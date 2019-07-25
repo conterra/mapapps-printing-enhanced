@@ -45,7 +45,7 @@
                 "defaultPageUnit": "CENTIMETERS",
                 "defaultFormat": "PDF",
                 "defaultTemplate": "A4 Portrait",
-                "defaultDPI": 96,
+                "defaultDpi": 96,
                 "dpiValues": [
                     {
                         "value": 96,

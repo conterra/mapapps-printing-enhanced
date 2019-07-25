@@ -22,7 +22,7 @@ Simply add the bundle "dn_printingenhanced" to your app.
         "defaultPageUnit": "CENTIMETERS",
         "defaultFormat": "JPG",
         "defaultTemplate": "A4 Portrait", 
-        "defaultDPI": 96,
+        "defaultDpi": 96,
         "dpiValues": [
             {
                 "value": 96,
@@ -81,7 +81,7 @@ Simply add the bundle "dn_printingenhanced" to your app.
 | defaultPageUnit                | String  |                                 | ```CENTIMETERS```                    | Default template unit (ArcGIS Server < 10.6) |
 | defaultFormat                  | String  |                                 | ```JPG```                            | Default print format                         |
 | defaultTemplate                | String  |                                 | ```A4 Portrait```                    | Default print template                       |
-| defaultDPI                     | Number  |                                 | ```96```                             | Default DPI value                            |
+| defaultDpi                     | Number  |                                 | ```96```                             | Default DPI value                            |
 | dpiValues                      | Array   |                                 | ```[]```                             | Available DPI values                         |
 | hideFormats                    | Array   |                                 | ```[]```                             | Hided print formats                          |
 | hideTemplates                  | Array   |                                 | ```[]```                             | Hided print templates                        |
