@@ -33,18 +33,18 @@
                 "title": "${windowTitle}",
                 "dockTool": "printingEnhancedToggleTool",
                 "closable": true,
-                "maximizable": true,
+                "maximizable": false,
                 "minimizeOnClose": true,
                 "resizable": true,
                 "marginBox": {
                     "w": 435,
                     "h": 550,
-                    "t": 60,
-                    "l": 20
+                    "t": 120,
+                    "l": 25
                 },
                 "minSize": {
-                    "w": 435,
-                    "h": 550
+                    "w": 300,
+                    "h": 480
                 },
                 "windowClass": "printing-enhanced-widget"
             }
@@ -59,13 +59,15 @@
                 "title": "${windowTitle}",
                 "dockTool": "printingEnhancedToggleTool",
                 "closable": true,
-                "maximizable": true,
+                "maximizable": false,
                 "minimizeOnClose": true,
                 "resizable": false,
+                "draggable": false,
                 "marginBox": {
-                    "w": "100%",
-                    "h": 600,
-                    "b": 0
+                    "w": 300,
+                    "h": 480,
+                    "t": 120,
+                    "l": 25
                 },
                 "windowClass": "printing-enhanced-widget"
             }
@@ -82,7 +84,7 @@
                 "dockable": true,
                 "dockingBar": "${id}-dockingBarBottomLeft",
                 "closable": true,
-                "maximizable": true,
+                "maximizable": false,
                 "minimizeOnClose": true,
                 "resizable": false,
                 "marginBox": {
