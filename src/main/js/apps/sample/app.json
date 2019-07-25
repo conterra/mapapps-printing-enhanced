@@ -19,6 +19,7 @@
             "map-init",
             "map-preload-2D",
             "toolset",
+            "toolrules",
             "banner",
             "basemaptoggler",
             "mapnavigation",
@@ -247,7 +248,6 @@
                         "title": "Werkzeuge",
                         "cssClass": "ct-main-app-menu",
                         "tools": [
-                            "printingToggleTool",
                             "printingEnhancedToggleTool"
                         ],
                         "registerWidget": {
@@ -256,6 +256,13 @@
                         "container": "ignore",
                         "windowType": "drawer_left"
                     }
+                ]
+            }
+        },
+        "toolrules": {
+            "ToolActiveStateManager": {
+                "activateOnStartToolIds": [
+                    "printingEnhancedToggleTool"
                 ]
             }
         }
