@@ -65,7 +65,7 @@
             class="mb-2"
         ></v-checkbox>
         <v-expansion-panel
-            v-if="showAdvancedOptions"
+            v-if="!hideAdvancedOptions"
             v-model="advancedOptions">
             <v-expansion-panel-content>
                 <template v-slot:header>
@@ -190,9 +190,9 @@
                 type: Boolean,
                 default: false
             },
-            showAdvancedOptions: {
+            hideAdvancedOptions: {
                 type: Boolean,
-                default: true
+                default: false
             }
         },
         data() {
