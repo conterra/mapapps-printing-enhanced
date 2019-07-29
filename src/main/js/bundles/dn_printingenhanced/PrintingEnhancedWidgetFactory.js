@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import TimeSliderWidget from "./PrintingEnhancedWidget.vue";
+import PrintingEnhancedWidget from "./PrintingEnhancedWidget.vue";
 import Vue from "apprt-vue/Vue";
 import VueDijit from "apprt-vue/VueDijit";
 import Binding from "apprt-binding/Binding";
@@ -30,7 +30,7 @@ export default class PrintingEnhancedWidgetFactory {
     }
 
     _initComponent() {
-        const vm = this.vm = new Vue(TimeSliderWidget);
+        const vm = this.vm = new Vue(PrintingEnhancedWidget);
         const printWidget = this._printingWidget;
         const printingPreviewController = this._printingPreviewController;
         const esriPrintWidget = printWidget._esriWidget;
