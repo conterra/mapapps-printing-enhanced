@@ -28,6 +28,7 @@
             "locateme",
             "share-link",
             "printing",
+            "toc",
             "dn_printingenhanced"
         ],
         "require": [

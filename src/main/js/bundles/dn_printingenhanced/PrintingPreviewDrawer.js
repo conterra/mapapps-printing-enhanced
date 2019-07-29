@@ -150,7 +150,9 @@ export default class PrintingPreviewDrawer {
 
     _addGraphicsLayerToMap(map) {
         const mapWidgetModel = this._mapWidgetModel;
-        const graphicsLayer = this.graphicsLayer = new GraphicsLayer();
+        const graphicsLayer = this.graphicsLayer = new GraphicsLayer({
+            listMode: "hide"
+        });
         map.add(graphicsLayer);
         const properties = this._printingEnhancedProperties;
         if (!properties.allowSketching) {
