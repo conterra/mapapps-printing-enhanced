@@ -255,11 +255,15 @@
                     </properties>
                     <includes>
                         <include>src/main/js/**/*.js</include>
+                        <include>src/main/js/**/*.vue</include>
                         <include>src/main/config/assembly.xml</include>
                         <include>**/build.properties</include>
                         <include>**/gulpfile.js</include>
                         <include>**/pom.xml</include>
                     </includes>
+                    <mapping>
+                        <vue>XML_STYLE</vue>
+                    </mapping>
                 </configuration>
                 <executions>
                     <execution>
