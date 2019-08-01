@@ -74,6 +74,11 @@
                     "Letter ANSI A Portrait",
                     "Tabloid ANSI B Landscape",
                     "Tabloid ANSI B Portrait"
+                ],
+                "useUsernameAsAuthor": true,
+                "usernameAttributes": [
+                    "givenname",
+                    "sn"
                 ]
             }
         },

@@ -69,26 +69,33 @@ Simply add the bundle "dn_printingenhanced" to your app.
                 ],
                 "width": "2px"
             }
-        }
+        },
+        "useUsernameAsAuthor": true,
+        "usernameAttributes": [
+            "givenname",
+            "sn"
+        ],
     }
 }
 ```
 
 ##### Properties
-| Property                       | Type    | Possible Values                 | Default                              | Description                                  |
-|--------------------------------|---------|---------------------------------|--------------------------------------|----------------------------------------------|
-| showPrintPreview               | Boolean | ```true``` &#124; ```false```   | ```true```                           | Enable the print preview                     |
-| showAdvancedOptions            | Boolean | ```true``` &#124; ```false```   | ```true```                           | Show advanced options                        |
-| showDpiSelect                  | Boolean | ```true``` &#124; ```false```   | ```true```                           | Show DPI select                              |
-| layoutTemplatesInfoTaskName    | String  |                                 | ```Get Layout Templates Info Task``` | Layout templates task name                   |
-| defaultPageUnit                | String  |                                 | ```CENTIMETERS```                    | Default template unit (ArcGIS Server < 10.6) |
-| defaultFormat                  | String  |                                 | ```JPG```                            | Default print format                         |
-| defaultTemplate                | String  |                                 | ```A4 Portrait```                    | Default print template                       |
-| defaultDpi                     | Number  |                                 | ```96```                             | Default DPI value                            |
-| dpiValues                      | Array   |                                 | ```[]```                             | Available DPI values                         |
-| hideFormats                    | Array   |                                 | ```[]```                             | Hided print formats                          |
-| hideTemplates                  | Array   |                                 | ```[]```                             | Hided print templates                        |
-| printingPreviewSymbol          | Object  |                                 |                                      | Print preview symbol                         |
+| Property                       | Type    | Possible Values                 | Default                              | Description                                              |
+|--------------------------------|---------|---------------------------------|--------------------------------------|----------------------------------------------------------|
+| showPrintPreview               | Boolean | ```true``` &#124; ```false```   | ```true```                           | Enable the print preview                                 |
+| showAdvancedOptions            | Boolean | ```true``` &#124; ```false```   | ```true```                           | Show advanced options                                    |
+| showDpiSelect                  | Boolean | ```true``` &#124; ```false```   | ```true```                           | Show DPI select                                          |
+| layoutTemplatesInfoTaskName    | String  |                                 | ```Get Layout Templates Info Task``` | Layout templates task name                               |
+| defaultPageUnit                | String  |                                 | ```CENTIMETERS```                    | Default template unit (ArcGIS Server < 10.6)             |
+| defaultFormat                  | String  |                                 | ```JPG```                            | Default print format                                     |
+| defaultTemplate                | String  |                                 | ```A4 Portrait```                    | Default print template                                   |
+| defaultDpi                     | Number  |                                 | ```96```                             | Default DPI value                                        |
+| dpiValues                      | Array   |                                 | ```[]```                             | Available DPI values                                     |
+| hideFormats                    | Array   |                                 | ```[]```                             | Hided print formats                                      |
+| hideTemplates                  | Array   |                                 | ```[]```                             | Hided print templates                                    |
+| printingPreviewSymbol          | Object  |                                 |                                      | Print preview symbol                                     |
+| useUsernameAsAuthor            | Boolean | ```true``` &#124; ```false```   | ```true```                           | Use the currently logged in user to pre-enter the author |
+| usernameAttributes             | Array   |                                 | ```["givenname","sn"]```             | Attributes of the user for determining the user name     |
 
 ## Development Guide
 ### Define the mapapps remote base

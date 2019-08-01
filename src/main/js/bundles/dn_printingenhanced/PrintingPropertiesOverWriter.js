@@ -34,6 +34,30 @@ export default class PrintingPropertiesOverWriter {
         this[_observers].destroy();
     }
 
+    setUserService(userService) {
+        const printWidget = this._printingWidget;
+        const esriPrintWidget = printWidget._esriWidget;
+        const properties = this._printingEnhancedProperties._properties;
+        if (properties.useUsernameAsAuthor) {
+            const authentication = userService.getAuthentication();
+            if (!authentication.isAuthenticated()) {
+                console.log("User not authenticated!");
+                return;
+            }
+            const user = authentication.getUser();
+            let username = "";
+            properties.usernameAttributes.forEach(function (nameAttribute) {
+                username += user.get(nameAttribute);
+                username += " ";
+            });
+            username = username.trim();
+            if (username.length === 0) {
+                username = user.getName();
+            }
+            esriPrintWidget.templateOptions.author = username;
+        }
+    }
+
     _setDefaultValues(templateOptions) {
         const properties = this._printingEnhancedProperties._properties;
         if (properties.defaultFormat) {
