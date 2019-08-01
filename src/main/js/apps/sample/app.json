@@ -79,6 +79,29 @@
                 "usernameAttributes": [
                     "givenname",
                     "sn"
+                ],
+                "customTextElements": [
+                    {
+                        "email": "${mail}"
+                    },
+                    {
+                        "city": "${city}"
+                    },
+                    {
+                        "country": "${country}"
+                    },
+                    {
+                        "phonenumber": "${phonenumber}"
+                    },
+                    {
+                        "sn": "${sn}"
+                    },
+                    {
+                        "street": "${street}"
+                    },
+                    {
+                        "testString": "testString"
+                    }
                 ]
             }
         },

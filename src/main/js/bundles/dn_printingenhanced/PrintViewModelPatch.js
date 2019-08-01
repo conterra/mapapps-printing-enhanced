@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 import PrintViewModel from "esri/widgets/Print/PrintViewModel";
-import PrintTask from "esri/tasks/PrintTask";
 import f from "esri/core/Error";
 import u from "esri/request";
 import S from "esri/tasks/support/PrintParameters";
+import d_string from "dojo/string";
+import ct_lang from "ct/_lang";
 
 export default class PrintingPropertiesOverWriter {
 
@@ -26,6 +27,7 @@ export default class PrintingPropertiesOverWriter {
         PrintViewModel.prototype.print = this.print;
         const properties = this._printingEnhancedProperties;
         PrintViewModel.prototype._allowSketching = properties.allowSketching;
+        PrintViewModel.prototype._customTextElements = properties.customTextElements;
     }
 
     print(e) {
@@ -33,6 +35,23 @@ export default class PrintingPropertiesOverWriter {
         if (!this.view) return f.reject(new u("print:view-required", "view is not set"));
         this.scaleEnabled ? (this._viewpoint || (this._viewpoint = this.view.viewpoint.clone()), extent = this._getExtent(this._viewpoint, e.outScale)) : (this._viewpoint = null, extent = this._getExtent(this.view.viewpoint));
         const r = new S({view: this.view, template: e, extent: extent});
+        // set customTextElements
+        if (this._customTextElements.length) {
+            if (!r.template.layoutOptions.customTextElements) {
+                r.template.layoutOptions.customTextElements = [];
+            }
+            if (this._user) {
+                this._customTextElements.forEach((element) => {
+                    ct_lang.forEachOwnProp(element, (value, name) => {
+                        element[name] = d_string.substitute(value, this._user);
+                    });
+                    r.template.layoutOptions.customTextElements.push(element)
+                });
+            } else {
+                r.template.layoutOptions.customTextElements = r.template.layoutOptions.customTextElements.concat(this._customTextElements);
+            }
+        }
+        // set sketching properties to view
         if (this._allowSketching) {
             if (this.printExtent) {
                 r.extent = this.printExtent;
@@ -57,9 +76,19 @@ export default class PrintingPropertiesOverWriter {
     setPrintSettings(event) {
         const geometry = event.getProperty("geometry");
         PrintViewModel.prototype.printExtent = geometry.extent;
-        const rotation = this._computeAngle(geometry.rings[0][0], geometry.rings[0][1]);
-        PrintViewModel.prototype.printRotation = rotation;
-        PrintTask.prototype.printRotation = rotation;
+        PrintViewModel.prototype.printRotation = this._computeAngle(geometry.rings[0][0], geometry.rings[0][1]);
+    }
+
+    setUserService(userService) {
+        const properties = this._printingEnhancedProperties._properties;
+        if (properties.useUsernameAsAuthor) {
+            const authentication = userService.getAuthentication();
+            if (!authentication.isAuthenticated()) {
+                console.log("User not authenticated!");
+                return;
+            }
+            PrintViewModel.prototype._user = authentication.getUser();
+        }
     }
 
     _computeAngle(pointA, pointB) {

@@ -207,6 +207,7 @@
                     "givenname",
                     "sn"
                 ],
+                "customTextElements": [],
                 "allowSketching": false
             }
         },
@@ -334,6 +335,11 @@
                 {
                     "name": "_printingEnhancedProperties",
                     "providing": "dn_printingenhanced.PrintingEnhancedProperties"
+                },
+                {
+                    "name": "userService",
+                    "providing": "ct.framework.api.UserAdmin",
+                    "cardinality": "0..1"
                 }
             ]
         }
