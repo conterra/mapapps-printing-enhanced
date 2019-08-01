@@ -23,7 +23,7 @@ import ct_lang from "ct/_lang";
 export default class PrintingPropertiesOverWriter {
 
     activate() {
-        PrintViewModel.prototype.printExtent = null;
+        PrintViewModel.prototype._printExtent = null;
         PrintViewModel.prototype.print = this.print;
         const properties = this._printingEnhancedProperties;
         PrintViewModel.prototype._allowSketching = properties.allowSketching;
@@ -40,23 +40,24 @@ export default class PrintingPropertiesOverWriter {
             if (!r.template.layoutOptions.customTextElements) {
                 r.template.layoutOptions.customTextElements = [];
             }
+            let customTextElements = r.template.layoutOptions.customTextElements;
             if (this._user) {
                 this._customTextElements.forEach((element) => {
                     ct_lang.forEachOwnProp(element, (value, name) => {
                         element[name] = d_string.substitute(value, this._user);
                     });
-                    r.template.layoutOptions.customTextElements.push(element)
+                    customTextElements.push(element)
                 });
             } else {
-                r.template.layoutOptions.customTextElements = r.template.layoutOptions.customTextElements.concat(this._customTextElements);
+                customTextElements = customTextElements.concat(this._customTextElements);
             }
         }
         // set sketching properties to view
         if (this._allowSketching) {
-            if (this.printExtent) {
-                r.extent = this.printExtent;
+            if (this._printExtent) {
+                r.extent = this._printExtent;
                 const oldRotation = r.view.rotation;
-                r.view.rotation = this.printRotation;
+                r.view.rotation = this._printRotation;
                 setTimeout(() => {
                     r.view.rotation = oldRotation;
                 }, 500);
@@ -75,8 +76,8 @@ export default class PrintingPropertiesOverWriter {
 
     setPrintSettings(event) {
         const geometry = event.getProperty("geometry");
-        PrintViewModel.prototype.printExtent = geometry.extent;
-        PrintViewModel.prototype.printRotation = this._computeAngle(geometry.rings[0][0], geometry.rings[0][1]);
+        PrintViewModel.prototype._printExtent = geometry.extent;
+        PrintViewModel.prototype._printRotation = this._computeAngle(geometry.rings[0][0], geometry.rings[0][1]);
     }
 
     setUserService(userService) {
