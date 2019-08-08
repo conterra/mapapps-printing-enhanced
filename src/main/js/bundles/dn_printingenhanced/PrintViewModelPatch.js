@@ -69,8 +69,21 @@ export default class PrintingPropertiesOverWriter {
                 }, 500);
             }
         }
-        return this._printTask.execute(r).catch(function (e) {
-            return f.reject(new u("print:export-error", "An error occurred while exporting the web map.", {error: e}))
+        const oldScale = r.view.scale;
+        const outScale = r.template.outScale;
+        return r.view.goTo({
+            scale: outScale
+        }).then(() => {
+            const execute = this._printTask.execute(r);
+            execute.catch(function (e) {
+                return f.reject(new u("print:export-error", "An error occurred while exporting the web map.", {error: e}))
+            });
+            setTimeout(() => {
+                r.view.goTo({
+                    scale: oldScale
+                });
+            }, 1000);
+            return execute;
         });
     }
 
