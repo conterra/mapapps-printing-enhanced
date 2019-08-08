@@ -76,15 +76,13 @@
             ripple
             color="primary"
             @click="$emit('print', {})">
-            <v-icon
-                dark
-                left>
+            <v-icon left>
                 save_alt
             </v-icon>
             {{ i18n.print }}
         </v-btn>
         <v-divider class="my-3"></v-divider>
-        <h3 v-if="exportedLinks.length">{{ i18n.exports}}</h3>
+        <h3 v-if="exportedLinks.length">{{ i18n.exports }}</h3>
         <v-list
             dense>
             <v-list-tile
