@@ -50,7 +50,8 @@
                     :layout-list="layoutList"
                     :show-print-preview.sync="showPrintPreview"
                     :show-dpi-select="showDpiSelect"
-                    :show-advanced-options="showAdvancedOptions"/>
+                    :show-advanced-options="showAdvancedOptions"
+                    @resetScale="$emit('resetScale')"/>
             </v-tab-item>
             <v-tab-item>
                 <map-only-widget
@@ -68,6 +69,7 @@
                     :show-print-preview.sync="showPrintPreview"
                     :show-dpi-select="showDpiSelect"
                     :show-advanced-options="showAdvancedOptions"
+                    @resetScale="$emit('resetScale')"
                     @rotate="rotate"/>
             </v-tab-item>
         </v-tabs>
