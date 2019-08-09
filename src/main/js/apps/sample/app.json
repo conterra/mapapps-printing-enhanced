@@ -29,7 +29,8 @@
             "share-link",
             "printing",
             "toc",
-            "dn_printingenhanced"
+            "dn_printingenhanced",
+            "authentication"
         ],
         "require": [
             "${app}.app"
@@ -45,7 +46,7 @@
                 "showAdvancedOptions": true,
                 "showDpiSelect": true,
                 "layoutTemplatesInfoTaskName": "Get Layout Templates Info Task",
-                "defaultPageUnit": "CENTIMETERS",
+                "defaultPageUnit": "CENTIMETER",
                 "defaultFormat": "PDF",
                 "defaultTemplate": "A4 Portrait",
                 "defaultDpi": 96,
@@ -157,7 +158,147 @@
                     }
                 ],
                 "map": {
-                    "layers": [],
+                    "layers": [
+                        {
+                            "id": "koeln1",
+                            "title": "${map.koeln1.title}",
+                            "description": "Basisdaten der Stadt Köln",
+                            "url": "https://services.conterra.de/arcgis/rest/services/common/koeln/MapServer",
+                            "type": "AGS_DYNAMIC",
+                            "visible": false,
+                            "minScale": 500000,
+                            "maxScale": 250000,
+                            "sublayers": [
+                                {
+                                    "title": "${map.koeln1.districts.title}",
+                                    "id": 11,
+                                    "opacity": 0.5,
+                                    "minScale": 500000,
+                                    "maxScale": 250000,
+                                    "popupTemplate": {
+                                        "title": "{STV_NAME}",
+                                        "content": [
+                                            {
+                                                "type": "text",
+                                                "text": "${map.koeln1.districts.text}"
+                                            },
+                                            {
+                                                "type": "fields",
+                                                "fieldInfos": [
+                                                    {
+                                                        "fieldName": "STV_NR",
+                                                        "label": "${common.number}"
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "title": "${map.koeln1.boroughs.title}",
+                                    "id": 10,
+                                    "opacity": 0.5,
+                                    "minScale": 500000,
+                                    "maxScale": 250000,
+                                    "popupTemplate": {
+                                        "title": "{NAME}",
+                                        "content": [
+                                            {
+                                                "type": "text",
+                                                "text": "${map.koeln1.boroughs.text}"
+                                            },
+                                            {
+                                                "type": "fields",
+                                                "fieldInfos": [
+                                                    {
+                                                        "fieldName": "expression/area",
+                                                        "format": {
+                                                            "places": 2,
+                                                            "digitSeparator": true
+                                                        }
+                                                    },
+                                                    {
+                                                        "fieldName": "expression/area-rel",
+                                                        "format": {
+                                                            "places": 2,
+                                                            "digitSeparator": true
+                                                        }
+                                                    },
+                                                    {
+                                                        "fieldName": "NUMMER",
+                                                        "label": "${common.number}"
+                                                    }
+                                                ]
+                                            }
+                                        ],
+                                        "expressionInfos": [
+                                            {
+                                                "name": "area",
+                                                "title": "${common.area}",
+                                                "expression": "$feature.FLAECHE / 10000"
+                                            },
+                                            {
+                                                "name": "area-rel",
+                                                "title": "${common.totalArea}",
+                                                "expression": "Round(($feature.FLAECHE / 405020000)*100,2)"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "title": "${map.koeln1.precints.title}",
+                                    "id": 9,
+                                    "opacity": 0.5,
+                                    "minScale": 500000,
+                                    "maxScale": 250000,
+                                    "popupTemplate": {
+                                        "title": "{NAME}",
+                                        "content": [
+                                            {
+                                                "type": "text",
+                                                "text": "${map.koeln1.precints.text}"
+                                            },
+                                            {
+                                                "type": "fields",
+                                                "fieldInfos": [
+                                                    {
+                                                        "fieldName": "expression/area",
+                                                        "format": {
+                                                            "places": 2,
+                                                            "digitSeparator": true
+                                                        }
+                                                    },
+                                                    {
+                                                        "fieldName": "expression/area-rel",
+                                                        "format": {
+                                                            "places": 2,
+                                                            "digitSeparator": true
+                                                        }
+                                                    },
+                                                    {
+                                                        "fieldName": "NUMMER",
+                                                        "label": "${common.number}"
+                                                    }
+                                                ]
+                                            }
+                                        ],
+                                        "expressionInfos": [
+                                            {
+                                                "name": "area",
+                                                "title": "${common.area}",
+                                                "expression": "$feature.FLAECHE / 10000"
+                                            },
+                                            {
+                                                "name": "area-rel",
+                                                "title": "${common.totalArea}",
+                                                "expression": "Round(($feature.FLAECHE / 405020000)*100,2)"
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    ],
                     "ground": {
                         "url": "https://elevation3d.arcgis.com/arcgis/rest/services/WorldElevation3D/Terrain3D/ImageServer",
                         "type": "ELEVATION"

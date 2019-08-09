@@ -13,12 +13,12 @@
     "productName": "devnet-mapapps-printing-enhanced",
     "dependencies": {
         "esri": "^4.5.0",
-        "apprt-vue": "^4.6.0",
-        "apprt-vuetify": "^4.6.0",
-        "apprt-binding": "^4.6.0",
-        "apprt-core": "^4.6.0",
-        "printing": "^4.6.0",
-        "coordinatetransformer": "^4.6.0"
+        "apprt-vue": "^4.5.0",
+        "apprt-vuetify": "^4.5.0",
+        "apprt-binding": "^4.5.0",
+        "apprt-core": "^4.5.0",
+        "printing": "^4.5.0",
+        "coordinatetransformer": "^4.5.0"
     },
     "CSS-Themes-Extension": [
         {
@@ -163,7 +163,7 @@
                 "showAdvancedOptions": true,
                 "showDpiSelect": true,
                 "layoutTemplatesInfoTaskName": "Get Layout Templates Info Task",
-                "defaultPageUnit": "CENTIMETERS",
+                "defaultPageUnit": "CENTIMETER",
                 "defaultFormat": "PDF",
                 "defaultTemplate": "A4 Portrait",
                 "defaultDpi": 96,
