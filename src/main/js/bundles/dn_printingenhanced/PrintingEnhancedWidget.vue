@@ -237,7 +237,9 @@
                 },
                 set: function (tab) {
                     if (tab === 1) {
-                        this.lastLayout = this.layout;
+                        if (this.layout !== "MAP_ONLY") {
+                            this.lastLayout = this.layout;
+                        }
                         this.layout = "MAP_ONLY";
                     } else {
                         if (this.lastLayout) {
