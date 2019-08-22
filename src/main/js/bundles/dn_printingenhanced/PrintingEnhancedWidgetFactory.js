@@ -17,7 +17,7 @@ import PrintingEnhancedWidget from "./PrintingEnhancedWidget.vue";
 import Vue from "apprt-vue/Vue";
 import VueDijit from "apprt-vue/VueDijit";
 import Binding from "apprt-binding/Binding";
-import ct_when from "ct/_when";
+import when from "apprt-core/when";
 
 export default class PrintingEnhancedWidgetFactory {
 
@@ -61,7 +61,7 @@ export default class PrintingEnhancedWidgetFactory {
             });
         });
 
-        ct_when(this._printingInfosAnalyzer.getPrintInfos(url), (printInfos) => {
+        when(this._printingInfosAnalyzer.getPrintInfos(url), (printInfos) => {
             const templateInfos = printInfos.templateInfos;
             if (printViewModel.templatesInfo) {
                 this._setTemplatesInfos(templateInfos, printViewModel.templatesInfo);

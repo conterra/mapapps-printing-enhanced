@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import ct_when from "ct/_when";
+import when from "apprt-core/when";
 import apprt_request from "apprt-request";
 import Deferred from "dojo/Deferred";
 import Geoprocessor from "esri/tasks/Geoprocessor";
@@ -28,14 +28,14 @@ export default class PrintingInfosAnalyzer {
             return this[_printInfos];
         }
         // otherwise request them from server
-        return ct_when(apprt_request(url, {
+        return when(apprt_request(url, {
             "query": {
                 "f": "json"
             }
         }), function (printInfos) {
             // side effect (cache infos and template infos)
             this[_printInfos] = printInfos;
-            return ct_when(this._fetchTemplateInfos(url), function (templateInfos) {
+            return when(this._fetchTemplateInfos(url), function (templateInfos) {
                 printInfos.templateInfos = templateInfos;
                 return printInfos;
             }, function () {

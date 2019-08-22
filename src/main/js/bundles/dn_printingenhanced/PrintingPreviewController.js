@@ -17,7 +17,7 @@ import {declare} from "apprt-core/Mutable";
 import Connect from "ct/_Connect";
 import Observers from "apprt-core/Observers";
 import d_aspect from "dojo/aspect";
-import ct_when from "ct/_when";
+import when from "apprt-core/when";
 
 const _templateOptions = Symbol("_templateOptions");
 const _printInfos = Symbol("_printInfos");
@@ -39,7 +39,7 @@ export default declare({
         // get print infos
         const url = this[_printServiceUrl] = esriPrintWidget.printServiceUrl;
         this[_printInfos] = {};
-        ct_when(this._printingInfosAnalyzer.getPrintInfos(url), (printInfos) => {
+        when(this._printingInfosAnalyzer.getPrintInfos(url), (printInfos) => {
             this[_printInfos] = printInfos;
             this._handleDrawTemplateDimensions();
         });
