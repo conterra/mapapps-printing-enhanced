@@ -50,7 +50,7 @@ export default declare({
 
         // handle print preview before and after printing
         d_aspect.before(printViewModel, "print", () => {
-            this._printingPreviewDrawer._removeGraphicFromView();
+            this._printingPreviewDrawer._removeGraphicFromGraphicsLayer();
         });
         d_aspect.after(printViewModel, "print", (promise) => {
             /*promise.then(() => {
@@ -68,7 +68,7 @@ export default declare({
     },
 
     deactivate() {
-        this._printingPreviewDrawer._removeGraphicFromView();
+        this._printingPreviewDrawer._removeGraphicFromGraphicsLayer();
         this[_connect].disconnect();
         this[_observers].destroy();
     },
@@ -90,7 +90,7 @@ export default declare({
             this._handleDrawTemplateDimensions();
         });
         connect.connect(tool, "onDeactivate", () => {
-            this._printingPreviewDrawer._removeGraphicFromView();
+            this._printingPreviewDrawer._removeGraphicFromGraphicsLayer();
         });
     },
 
@@ -101,7 +101,7 @@ export default declare({
             this._handleDrawTemplateDimensions();
         });
         connect.connect(tool, "onDeactivate", () => {
-            this._printingPreviewDrawer._removeGraphicFromView();
+            this._printingPreviewDrawer._removeGraphicFromGraphicsLayer();
         });
     },
 
@@ -139,7 +139,7 @@ export default declare({
     },
 
     _handleDrawTemplateDimensions(showOldPreview) {
-        this._printingPreviewDrawer._removeGraphicFromView();
+        this._printingPreviewDrawer._removeGraphicFromGraphicsLayer();
         const properties = this._printingEnhancedProperties._properties;
         if ((this._printingToggleTool.active || this._printingEnhancedToggleTool.active) && this.showPrintPreview) {
             this._printingPreviewDrawer.drawTemplateDimensions(this[_printInfos], this[_templateOptions], properties.defaultPageUnit, showOldPreview);

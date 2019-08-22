@@ -21,6 +21,8 @@ import GraphicsLayer from "esri/layers/GraphicsLayer";
 import SketchViewModel from "esri/widgets/Sketch/SketchViewModel";
 
 const _geometry = Symbol("_geometry");
+const _graphic = Symbol("_graphic");
+const _graphicsLayer = Symbol("_graphicsLayer");
 const _sketchViewModel = Symbol("_sketchViewModel");
 
 export default class PrintingPreviewDrawer {
@@ -66,8 +68,8 @@ export default class PrintingPreviewDrawer {
         } else {
             geometry = this._getMainFrameGeometry(geometryParams);
         }
-        this._removeGraphicFromView();
-        this._addGraphicToView(geometry);
+        this._removeGraphicFromGraphicsLayer();
+        this._addGraphicToGraphicsLayer(geometry);
     }
 
     _getPrintSize(printInfos, templateOptions, defaultPageUnit) {
@@ -150,7 +152,7 @@ export default class PrintingPreviewDrawer {
 
     _addGraphicsLayerToMap(map) {
         const mapWidgetModel = this._mapWidgetModel;
-        const graphicsLayer = this.graphicsLayer = new GraphicsLayer({
+        const graphicsLayer = this[_graphicsLayer] = new GraphicsLayer({
             listMode: "hide"
         });
         map.add(graphicsLayer);
@@ -168,7 +170,7 @@ export default class PrintingPreviewDrawer {
     }
 
     _removeGraphicsLayerFromMap(map) {
-        map.remove(this.graphicsLayer);
+        map.remove(this[_graphicsLayer]);
     }
 
     _createSketchViewModel(graphicsLayer, view) {
@@ -194,19 +196,19 @@ export default class PrintingPreviewDrawer {
         });
     }
 
-    _addGraphicToView(geometry) {
+    _addGraphicToGraphicsLayer(geometry) {
         const properties = this._printingEnhancedProperties;
         const symbol = properties.printingPreviewSymbol;
-        const graphic = this.graphic = new Graphic({
+        const graphic = this[_graphic] = new Graphic({
             geometry: geometry,
             symbol: symbol
         });
-        this.graphicsLayer.add(graphic);
+        this[_graphicsLayer].add(graphic);
     }
 
-    _removeGraphicFromView() {
-        if (this.graphic) {
-            this.graphicsLayer.remove(this.graphic);
+    _removeGraphicFromGraphicsLayer() {
+        if (this[_graphic]) {
+            this[_graphicsLayer].remove(this[_graphic]);
         }
         const sketchViewModel = this[_sketchViewModel];
         sketchViewModel && sketchViewModel.complete();
