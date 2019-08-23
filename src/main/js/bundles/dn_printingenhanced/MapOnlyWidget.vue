@@ -219,48 +219,83 @@
         },
         data() {
             return {
-                advancedOptions: false,
-                attributionEnabledValue: this.attributionEnabledValue,
-                dpiValue: this.dpi,
-                formatValue: this.format,
-                widthValue: this.width,
-                heightValue: this.height,
-                scaleValue: this.scale,
-                scaleEnabledValue: this.scaleEnabled,
-                titleValue: this.title,
-                showPrintPreviewValue: this.scaleEnabled
+                advancedOptions: false
             }
         },
-        watch: {
-            attributionEnabledValue: function (attributionEnabled) {
-                this.$emit('update:attribution-enabled', attributionEnabled);
+        computed: {
+            attributionEnabledValue: {
+                get: function () {
+                    return this.attributionEnabled;
+                },
+                set: function (attributionEnabled) {
+                    this.$emit('attribution-enabled', attributionEnabled);
+                }
             },
-            dpiValue: function (dpi) {
-                this.$emit('update:dpi', dpi);
+            dpiValue: {
+                get: function () {
+                    return this.dpi;
+                },
+                set: function (dpi) {
+                    this.$emit('update:dpi', dpi);
+                }
             },
-            formatValue: function (format) {
-                this.$emit('update:format', format);
+            formatValue: {
+                get: function () {
+                    return this.format;
+                },
+                set: function (format) {
+                    this.$emit('update:format', format);
+                }
             },
-            widthValue: function (width) {
-                this.$emit('update:width', parseInt(width));
+            widthValue: {
+                get: function () {
+                    return this.width;
+                },
+                set: function (width) {
+                    this.$emit('update:width', width);
+                }
             },
-            heightValue: function (height) {
-                this.$emit('update:height', parseInt(height));
+            heightValue: {
+                get: function () {
+                    return this.height;
+                },
+                set: function (height) {
+                    this.$emit('update:height', height);
+                }
             },
-            scaleValue: function (scale) {
-                this.$emit('update:scale', scale);
+            scaleValue: {
+                get: function () {
+                    return this.scale;
+                },
+                set: function (scale) {
+                    this.$emit('update:scale', scale);
+                }
             },
-            scaleEnabledValue: function (scaleEnabled) {
-                this.$emit('update:scale-enabled', scaleEnabled);
+            scaleEnabledValue: {
+                get: function () {
+                    return this.scaleEnabled;
+                },
+                set: function (scaleEnabled) {
+                    this.$emit('update:scale-enabled', scaleEnabled);
+                }
             },
-            titleValue: function (title) {
-                this.$emit('update:title', title);
+            showPrintPreviewValue: {
+                get: function () {
+                    return this.showPrintPreview;
+                },
+                set: function (showPrintPreview) {
+                    this.$emit('update:show-print-preview', showPrintPreview);
+                }
             },
-            showPrintPreviewValue: function (showPrintPreview) {
-                this.$emit('update:show-print-preview', showPrintPreview);
+            titleValue: {
+                get: function () {
+                    return this.title;
+                },
+                set: function (title) {
+                    this.$emit('update:title', title);
+                }
             }
         },
-        computed: {},
         methods: {
             rotate: function () {
                 this.$emit('rotate');

@@ -26,7 +26,7 @@
             <v-flex
                 md12>
                 <v-text-field
-                    v-model="title"
+                    v-model="titleValue"
                     :label="i18n.title"
                     :placeholder="i18n.titlePlaceholder"
                     hide-details
@@ -35,7 +35,7 @@
             <v-flex
                 md12>
                 <v-select
-                    v-model="format"
+                    v-model="formatValue"
                     :items="formatList"
                     :label="i18n.format"
                     hide-details
@@ -44,7 +44,7 @@
             <v-flex
                 md12>
                 <v-select
-                    v-model="layout"
+                    v-model="layoutValue"
                     :items="layoutList"
                     :label="i18n.layout"
                     hide-details
@@ -52,7 +52,7 @@
             </v-flex>
         </v-layout>
         <v-checkbox
-            v-model="showPrintPreview"
+            v-model="showPrintPreviewValue"
             :label="i18n.showPrintPreview"
             color="primary"
             hide-details
@@ -73,7 +73,7 @@
                         <v-flex
                             md12>
                             <v-checkbox
-                                v-model="scaleEnabled"
+                                v-model="scaleEnabledValue"
                                 :label="i18n.scaleEnabled"
                                 color="primary"
                                 hide-details
@@ -83,7 +83,7 @@
                         <v-flex
                             md10>
                             <v-text-field
-                                v-model="scale"
+                                v-model="scaleValue"
                                 :label="i18n.scale"
                                 :disabled="!scaleEnabled"
                                 step="1"
@@ -105,7 +105,7 @@
                         <v-flex
                             md12>
                             <v-text-field
-                                v-model="author"
+                                v-model="authorValue"
                                 :label="i18n.author"
                                 :placeholder="i18n.authorPlaceholder"
                                 hide-details
@@ -114,7 +114,7 @@
                         <v-flex
                             md12>
                             <v-text-field
-                                v-model="copyright"
+                                v-model="copyrightValue"
                                 :label="i18n.copyright"
                                 :placeholder="i18n.copyrightPlaceholder"
                                 hide-details
@@ -124,7 +124,7 @@
                             v-if="showDpiSelect"
                             md12>
                             <v-select
-                                v-model="dpi"
+                                v-model="dpiValue"
                                 :items="dpiValues"
                                 :label="i18n.dpi"
                                 hide-details
@@ -133,7 +133,7 @@
                         <v-flex
                             md12>
                             <v-checkbox
-                                v-model="legendEnabled"
+                                v-model="legendEnabledValue"
                                 :label="i18n.legendEnabled"
                                 color="primary"
                                 hide-details
@@ -225,36 +225,86 @@
                 advancedOptions: false
             }
         },
-        watch: {
-            author: function () {
-                this.$emit('update:author', this.author);
+        computed: {
+            authorValue: {
+                get: function () {
+                    return this.author;
+                },
+                set: function (author) {
+                    this.$emit('author', author);
+                }
             },
-            copyright: function () {
-                this.$emit('update:copyright', this.copyright);
+            copyrightValue: {
+                get: function () {
+                    return this.copyright;
+                },
+                set: function (copyright) {
+                    this.$emit('copyright', copyright);
+                }
             },
-            dpi: function () {
-                this.$emit('update:dpi', this.dpi);
+            dpiValue: {
+                get: function () {
+                    return this.dpi;
+                },
+                set: function (dpi) {
+                    this.$emit('update:dpi', dpi);
+                }
             },
-            format: function () {
-                this.$emit('update:format', this.format);
+            formatValue: {
+                get: function () {
+                    return this.format;
+                },
+                set: function (format) {
+                    this.$emit('update:format', format);
+                }
             },
-            layout: function () {
-                this.$emit('update:layout', this.layout);
+            layoutValue: {
+                get: function () {
+                    return this.layout;
+                },
+                set: function (layout) {
+                    this.$emit('update:layout', layout);
+                }
             },
-            legendEnabled: function () {
-                this.$emit('update:legend-enabled', this.legendEnabled);
+            legendEnabledValue: {
+                get: function () {
+                    return this.legendEnabled;
+                },
+                set: function (legendEnabled) {
+                    this.$emit('update:legend-enabled', legendEnabled);
+                }
             },
-            scale: function () {
-                this.$emit('update:scale', this.scale);
+            scaleValue: {
+                get: function () {
+                    return this.scale;
+                },
+                set: function (scale) {
+                    this.$emit('update:scale', scale);
+                }
             },
-            scaleEnabled: function () {
-                this.$emit('update:scale-enabled', this.scaleEnabled);
+            scaleEnabledValue: {
+                get: function () {
+                    return this.scaleEnabled;
+                },
+                set: function (scaleEnabled) {
+                    this.$emit('update:scale-enabled', scaleEnabled);
+                }
             },
-            title: function () {
-                this.$emit('update:title', this.title);
+            showPrintPreviewValue: {
+                get: function () {
+                    return this.showPrintPreview;
+                },
+                set: function (showPrintPreview) {
+                    this.$emit('update:show-print-preview', showPrintPreview);
+                }
             },
-            showPrintPreview: function () {
-                this.$emit('update:show-print-preview', this.showPrintPreview);
+            titleValue: {
+                get: function () {
+                    return this.title;
+                },
+                set: function (title) {
+                    this.$emit('update:title', title);
+                }
             }
         }
     };
