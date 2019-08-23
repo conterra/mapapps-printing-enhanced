@@ -26,7 +26,7 @@
             <v-flex
                 md12>
                 <v-text-field
-                    v-model="title"
+                    v-model="titleValue"
                     :label="i18n.file"
                     :placeholder="i18n.filePlaceholder"
                     hide-details
@@ -35,7 +35,7 @@
             <v-flex
                 md12>
                 <v-select
-                    v-model="format"
+                    v-model="formatValue"
                     :items="formatList"
                     :label="i18n.format"
                     hide-details
@@ -44,7 +44,7 @@
             <v-flex
                 md5>
                 <v-text-field
-                    v-model="width"
+                    v-model="widthValue"
                     :label="i18n.width"
                     step="1"
                     type="number"
@@ -55,7 +55,7 @@
             <v-flex
                 md5>
                 <v-text-field
-                    v-model="height"
+                    v-model="heightValue"
                     :label="i18n.height"
                     step="1"
                     type="number"
@@ -75,7 +75,7 @@
             </v-flex>
         </v-layout>
         <v-checkbox
-            v-model="showPrintPreview"
+            v-model="showPrintPreviewValue"
             :label="i18n.showPrintPreview"
             color="primary"
             hide-details
@@ -96,7 +96,7 @@
                         <v-flex
                             md12>
                             <v-checkbox
-                                v-model="scaleEnabled"
+                                v-model="scaleEnabledValue"
                                 :label="i18n.scaleEnabled"
                                 color="primary"
                                 hide-details
@@ -106,7 +106,7 @@
                         <v-flex
                             md10>
                             <v-text-field
-                                v-model="scale"
+                                v-model="scaleValue"
                                 :label="i18n.scale"
                                 :disabled="!scaleEnabled"
                                 step="1"
@@ -129,7 +129,7 @@
                             v-if="showDpiSelect"
                             md12>
                             <v-select
-                                v-model="dpi"
+                                v-model="dpiValue"
                                 :items="dpiValues"
                                 :label="i18n.dpi"
                                 hide-details
@@ -138,7 +138,7 @@
                         <v-flex
                             md12>
                             <v-checkbox
-                                v-model="attributionEnabled"
+                                v-model="attributionEnabledValue"
                                 :label="i18n.attributionEnabled"
                                 color="primary"
                                 hide-details
@@ -219,38 +219,48 @@
         },
         data() {
             return {
-                advancedOptions: false
+                advancedOptions: false,
+                attributionEnabledValue: this.attributionEnabledValue,
+                dpiValue: this.dpi,
+                formatValue: this.format,
+                widthValue: this.width,
+                heightValue: this.height,
+                scaleValue: this.scale,
+                scaleEnabledValue: this.scaleEnabled,
+                titleValue: this.title,
+                showPrintPreviewValue: this.scaleEnabled
             }
         },
         watch: {
-            attributionEnabled: function () {
-                this.$emit('update:attribution-enabled', this.attributionEnabled);
+            attributionEnabledValue: function (attributionEnabled) {
+                this.$emit('update:attribution-enabled', attributionEnabled);
             },
-            dpi: function () {
-                this.$emit('update:dpi', this.dpi);
+            dpiValue: function (dpi) {
+                this.$emit('update:dpi', dpi);
             },
-            format: function () {
-                this.$emit('update:format', this.format);
+            formatValue: function (format) {
+                this.$emit('update:format', format);
             },
-            width: function () {
-                this.$emit('update:width', this.width);
+            widthValue: function (width) {
+                this.$emit('update:width', parseInt(width));
             },
-            height: function () {
-                this.$emit('update:height', this.height);
+            heightValue: function (height) {
+                this.$emit('update:height', parseInt(height));
             },
-            scale: function () {
-                this.$emit('update:scale', this.scale);
+            scaleValue: function (scale) {
+                this.$emit('update:scale', scale);
             },
-            scaleEnabled: function () {
-                this.$emit('update:scale-enabled', this.scaleEnabled);
+            scaleEnabledValue: function (scaleEnabled) {
+                this.$emit('update:scale-enabled', scaleEnabled);
             },
-            title: function () {
-                this.$emit('update:title', this.title);
+            titleValue: function (title) {
+                this.$emit('update:title', title);
             },
-            showPrintPreview: function () {
-                this.$emit('update:show-print-preview', this.showPrintPreview);
+            showPrintPreviewValue: function (showPrintPreview) {
+                this.$emit('update:show-print-preview', showPrintPreview);
             }
         },
+        computed: {},
         methods: {
             rotate: function () {
                 this.$emit('rotate');
