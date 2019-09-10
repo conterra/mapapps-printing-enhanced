@@ -50,14 +50,14 @@ export default declare({
 
         // handle print preview before and after printing
         d_aspect.before(printViewModel, "print", () => {
-            this._printingPreviewDrawer._removeGraphicFromGraphicsLayer();
+            this._printingPreviewDrawer.showGraphicsLayer(false);
         });
         d_aspect.after(printViewModel, "print", (promise) => {
             /*promise.then(() => {
                 this._handleDrawTemplateDimensions();
             });*/
             setTimeout(() => {
-                this._handleDrawTemplateDimensions(true);
+                this._printingPreviewDrawer.showGraphicsLayer(true);
             }, 1000);
             return promise;
         });
@@ -138,11 +138,11 @@ export default declare({
         }
     },
 
-    _handleDrawTemplateDimensions(showOldPreview) {
+    _handleDrawTemplateDimensions() {
         this._printingPreviewDrawer._removeGraphicFromGraphicsLayer();
         const properties = this._printingEnhancedProperties._properties;
         if ((this._printingToggleTool.active || this._printingEnhancedToggleTool.active) && this.showPrintPreview) {
-            this._printingPreviewDrawer.drawTemplateDimensions(this[_printInfos], this[_templateOptions], properties.defaultPageUnit, showOldPreview);
+            this._printingPreviewDrawer.drawTemplateDimensions(this[_printInfos], this[_templateOptions], properties.defaultPageUnit);
         }
     },
 

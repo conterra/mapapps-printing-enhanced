@@ -45,7 +45,7 @@ export default class PrintingPreviewDrawer {
         this._removeGraphicsLayerFromMap(map);
     }
 
-    drawTemplateDimensions(printInfos, templateOptions, defaultPageUnit, showOldPreview) {
+    drawTemplateDimensions(printInfos, templateOptions, defaultPageUnit) {
         const mapWidgetModel = this._mapWidgetModel;
         if (!printInfos.templateInfos) {
             return;
@@ -62,12 +62,7 @@ export default class PrintingPreviewDrawer {
             height: height,
             rotation: mapWidgetModel.rotation
         };
-        let geometry;
-        if (showOldPreview && this[_geometry]) {
-            geometry = this[_geometry];
-        } else {
-            geometry = this._getMainFrameGeometry(geometryParams);
-        }
+        const geometry = this._getMainFrameGeometry(geometryParams);
         this._removeGraphicFromGraphicsLayer();
         this._addGraphicToGraphicsLayer(geometry);
     }
@@ -212,5 +207,9 @@ export default class PrintingPreviewDrawer {
         }
         const sketchViewModel = this[_sketchViewModel];
         sketchViewModel && sketchViewModel.complete();
+    }
+
+    showGraphicsLayer(value) {
+        this[_graphicsLayer].visible = value;
     }
 }
