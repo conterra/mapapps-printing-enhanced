@@ -231,7 +231,7 @@
                     return this.author;
                 },
                 set: function (author) {
-                    this.$emit('author', author);
+                    this.$emit('update:author', author);
                 }
             },
             copyrightValue: {
@@ -239,7 +239,7 @@
                     return this.copyright;
                 },
                 set: function (copyright) {
-                    this.$emit('copyright', copyright);
+                    this.$emit('update:copyright', copyright);
                 }
             },
             dpiValue: {

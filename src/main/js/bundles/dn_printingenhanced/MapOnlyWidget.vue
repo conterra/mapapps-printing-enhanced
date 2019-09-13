@@ -228,7 +228,7 @@
                     return this.attributionEnabled;
                 },
                 set: function (attributionEnabled) {
-                    this.$emit('attribution-enabled', attributionEnabled);
+                    this.$emit('update:attribution-enabled', attributionEnabled);
                 }
             },
             dpiValue: {
