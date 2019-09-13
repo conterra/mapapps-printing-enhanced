@@ -16,6 +16,10 @@
             "templatelayout",
             "template-seasons",
             "theme-everlasting",
+            "theme-winter",
+            "theme-spring",
+            "theme-summer",
+            "theme-autumn",
             "map-init",
             "map-preload-2D",
             "toolset",
@@ -40,6 +44,14 @@
         ]
     },
     "bundles": {
+        "themes": {
+            "ThemeModel": {
+                "_selectedTheme": "everlasting"
+            },
+            "ThemeSelector": {
+                "componentEnabled": true
+            }
+        },
         "dn_printingenhanced": {
             "Config": {
                 "showPrintPreview": true,
