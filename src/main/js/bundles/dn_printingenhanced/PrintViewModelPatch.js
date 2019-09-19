@@ -49,7 +49,9 @@ export default class PrintingPropertiesOverWriter {
                     customTextElements.push(element)
                 });
             } else {
-                customTextElements = customTextElements.concat(this._customTextElements);
+                this._customTextElements.forEach((element) => {
+                    customTextElements.push(element);
+                })
             }
         }
         // set sketching properties to view
@@ -91,6 +93,10 @@ export default class PrintingPropertiesOverWriter {
         const geometry = event.getProperty("geometry");
         PrintViewModel.prototype._printExtent = geometry.extent;
         PrintViewModel.prototype._printRotation = this._computeAngle(geometry.rings[0][0], geometry.rings[0][1]);
+    }
+
+    setCustomTextElements(event) {
+        PrintViewModel.prototype._customTextElements = event.getProperty("customTextElements");
     }
 
     setUserService(userService) {

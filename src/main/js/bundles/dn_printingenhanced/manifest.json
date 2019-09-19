@@ -321,13 +321,18 @@
         {
             "name": "PrintViewModelPatch",
             "provides": [
-                "ct.framework.api.EventHandler"
+                "ct.framework.api.EventHandler",
+                "dn_printingenhanced.PrintViewModelPatch"
             ],
             "properties": {
                 "Event-Topics": [
                     {
                         "topic": "dn_printingenhanced/PRINTSETTINGS",
                         "method": "setPrintSettings"
+                    },
+                    {
+                        "topic": "dn_printingenhanced/CUSTOM_TEXTELEMENTS",
+                        "method": "setCustomTextElements"
                     }
                 ]
             },
