@@ -222,9 +222,7 @@
             }
         },
         data() {
-            return {
-                advancedOptions: false
-            }
+            return {}
         },
         computed: {
             activeTab: {

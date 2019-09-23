@@ -222,7 +222,7 @@
         },
         data() {
             return {
-                advancedOptions: false
+                advancedOptions: [0]
             }
         },
         computed: {
