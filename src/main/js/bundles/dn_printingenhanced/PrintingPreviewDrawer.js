@@ -113,6 +113,9 @@ export default class PrintingPreviewDrawer {
         //let wkid = spatialRederence && spatialRederence.wkid || spatialRederence.latestWkid;
         let factor;
         switch (unit) {
+            case "MILLIMETER":
+                factor = 1000;
+                break;
             case "CENTIMETER":
                 factor = 100;
                 break;
