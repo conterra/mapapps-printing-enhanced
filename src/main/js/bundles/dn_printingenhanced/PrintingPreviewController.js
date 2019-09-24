@@ -141,7 +141,7 @@ export default declare({
     _handleDrawTemplateDimensions() {
         this._printingPreviewDrawer._removeGraphicFromGraphicsLayer();
         const properties = this._printingEnhancedProperties._properties;
-        if ((this._printingToggleTool.active || this._printingEnhancedToggleTool.active) && this.showPrintPreview) {
+        if (((this._printingToggleTool && this._printingToggleTool.active) || this._printingEnhancedToggleTool.active) && this.showPrintPreview) {
             this._printingPreviewDrawer.drawTemplateDimensions(this[_printInfos], this[_templateOptions], properties.defaultPageUnit);
         }
     },

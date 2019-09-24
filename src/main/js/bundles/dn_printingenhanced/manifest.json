@@ -319,6 +319,15 @@
             }
         },
         {
+            "name": "PrintingToggleToolHandler",
+            "references": [
+                {
+                    "name": "_configAdminService",
+                    "providing": "ct.framework.api.ConfigurationAdmin"
+                }
+            ]
+        },
+        {
             "name": "PrintViewModelPatch",
             "provides": [
                 "ct.framework.api.EventHandler",

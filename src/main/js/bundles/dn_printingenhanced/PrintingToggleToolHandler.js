@@ -13,12 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import ".";
-import "ct/tools/Tool";
-import "./PrintingPreviewController";
-import "./PrintingInfosAnalyzer";
-import "./PrintingPropertiesOverWriter";
-import "./PrintingPreviewDrawer";
-import "./PrintingEnhancedWidgetFactory";
-import "./PrintViewModelPatch";
-import "./PrintingToggleToolHandler";
+export default class PrintingToggleToolHandler {
+
+    activate() {
+        this._enablePrintigToogleTool(false);
+    }
+
+    deactivate() {
+        this._enablePrintigToogleTool(true);
+    }
+
+    _enablePrintigToogleTool(enabled) {
+        const componentName = "PrintingToggleTool";
+        const bid = "printing";
+        const componentConfig = this._configAdminService.getConfiguration(bid + "-" + componentName, bid);
+        componentConfig.update({componentEnabled: enabled});
+    }
+
+}
