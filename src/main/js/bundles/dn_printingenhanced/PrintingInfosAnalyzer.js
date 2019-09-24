@@ -15,7 +15,6 @@
  */
 import when from "apprt-core/when";
 import apprt_request from "apprt-request";
-import Deferred from "dojo/Deferred";
 import Geoprocessor from "esri/tasks/Geoprocessor";
 
 const _printInfos = Symbol("_printInfos");
@@ -73,25 +72,21 @@ export default class PrintingInfosAnalyzer {
     _fetchTemplateInfosAsync(gp) {
         const properties = this._printingEnhancedProperties._properties;
         const outputParamName = properties.layoutTemplatesInfoTaskResultParameter || "Output_JSON";
-        const deferred = new Deferred();
-        gp.submitJob({},
-            (jobInfo) => {
-                gp.getResultData(jobInfo.jobId, outputParamName, (results) => {
-                    deferred.resolve(results.value);
-                });
-            },
-            () => {
-                // progress ignored
-            },
-            (error) => {
-                // try to fetch sync
-                deferred.reject(error);
+        return new Promise((resolve, reject) => {
+            gp.submitJob({}).then((jobInfo) => {
+                if (jobInfo.jobStatus === "job-succeeded") {
+                    gp.getResultData(jobInfo.jobId, outputParamName).then((results) => {
+                        resolve(results.value);
+                    });
+                } else if (jobInfo.jobStatus === "job-failed") {
+                    reject(jobInfo.messages[0]);
+                }
             });
-        return deferred;
+        });
     }
 
     _isAsync() {
-        const infos = this._printInfos;
+        const infos = this[_printInfos];
         if (infos) {
             return infos.executionType !== "esriExecutionTypeSynchronous";
         }
