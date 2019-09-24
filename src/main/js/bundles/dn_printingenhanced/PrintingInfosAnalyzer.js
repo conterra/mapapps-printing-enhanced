@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import when from "apprt-core/when";
+import apprt_when from "apprt-core/when";
 import apprt_request from "apprt-request";
 import Geoprocessor from "esri/tasks/Geoprocessor";
 
@@ -27,14 +27,14 @@ export default class PrintingInfosAnalyzer {
             return this[_printInfos];
         }
         // otherwise request them from server
-        return when(apprt_request(url, {
+        return apprt_when(apprt_request(url, {
             "query": {
                 "f": "json"
             }
         }), function (printInfos) {
             // side effect (cache infos and template infos)
             this[_printInfos] = printInfos;
-            return when(this._fetchTemplateInfos(url), function (templateInfos) {
+            return apprt_when(this._fetchTemplateInfos(url), function (templateInfos) {
                 printInfos.templateInfos = templateInfos;
                 return printInfos;
             }, function () {
