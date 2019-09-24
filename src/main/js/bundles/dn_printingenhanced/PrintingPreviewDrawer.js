@@ -91,6 +91,9 @@ export default class PrintingPreviewDrawer {
                 layoutName = layoutName.replace(new RegExp(" ", 'g'), "-");
                 return layoutName === layout
             });
+            if (!templateInfo) {
+                return null;
+            }
             const frameSize = templateInfo.activeDataFrameSize || templateInfo.webMapFrameSize;
             templateWidth = frameSize[0];
             templateHeight = frameSize[1];
