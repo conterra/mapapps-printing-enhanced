@@ -44,8 +44,8 @@
                 "marginBox": {
                     "w": 435,
                     "h": 550,
-                    "t": 120,
-                    "l": 25
+                    "t": 125,
+                    "l": 20
                 },
                 "minSize": {
                     "w": 300,
@@ -71,8 +71,8 @@
                 "marginBox": {
                     "w": 300,
                     "h": 480,
-                    "t": 120,
-                    "l": 25
+                    "t": 125,
+                    "l": 20
                 },
                 "windowClass": "printing-enhanced-widget"
             }
