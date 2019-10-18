@@ -84,11 +84,11 @@
             {{ i18n.print }}
         </v-btn>
         <v-divider class="my-3"></v-divider>
-        <h3 v-if="exportedLinks.length">{{ i18n.exports }}</h3>
+        <h3 v-if="reverseExportedLinks.length">{{ i18n.exports }}</h3>
         <v-list
             dense>
             <v-list-tile
-                v-for="exportedLink in exportedLinks"
+                v-for="exportedLink in reverseExportedLinks"
                 :key="exportedLink.id"
                 :href="exportedLink.url"
                 target="_blank"
@@ -245,6 +245,9 @@
                         }
                     }
                 }
+            },
+            reverseExportedLinks() {
+                return this.exportedLinks.slice().reverse();
             }
         },
         mounted: function () {
