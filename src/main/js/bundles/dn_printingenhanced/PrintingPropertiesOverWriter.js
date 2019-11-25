@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 import Observers from "apprt-core/Observers";
+import LayoutHelper from "./LayoutHelper";
 
 const _observers = Symbol("_observers");
 
@@ -61,10 +62,10 @@ export default class PrintingPropertiesOverWriter {
     _setDefaultValues(templateOptions) {
         const properties = this._printingEnhancedProperties._properties;
         if (properties.defaultFormat) {
-            templateOptions.format = this._reformatValue(properties.defaultFormat);
+            templateOptions.format = properties.defaultFormat.toLowerCase();
         }
         if (properties.defaultTemplate) {
-            templateOptions.layout = this._reformatValue(properties.defaultTemplate);
+            templateOptions.layout = LayoutHelper.getLayoutId(properties.defaultTemplate);
         }
         if (properties.defaultDpi) {
             templateOptions.dpi = properties.defaultDpi;
@@ -73,8 +74,8 @@ export default class PrintingPropertiesOverWriter {
 
     _filterChoiceLists(templatesInfo) {
         const properties = this._printingEnhancedProperties._properties;
-        templatesInfo.format.choiceList = this._filterChoiceList(templatesInfo.format.choiceList, properties.hideFormats);
-        templatesInfo.layout.choiceList = this._filterChoiceList(templatesInfo.layout.choiceList, properties.hideTemplates);
+        templatesInfo.format.choiceList = this._filterFormatChoiceList(templatesInfo.format.choiceList, properties.hideFormats);
+        templatesInfo.layout.choiceList = this._filterLayoutChoiceList(templatesInfo.layout.choiceList, properties.hideTemplates);
         return templatesInfo;
     }
 
@@ -84,21 +85,21 @@ export default class PrintingPropertiesOverWriter {
         }));
     }
 
-    _filterChoiceList(choiceList, filterList) {
+    _filterFormatChoiceList(choiceList, filterList) {
         if (filterList && filterList.length) {
-            filterList = filterList.map((format) => {
-                return this._reformatValue(format);
-            });
-            return choiceList.filter((format) => {
-                return !filterList.includes(format);
-            });
+            filterList = filterList.map((format) => format.toLowerCase());
+            return choiceList.filter((format) => !filterList.includes(format));
         } else {
             return choiceList;
         }
     }
 
-    _reformatValue(value) {
-        value = value.toLowerCase();
-        return value.replace(new RegExp(" ", 'g'), "-");
+    _filterLayoutChoiceList(choiceList, filterList) {
+        if (filterList && filterList.length) {
+            filterList = filterList.map((format) => LayoutHelper.getLayoutId(format));
+            return choiceList.filter((format) => !filterList.includes(format));
+        } else {
+            return choiceList;
+        }
     }
 }

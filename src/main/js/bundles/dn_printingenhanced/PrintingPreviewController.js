@@ -144,10 +144,5 @@ export default declare({
         if (((this._printingToggleTool && this._printingToggleTool.active) || this._printingEnhancedToggleTool.active) && this.showPrintPreview) {
             this._printingPreviewDrawer.drawTemplateDimensions(this[_printInfos], this[_templateOptions], properties.defaultPageUnit);
         }
-    },
-
-    _reformatValue(value) {
-        value = value.toLowerCase();
-        return value.replace(new RegExp(" ", 'g'), "-");
     }
 });

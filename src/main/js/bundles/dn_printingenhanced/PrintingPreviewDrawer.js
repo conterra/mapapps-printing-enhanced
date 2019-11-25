@@ -19,6 +19,7 @@ import * as geometryEngine from "esri/geometry/geometryEngine";
 import geometry from "ct/mapping/geometry";
 import GraphicsLayer from "esri/layers/GraphicsLayer";
 import SketchViewModel from "esri/widgets/Sketch/SketchViewModel";
+import LayoutHelper from "./LayoutHelper";
 
 const _geometry = Symbol("_geometry");
 const _graphic = Symbol("_graphic");
@@ -87,9 +88,9 @@ export default class PrintingPreviewDrawer {
             printSize.height = (templateHeight * resolution);
         } else {
             const templateInfo = templateInfos.find((templateInfo) => {
-                let layoutName = templateInfo.layoutTemplate.toLowerCase();
-                layoutName = layoutName.replace(new RegExp(" ", 'g'), "-");
-                return layoutName === layout
+                const layoutName = templateInfo.layoutTemplate;
+                const currentLayoutName = LayoutHelper.getLayoutName(layout);
+                return layoutName === currentLayoutName;
             });
             if (!templateInfo) {
                 return null;
