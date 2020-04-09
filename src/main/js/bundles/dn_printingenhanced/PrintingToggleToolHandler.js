@@ -16,14 +16,14 @@
 export default class PrintingToggleToolHandler {
 
     activate() {
-        this._enablePrintigToogleTool(false);
+        this._enablePrintingToggleTool(false);
     }
 
     deactivate() {
-        this._enablePrintigToogleTool(true);
+        this._enablePrintingToggleTool(true);
     }
 
-    _enablePrintigToogleTool(enabled) {
+    _enablePrintingToggleTool(enabled) {
         const componentName = "PrintingToggleTool";
         const bid = "printing";
         const componentConfig = this._configAdminService.getConfiguration(bid + "-" + componentName, bid);
