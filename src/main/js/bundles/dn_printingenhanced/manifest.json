@@ -125,7 +125,8 @@
                 },
                 {
                     "name": "_printingPreviewDrawer",
-                    "providing": "dn_printingenhanced.PrintingPreviewDrawer"
+                    "providing": "dn_printingenhanced.PrintingPreviewDrawer",
+                    "cardinality": "0..1"
                 },
                 {
                     "name": "printingToggleTool",
@@ -141,8 +142,7 @@
                 },
                 {
                     "name": "mapWidgetModel",
-                    "providing": "map-widget.MapWidgetModel",
-                    "cardinality": "0..1"
+                    "providing": "map-widget.MapWidgetModel"
                 },
                 {
                     "name": "_logger",
