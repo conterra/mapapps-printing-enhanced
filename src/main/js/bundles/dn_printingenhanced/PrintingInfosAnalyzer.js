@@ -55,7 +55,7 @@ export default class PrintingInfosAnalyzer {
         const properties = this._printingEnhancedProperties._properties;
         const printUrl = url;
         const templateUrl = printUrl.substr(0, printUrl.lastIndexOf("/") + 1) + properties.layoutTemplatesInfoTaskName;
-        const gp = Geoprocessor(templateUrl);
+        const gp = new Geoprocessor({url: templateUrl});
         if (this._isAsync()) {
             return this._fetchTemplateInfosAsync(gp);
         } else {
