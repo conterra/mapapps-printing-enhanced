@@ -135,22 +135,6 @@
                     return {}
                 }
             },
-            attributionEnabled: {
-                type: Boolean,
-                default: true
-            },
-            author: {
-                type: String,
-                default: ""
-            },
-            copyright: {
-                type: String,
-                default: ""
-            },
-            dpi: {
-                type: Number,
-                default: 96
-            },
             dpiValues: {
                 type: Array,
                 default: () => []
@@ -158,38 +142,6 @@
             forceFeatureAttributes: {
                 type: Boolean,
                 default: false
-            },
-            format: {
-                type: String,
-                default: "pdf"
-            },
-            height: {
-                type: Number,
-                default: 1100
-            },
-            layout: {
-                type: String,
-                default: "a3-portrait"
-            },
-            legendEnabled: {
-                type: Boolean,
-                default: true
-            },
-            scale: {
-                type: Number,
-                default: 0
-            },
-            scaleEnabled: {
-                type: Boolean,
-                default: false
-            },
-            title: {
-                type: String,
-                default: ""
-            },
-            width: {
-                type: Number,
-                default: 800
             },
             templatesInfo: {
                 type: Object,
@@ -208,10 +160,6 @@
                 type: Array,
                 default: () => []
             },
-            showPrintPreview: {
-                type: Boolean,
-                default: true
-            },
             showAdvancedOptions: {
                 type: Boolean,
                 default: true
@@ -222,7 +170,59 @@
             }
         },
         data() {
-            return {}
+            return {
+                attributionEnabled: {
+                    type: Boolean,
+                    default: true
+                },
+                author: {
+                    type: String,
+                    default: ""
+                },
+                copyright: {
+                    type: String,
+                    default: ""
+                },
+                dpi: {
+                    type: Number,
+                    default: 96
+                },
+                format: {
+                    type: String,
+                    default: "pdf"
+                },
+                height: {
+                    type: Number,
+                    default: 1100
+                },
+                layout: {
+                    type: String,
+                    default: "a3-portrait"
+                },legendEnabled: {
+                    type: Boolean,
+                    default: true
+                },
+                scale: {
+                    type: Number,
+                    default: 0
+                },
+                scaleEnabled: {
+                    type: Boolean,
+                    default: false
+                },
+                title: {
+                    type: String,
+                    default: ""
+                },
+                width: {
+                    type: Number,
+                    default: 800
+                },
+                showPrintPreview: {
+                    type: Boolean,
+                    default: true
+                }
+            }
         },
         computed: {
             activeTab: {
