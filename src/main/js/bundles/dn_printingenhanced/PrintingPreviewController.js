@@ -18,6 +18,7 @@ import Connect from "ct/_Connect";
 import Observers from "apprt-core/Observers";
 import d_aspect from "dojo/aspect";
 import apprt_when from "apprt-core/when";
+import async from "apprt-core/async";
 
 const _templateOptions = Symbol("_templateOptions");
 const _printInfos = Symbol("_printInfos");
@@ -56,9 +57,9 @@ export default declare({
             /*promise.then(() => {
                 this._handleDrawTemplateDimensions();
             });*/
-            setTimeout(() => {
+            async(() => {
                 this._printingPreviewDrawer.showGraphicsLayer(true);
-            }, 1000);
+            }, 2000);
             return promise;
         });
 

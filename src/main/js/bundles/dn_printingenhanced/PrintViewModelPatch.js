@@ -19,6 +19,7 @@ import u from "esri/request";
 import S from "esri/tasks/support/PrintParameters";
 import d_string from "dojo/string";
 import ct_lang from "ct/_lang";
+import async from "apprt-core/async";
 
 export default class PrintingPropertiesOverWriter {
 
@@ -60,13 +61,13 @@ export default class PrintingPropertiesOverWriter {
                 r.extent = this._printExtent;
                 const oldRotation = r.view.rotation;
                 r.view.rotation = this._printRotation;
-                setTimeout(() => {
+                async(() => {
                     r.view.rotation = oldRotation;
                 }, 500);
             } else {
                 const oldRotation = r.view.rotation;
                 r.view.rotation = 0;
-                setTimeout(() => {
+                async(() => {
                     r.view.rotation = oldRotation;
                 }, 500);
             }
@@ -80,11 +81,11 @@ export default class PrintingPropertiesOverWriter {
             execute.catch(function (e) {
                 return f.reject(new u("print:export-error", "An error occurred while exporting the web map.", {error: e}))
             });
-            setTimeout(() => {
+            async(() => {
                 r.view.goTo({
                     scale: oldScale
                 });
-            }, 1000);
+            }, 2000);
             return execute;
         });
     }
