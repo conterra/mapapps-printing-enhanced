@@ -143,11 +143,6 @@
                 type: Boolean,
                 default: false
             },
-            templatesInfo: {
-                type: Object,
-                default: () => {
-                }
-            },
             formatList: {
                 type: Array,
                 default: () => []
@@ -198,7 +193,8 @@
                 layout: {
                     type: String,
                     default: "a3-portrait"
-                },legendEnabled: {
+                },
+                legendEnabled: {
                     type: Boolean,
                     default: true
                 },

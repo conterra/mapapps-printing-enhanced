@@ -166,8 +166,8 @@
                 "showDpiSelect": true,
                 "layoutTemplatesInfoTaskName": "Get%20Layout%20Templates%20Info%20Task",
                 "defaultPageUnit": "CENTIMETER",
-                "defaultFormat": "PDF",
-                "defaultTemplate": "A4 Portrait",
+                "defaultFormat": "pdf",
+                "defaultLayout": "a4-landscape",
                 "defaultDpi": 96,
                 "dpiValues": [
                     {
@@ -183,8 +183,8 @@
                         "text": "300"
                     }
                 ],
-                "hideFormats": [],
-                "hideTemplates": [],
+                "allowedFormats": "all",
+                "allowedLayouts": "all",
                 "printingPreviewSymbol": {
                     "type": "simple-fill",
                     "color": [

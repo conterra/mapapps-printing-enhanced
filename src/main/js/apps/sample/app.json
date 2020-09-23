@@ -44,23 +44,15 @@
         ]
     },
     "bundles": {
-        "themes": {
-            "ThemeModel": {
-                "_selectedTheme": "everlasting"
-            },
-            "ThemeSelector": {
-                "componentEnabled": true
-            }
-        },
         "dn_printingenhanced": {
             "Config": {
                 "showPrintPreview": true,
                 "showAdvancedOptions": true,
                 "showDpiSelect": true,
-                "layoutTemplatesInfoTaskName": "Get%20Layout%20Templates%20Info%20Task",
+                "layoutTemplatesInfoTaskName": "GetLayoutTemplatesInfoInternet",
                 "defaultPageUnit": "CENTIMETER",
-                "defaultFormat": "PDF",
-                "defaultTemplate": "A4 Portrait",
+                "defaultFormat": "pdf",
+                "defaultLayout": "a4-landscape",
                 "defaultDpi": 96,
                 "dpiValues": [
                     {
@@ -76,17 +68,15 @@
                         "text": "300"
                     }
                 ],
-                "hideFormats": [
-                    "GIF",
-                    "EPS",
-                    "SVG",
-                    "SVGZ"
+                "allowedFormats": [
+                    "pdf",
+                    "png32"
                 ],
-                "hideTemplates": [
-                    "Letter ANSI A Landscape",
-                    "Letter ANSI A Portrait",
-                    "Tabloid ANSI B Landscape",
-                    "Tabloid ANSI B Portrait"
+                "allowedLayouts": [
+                    "a3-landscape",
+                    "a3-portrait",
+                    "a4-landscape",
+                    "a4-portrait"
                 ],
                 "useUsernameAsAuthor": true,
                 "usernameAttributes": [
@@ -116,6 +106,14 @@
                         "testString": "testString"
                     }
                 ]
+            }
+        },
+        "themes": {
+            "ThemeModel": {
+                "_selectedTheme": "everlasting"
+            },
+            "ThemeSelector": {
+                "componentEnabled": true
             }
         },
         "banner": {

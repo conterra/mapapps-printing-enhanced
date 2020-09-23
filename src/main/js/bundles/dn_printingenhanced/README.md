@@ -16,7 +16,7 @@ Simply add the bundle "dn_printingenhanced" to your app.
         "layoutTemplatesInfoTaskName": "Get Layout Templates Info Task",
         "defaultPageUnit": "CENTIMETER",
         "defaultFormat": "JPG",
-        "defaultTemplate": "A4 Portrait",
+        "defaultLayout": "a4-landscape",
         "defaultDpi": 96,
         "dpiValues": [
             {
@@ -32,17 +32,15 @@ Simply add the bundle "dn_printingenhanced" to your app.
                 "text": "300"
             }
         ],
-        "hideFormats": [
-            "GIF",
-            "EPS",
-            "SVG",
-            "SVGZ"
+        "allowedFormats": [
+            "pdf",
+            "png32"
         ],
-        "hideTemplates": [
-            "Letter ANSI A Landscape",
-            "Letter ANSI A Portrait",
-            "Tabloid ANSI B Landscape",
-            "Tabloid ANSI B Portrait"
+        "allowedLayouts": [
+            "a3-landscape",
+            "a3-portrait",
+            "a4-landscape",
+            "a4-portrait"
         ],
         "printingPreviewSymbol": {
             "type": "simple-fill",
@@ -95,20 +93,20 @@ Simply add the bundle "dn_printingenhanced" to your app.
 }
 ```
 
-| Property                       | Type    | Possible Values                    | Default                              | Description                                                                                                                          |
-|--------------------------------|---------|------------------------------------|--------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------|
-| showPrintPreview               | Boolean | ```true``` &#124; ```false```      | ```true```                           | Enable the print preview.                                                                                                            |
-| showAdvancedOptions            | Boolean | ```true``` &#124; ```false```      | ```true```                           | Show advanced options.                                                                                                               |
-| showDpiSelect                  | Boolean | ```true``` &#124; ```false```      | ```true```                           | Show DPI select.                                                                                                                     |
-| layoutTemplatesInfoTaskName    | String  |                                    | ```Get Layout Templates Info Task``` | Layout templates task name.                                                                                                          |
-| defaultPageUnit                | String  | ```MILLIMETER, CENTIMETER, INCH``` | ```CENTIMETER```                     | Default template unit (ArcGIS Server < 10.6).                                                                                        |
-| defaultFormat                  | String  |                                    | ```JPG```                            | Default print format.                                                                                                                |
-| defaultTemplate                | String  |                                    | ```A4 Portrait```                    | Default print template.                                                                                                              |
-| defaultDpi                     | Number  |                                    | ```96```                             | Default DPI value.                                                                                                                   |
-| dpiValues                      | Array   |                                    | ```[]```                             | Available DPI values.                                                                                                                |
-| hideFormats                    | Array   |                                    | ```[]```                             | Hidden print formats.                                                                                                                 |
-| hideTemplates                  | Array   |                                    | ```[]```                             | Hidden print templates.                                                                                                               |
-| printingPreviewSymbol          | Object  |                                    |                                      | Print preview symbol.                                                                                                                |
-| useUsernameAsAuthor            | Boolean | ```true``` &#124; ```false```      | ```true```                           | Use the currently logged in user to pre-enter the author.                                                                            |
-| usernameAttributes             | Array   |                                    | ```["givenname","sn"]```             | Attributes of the user for determining the user name.                                                                                |
-| customTextElements             | Array   |                                    | ```[]```                             | Define custom text elements that are available in the print template. You can use strings or replacer for values of the user object. |
+| Property                       | Type               | Possible Values                    | Default                              | Description                                                                                                                                                                                                                       |
+|--------------------------------|--------------------|------------------------------------|--------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| showPrintPreview               | Boolean            | ```true``` &#124; ```false```      | ```true```                           | Enable the print preview.                                                                                                                                                                                                         |
+| showAdvancedOptions            | Boolean            | ```true``` &#124; ```false```      | ```true```                           | Show advanced options.                                                                                                                                                                                                            |
+| showDpiSelect                  | Boolean            | ```true``` &#124; ```false```      | ```true```                           | Show DPI select.                                                                                                                                                                                                                  |
+| layoutTemplatesInfoTaskName    | String             |                                    | ```Get Layout Templates Info Task``` | Layout templates task name.                                                                                                                                                                                                       |
+| defaultPageUnit                | String             | ```MILLIMETER, CENTIMETER, INCH``` | ```CENTIMETER```                     | Default template unit (ArcGIS Server < 10.6).                                                                                                                                                                                     |
+| defaultFormat                  | String             |                                    | ```JPG```                            | Default print format.                                                                                                                                                                                                             |
+| defaultLayout                  | String             |                                    | ```a4-landscape```                   | Default print template.                                                                                                                                                                                                           |
+| defaultDpi                     | Number             |                                    | ```96```                             | Default DPI value.                                                                                                                                                                                                                |
+| dpiValues                      | Array              |                                    | ```[]```                             | Available DPI values.                                                                                                                                                                                                             |
+| allowedFormats                 | String or String[] |                                    | ```all```                            | Specify the print output file format(s) that the user can select based on the options available from the print service. See: https://developers.arcgis.com/javascript/latest/api-reference/esri-widgets-Print.html#allowedFormats |
+| allowedLayouts                 | String or String[] |                                    | ```all```                            | Specify the print output layout(s) that the user can select based on the options available from the print service. See: https://developers.arcgis.com/javascript/latest/api-reference/esri-widgets-Print.html#allowedLayouts      |
+| printingPreviewSymbol          | Object             |                                    | see sample configuration             | Print preview symbol.                                                                                                                                                                                                             |
+| useUsernameAsAuthor            | Boolean            | ```true``` &#124; ```false```      | ```true```                           | Use the currently logged in user to pre-enter the author.                                                                                                                                                                         |
+| usernameAttributes             | Array              |                                    | ```["givenname","sn"]```             | Attributes of the user for determining the user name.                                                                                                                                                                             |
+| customTextElements             | Array              |                                    | ```[]```                             | Define custom text elements that are available in the print template. You can use strings or replacer for values of the user object.                                                                                              |

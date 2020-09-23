@@ -27,16 +27,12 @@ const defaultLayouts = [
 export default {
 
     getLayoutId(layoutName) {
-        const value = defaultLayouts.find((layoutObj) => {
-            return layoutObj.name === layoutName;
-        });
+        const value = defaultLayouts.find((layoutObj) => layoutObj.name === layoutName);
         return value ? value.id : layoutName;
     },
 
     getLayoutName(layoutId) {
-        const value = defaultLayouts.find((layoutObj) => {
-            return layoutObj.id === layoutId;
-        });
+        const value = defaultLayouts.find((layoutObj) => layoutObj.id === layoutId);
         return value ? value.name : layoutId;
     }
 

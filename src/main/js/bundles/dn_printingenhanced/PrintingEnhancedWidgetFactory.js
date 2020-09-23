@@ -17,7 +17,6 @@ import PrintingEnhancedWidget from "./PrintingEnhancedWidget.vue";
 import Vue from "apprt-vue/Vue";
 import VueDijit from "apprt-vue/VueDijit";
 import Binding from "apprt-binding/Binding";
-import apprt_when from "apprt-core/when";
 
 export default class PrintingEnhancedWidgetFactory {
 
@@ -30,14 +29,22 @@ export default class PrintingEnhancedWidgetFactory {
     }
 
     _initComponent() {
+        const properties = this._printingEnhancedProperties;
         const vm = this.vm = new Vue(PrintingEnhancedWidget);
         const printWidget = this._printingWidget;
         const printingPreviewController = this._printingPreviewController;
         const esriPrintWidget = printWidget._esriWidget;
         const printViewModel = esriPrintWidget.viewModel;
         const templateOptions = esriPrintWidget.templateOptions;
-        const url = esriPrintWidget.printServiceUrl;
-        const properties = this._printingEnhancedProperties;
+
+        if (printViewModel.templatesInfo) {
+            this._setTemplatesInfos(printViewModel.templatesInfo);
+        } else {
+            const watcher = printViewModel.watch("templatesInfo", (templatesInfo) => {
+                this._setTemplatesInfos(templatesInfo);
+                watcher.remove();
+            });
+        }
 
         esriPrintWidget.exportedLinks.on("after-add", function (event) {
             const item = event.item;
@@ -61,25 +68,12 @@ export default class PrintingEnhancedWidgetFactory {
             });
         });
 
-        apprt_when(this._printingInfosAnalyzer.getPrintInfos(url), (printInfos) => {
-            const templateInfos = printInfos.templateInfos;
-            if (printViewModel.templatesInfo) {
-                this._setTemplatesInfos(templateInfos, printViewModel.templatesInfo);
-            }
-            printViewModel.watch("templatesInfo", (templatesInfo) => {
-                this._setTemplatesInfos(templateInfos, templatesInfo);
-            });
-        });
-
         vm.i18n = this._i18n.get().ui;
         vm.exportedItems = [];
         vm.showAdvancedOptions = properties.showAdvancedOptions;
         vm.showDpiSelect = properties.showDpiSelect;
         vm.dpiValues = properties.dpiValues;
         // listen to view model methods
-        vm.$on('startup', () => {
-
-        });
         vm.$on('print', () => {
             esriPrintWidget._handlePrintMap();
         });
@@ -92,18 +86,13 @@ export default class PrintingEnhancedWidgetFactory {
             .enable()
             .syncToLeftNow();
 
-        Binding.for(vm, printViewModel)
-            .syncAllToLeft("templatesInfo")
-            .enable()
-            .syncToLeftNow();
-
         Binding.for(vm, templateOptions)
             .syncAll("attributionEnabled", "author", "copyright", "dpi", "forceFeatureAttributes", "format", "height", "layout", "legendEnabled", "scale", "scaleEnabled", "title", "width")
             .enable()
             .syncToLeftNow();
     }
 
-    _setTemplatesInfos(templateInfos, templatesInfo) {
+    _setTemplatesInfos(templatesInfo) {
         this.vm.formatList = templatesInfo.format.choiceList.map((format) => {
             return {
                 value: format,
