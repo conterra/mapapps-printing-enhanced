@@ -66,6 +66,7 @@ export default class PrintingPreviewDrawer {
         const geometry = this._getMainFrameGeometry(geometryParams);
         this._removeGraphicFromGraphicsLayer();
         this._addGraphicToGraphicsLayer(geometry);
+        return geometry;
     }
 
     _getPrintSize(printInfos, templateOptions, defaultPageUnit) {

@@ -77,9 +77,11 @@ export default declare({
     setMapWidgetModel(mapWidgetModel) {
         if (mapWidgetModel.view) {
             this._watchForExtentChange(mapWidgetModel.view);
+            this._view = mapWidgetModel.view;
         } else {
             mapWidgetModel.watch("view", ({value: view}) => {
                 this._watchForExtentChange(view)
+                this._view = mapWidgetModel.view;
             });
         }
     },
@@ -109,7 +111,7 @@ export default declare({
     _watchForTemplateOptionsChanges(esriPrintWidget) {
         const templateOptions = this[_templateOptions] = esriPrintWidget.templateOptions;
         this[_observers].add(templateOptions.watch("layout", () => {
-            this._handleDrawTemplateDimensions();
+            this._handleDrawTemplateDimensions(true);
         }));
         this[_observers].add(templateOptions.watch("scale", () => {
             this._handleDrawTemplateDimensions();
@@ -139,11 +141,24 @@ export default declare({
         }
     },
 
-    _handleDrawTemplateDimensions() {
+    _handleDrawTemplateDimensions(zoomTo) {
         this._printingPreviewDrawer._removeGraphicFromGraphicsLayer();
         const properties = this._printingEnhancedProperties._properties;
         if (((this._printingToggleTool && this._printingToggleTool.active) || this._printingEnhancedToggleTool.active) && this.showPrintPreview) {
-            this._printingPreviewDrawer.drawTemplateDimensions(this[_printInfos], this[_templateOptions], properties.defaultPageUnit);
+            const geometry = this._printingPreviewDrawer
+                .drawTemplateDimensions(this[_printInfos], this[_templateOptions], properties.defaultPageUnit);
+            if (geometry && zoomTo && this[_templateOptions].scaleEnabled) {
+                this._zoomToTemplateExtent(geometry);
+            }
         }
+    },
+
+    _zoomToTemplateExtent(geometry) {
+        if (!this._view) {
+            return;
+        }
+        const expandFactor = 1.2;
+        this._view.goTo(geometry.extent.expand(expandFactor));
     }
+
 });

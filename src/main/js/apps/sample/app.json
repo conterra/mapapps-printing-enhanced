@@ -49,7 +49,7 @@
                 "showPrintPreview": true,
                 "showAdvancedOptions": true,
                 "showDpiSelect": true,
-                "layoutTemplatesInfoTaskName": "GetLayoutTemplatesInfoInternet",
+                "layoutTemplatesInfoTaskName": "Get%20Layout%20Templates%20Info%20Task",
                 "defaultPageUnit": "CENTIMETER",
                 "defaultFormat": "pdf",
                 "defaultLayout": "a4-landscape",
