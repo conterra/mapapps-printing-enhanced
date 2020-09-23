@@ -54,6 +54,8 @@
                 "defaultFormat": "pdf",
                 "defaultLayout": "a4-landscape",
                 "defaultDpi": 96,
+                "defaultScale": 1000000,
+                "defaultScaleEnabled": true,
                 "dpiValues": [
                     {
                         "value": 96,
