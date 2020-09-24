@@ -42,7 +42,8 @@ module.exports = {
         attributionEnabled: "Quellennachweis einfügen",
         dpi: "DPI",
         showPrintPreview: "Druckrahmen anzeigen",
-        exports: "Druckergebnisse",
+        printResults: "Druckergebnisse",
+        noPrintResults: "Keine Druckergebnisse vorhanden",
         errors: {
             unknown: "Drucken: Ein unbekannter Fehler ist aufgetreten!",
             code403: "Drucken: Die konfigurierte Print-Service URL muss in ihrem Proxy als erlaubt deklariert sein!",

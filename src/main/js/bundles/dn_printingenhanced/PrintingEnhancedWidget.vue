@@ -33,6 +33,14 @@
             <v-tab>
                 {{ i18n.onlyMap }}
             </v-tab>
+            <v-tab
+                v-if="!exportedLinks.length">
+                {{ i18n.printResults }}
+            </v-tab>
+            <v-tab
+                v-else>
+                {{ i18n.printResults }} ({{ exportedLinks.length }})
+            </v-tab>
             <v-tab-item>
                 <layout-widget
                     :i18n="i18n"
@@ -72,8 +80,14 @@
                     @resetScale="$emit('resetScale')"
                     @rotate="rotate"/>
             </v-tab-item>
+            <v-tab-item>
+                <printing-results-widget
+                    :i18n="i18n"
+                    :exported-links="exportedLinks"/>
+            </v-tab-item>
         </v-tabs>
         <v-container
+            v-if="activeTab!==2"
             grid-list-md
             fluid
             class="px-2 py-0">
@@ -81,44 +95,12 @@
                 block
                 ripple
                 color="primary"
-                @click="$emit('print', {})">
+                @click="print()">
                 <v-icon left>
                     save_alt
                 </v-icon>
                 {{ i18n.print }}
             </v-btn>
-            <v-divider class="my-3"></v-divider>
-            <h3 v-if="reverseExportedLinks.length">{{ i18n.exports }}</h3>
-            <v-list
-                dense>
-                <v-list-tile
-                    v-for="exportedLink in reverseExportedLinks"
-                    :key="exportedLink.id"
-                    :href="exportedLink.url"
-                    target="_blank"
-                >
-                    <v-list-tile-action>
-                        <v-progress-circular
-                            v-if="exportedLink.loading"
-                            indeterminate
-                            size="22"
-                            color="primary"
-                        ></v-progress-circular>
-                        <v-icon
-                            v-else-if="exportedLink.error"
-                            color="red">
-                            error
-                        </v-icon>
-                        <v-icon
-                            v-else>
-                            cloud_download
-                        </v-icon>
-                    </v-list-tile-action>
-                    <v-list-tile-content>
-                        <v-list-tile-title v-text="exportedLink.name"></v-list-tile-title>
-                    </v-list-tile-content>
-                </v-list-tile>
-            </v-list>
         </v-container>
     </v-container>
 </template>
@@ -126,11 +108,13 @@
     import Bindable from "apprt-vue/mixins/Bindable";
     import LayoutWidget from "./LayoutWidget.vue";
     import MapOnlyWidget from "./MapOnlyWidget.vue";
+    import PrintingResultsWidget from "./PrintingResultsWidget.vue";
 
     export default {
         components: {
             "layout-widget": LayoutWidget,
-            "map-only-widget": MapOnlyWidget
+            "map-only-widget": MapOnlyWidget,
+            "printing-results-widget": PrintingResultsWidget
         },
         mixins: [Bindable],
         props: {
@@ -226,41 +210,42 @@
                 enablePrintPreview: {
                     type: Boolean,
                     default: true
+                },
+                activeTab: {
+                    type: Number,
+                    default: 0
                 }
             }
         },
-        computed: {
-            activeTab: {
-                get: function () {
-                    if (this.layout === "MAP_ONLY") {
-                        return 1;
-                    } else {
-                        return 0;
+        watch: {
+            activeTab: function(tab) {
+                if (tab === 0) {
+                    if (this.lastLayout) {
+                        this.layout = this.lastLayout;
                     }
-                },
-                set: function (tab) {
-                    if (tab === 1) {
-                        if (this.layout !== "MAP_ONLY") {
-                            this.lastLayout = this.layout;
-                        }
-                        this.layout = "MAP_ONLY";
-                    } else {
-                        if (this.lastLayout) {
-                            this.layout = this.lastLayout;
-                        }
+                } else if (tab === 1) {
+                    if (this.layout !== "MAP_ONLY") {
+                        this.lastLayout = this.layout;
                     }
+                    this.layout = "MAP_ONLY";
                 }
-            },
-            reverseExportedLinks() {
-                return this.exportedLinks.slice().reverse();
             }
         },
         mounted: function () {
+            if (this.layout === "MAP_ONLY") {
+                this.activeTab = 1;
+            } else {
+                this.activeTab = 0;
+            }
             this.$emit('startup');
         },
         methods: {
             rotate: function () {
                 [this.height, this.width] = [this.width, this.height]
+            },
+            print: function () {
+                this.$emit('print', {});
+                this.activeTab = 2;
             }
         }
     };

@@ -43,7 +43,8 @@ module.exports = {
             attributionEnabled: "Enable attribution",
             dpi: "DPI",
             showPrintPreview: "Show print preview",
-            exports: "Print Results",
+            printResults: "Print Results",
+            noPrintResults: "No print results",
             errors: {
                 unknown: "Printing: An unknown error occurred!",
                 code403: "Printing: The configured printing service URL has to be in your proxy whitelist!",
