@@ -23,7 +23,7 @@ module.exports = {
             tooltip: "Printing"
         },
         ui: {
-            print: "Export",
+            print: "Print",
             layout: "Layout",
             format: "Format",
             onlyMap: "Only Map",
@@ -44,7 +44,7 @@ module.exports = {
             attributionEnabled: "Enable attribution",
             dpi: "DPI",
             showPrintPreview: "Show print preview",
-            exports: "Exports",
+            exports: "Print Results",
             errors: {
                 unknown: "Printing: An unknown error occurred!",
                 code403: "Printing: The configured printing service URL has to be in your proxy whitelist!",

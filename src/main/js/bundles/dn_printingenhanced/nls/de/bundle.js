@@ -22,7 +22,7 @@ module.exports = {
         tooltip: "Drucken"
     },
     ui: {
-        print: "Exportieren",
+        print: "Drucken",
         layout: "Layout",
         format: "Dateiformat",
         onlyMap: "Nur Karte",
@@ -43,7 +43,7 @@ module.exports = {
         attributionEnabled: "Quellennachweis einfügen",
         dpi: "DPI",
         showPrintPreview: "Druckrahmen anzeigen",
-        exports: "Exportierte Dateien",
+        exports: "Druckergebnisse",
         errors: {
             unknown: "Drucken: Ein unbekannter Fehler ist aufgetreten!",
             code403: "Drucken: Die konfigurierte Print-Service URL muss in ihrem Proxy als erlaubt deklariert sein!",
