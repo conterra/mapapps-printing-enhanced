@@ -52,7 +52,7 @@
             </v-flex>
         </v-layout>
         <v-checkbox
-            v-model="showPrintPreviewValue"
+            v-model="enablePrintPreviewValue"
             :label="i18n.showPrintPreview"
             color="primary"
             hide-details
@@ -224,7 +224,7 @@
                 type: Array,
                 default: () => []
             },
-            showPrintPreview: {
+            enablePrintPreview: {
                 type: Boolean,
                 default: true
             },
@@ -307,12 +307,12 @@
                     this.$emit('update:scale-enabled', scaleEnabled);
                 }
             },
-            showPrintPreviewValue: {
+            enablePrintPreviewValue: {
                 get: function () {
-                    return this.showPrintPreview;
+                    return this.enablePrintPreview;
                 },
-                set: function (showPrintPreview) {
-                    this.$emit('update:show-print-preview', showPrintPreview);
+                set: function (enablePrintPreview) {
+                    this.$emit('update:enable-print-preview', enablePrintPreview);
                 }
             },
             titleValue: {

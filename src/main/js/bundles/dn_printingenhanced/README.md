@@ -26,7 +26,7 @@ Simply add the bundle "dn_printingenhanced" to your app.
             "title": "Print",
             "width": 600
         },
-        "showPrintPreview": true,
+        "enablePrintPreview": true,
         "showAdvancedOptions": true,
         "showDpiSelect": true,
         "layoutTemplatesInfoTaskName": "Get Layout Templates Info Task",
@@ -109,7 +109,7 @@ Simply add the bundle "dn_printingenhanced" to your app.
 | Property                       | Type               | Possible Values                    | Default                              | Description                                                                                                                                                                                                                       |
 |--------------------------------|--------------------|------------------------------------|--------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | templateOptions                | Object             |                                    |                                      | Esri Print Widget TemplateOptions:https://developers.arcgis.com/javascript/latest/api-reference/esri-widgets-Print-TemplateOptions.html                                                                                           |
-| showPrintPreview               | Boolean            | ```true``` &#124; ```false```      | ```true```                           | Enable the print preview.                                                                                                                                                                                                         |
+| enablePrintPreview             | Boolean            | ```true``` &#124; ```false```      | ```true```                           | Default value for the print preview.                                                                                                                                                                                                         |
 | showAdvancedOptions            | Boolean            | ```true``` &#124; ```false```      | ```true```                           | Show advanced options.                                                                                                                                                                                                            |
 | showDpiSelect                  | Boolean            | ```true``` &#124; ```false```      | ```true```                           | Show DPI select.                                                                                                                                                                                                                  |
 | layoutTemplatesInfoTaskName    | String             |                                    | ```Get Layout Templates Info Task``` | Layout templates task name.                                                                                                                                                                                                       |

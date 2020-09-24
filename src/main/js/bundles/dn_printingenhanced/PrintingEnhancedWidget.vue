@@ -49,7 +49,7 @@
                     :title.sync="title"
                     :format-list="formatList"
                     :layout-list="layoutList"
-                    :show-print-preview.sync="showPrintPreview"
+                    :enable-print-preview.sync="enablePrintPreview"
                     :show-dpi-select="showDpiSelect"
                     :show-advanced-options="showAdvancedOptions"
                     @resetScale="$emit('resetScale')"/>
@@ -68,7 +68,7 @@
                     :scale.sync="scale"
                     :scale-values="scaleValues"
                     :scale-enabled.sync="scaleEnabled"
-                    :show-print-preview.sync="showPrintPreview"
+                    :enable-print-preview.sync="enablePrintPreview"
                     :show-dpi-select="showDpiSelect"
                     :show-advanced-options="showAdvancedOptions"
                     @resetScale="$emit('resetScale')"
@@ -229,7 +229,7 @@
                     type: Number,
                     default: 800
                 },
-                showPrintPreview: {
+                enablePrintPreview: {
                     type: Boolean,
                     default: true
                 }
