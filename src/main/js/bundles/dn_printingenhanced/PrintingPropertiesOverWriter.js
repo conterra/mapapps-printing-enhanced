@@ -60,8 +60,8 @@ export default class PrintingPropertiesOverWriter {
         if (properties.defaultDpi) {
             templateOptions.dpi = properties.defaultDpi;
         }
-        if (properties.defaultScaleEnabled) {
-            templateOptions.scaleEnabled = properties.defaultScaleEnabled;
+        if (properties.defaultSetScaleEnabled) {
+            templateOptions.scaleEnabled = properties.defaultSetScaleEnabled;
         }
         if (properties.defaultScale) {
             templateOptions.scale = properties.defaultScale;

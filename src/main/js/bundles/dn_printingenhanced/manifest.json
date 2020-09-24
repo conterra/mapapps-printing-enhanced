@@ -170,7 +170,7 @@
                 "defaultLayout": "a4-landscape",
                 "defaultDpi": 96,
                 "defaultScale": null,
-                "defaultScaleEnabled": true,
+                "defaultSetScaleEnabled": true,
                 "dpiValues": [
                     {
                         "value": 96,

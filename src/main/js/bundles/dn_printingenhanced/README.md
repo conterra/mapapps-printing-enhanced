@@ -19,7 +19,7 @@ Simply add the bundle "dn_printingenhanced" to your app.
         "defaultLayout": "a4-landscape",
         "defaultDpi": 96,
         "defaultScale": 1000000,
-        "defaultScaleEnabled": true,
+        "defaultSetScaleEnabled": true,
         "dpiValues": [
             {
                 "value": 96,
@@ -106,7 +106,7 @@ Simply add the bundle "dn_printingenhanced" to your app.
 | defaultLayout                  | String             |                                    | ```a4-landscape```                   | Default print template.                                                                                                                                                                                                           |
 | defaultDpi                     | Number             |                                    | ```96```                             | Default dpi value.                                                                                                                                                                                                                |
 | defaultScale                   | Number             |                                    | ```null```                           | Default scale value.                                                                                                                                                                                                              |
-| defaultScaleEnabled            | Boolean            | ```true``` &#124; ```false```      | ```true```                           | Enables the fix scale checkbox on app start.                                                                                                                                                                                      |
+| defaultSetScaleEnabled         | Boolean            | ```true``` &#124; ```false```      | ```true```                           | Enables the fix scale checkbox on app start.                                                                                                                                                                                      |
 | dpiValues                      | Array              |                                    | ```[]```                             | Available dpi values.                                                                                                                                                                                                             |
 | scaleValues                    | Array              |                                    | ```[]```                             | Available scale values. If the array is filled, a select will be available in the UI instead of a text field.                                                                                                                     |
 | allowedFormats                 | String or String[] |                                    | ```all```                            | Specify the print output file format(s) that the user can select based on the options available from the print service. See: https://developers.arcgis.com/javascript/latest/api-reference/esri-widgets-Print.html#allowedFormats |
