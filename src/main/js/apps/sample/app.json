@@ -51,8 +51,11 @@
                     "width": 600,
                     "height": 600
                 },
+                "visibleUiElements": {
+                    "mapOnlyTab": true,
+                    "dpi": true
+                },
                 "enablePrintPreview": true,
-                "showDpiSelect": true,
                 "layoutTemplatesInfoTaskName": "Get%20Layout%20Templates%20Info%20Task",
                 "defaultPageUnit": "CENTIMETER",
                 "dpiValues": [
