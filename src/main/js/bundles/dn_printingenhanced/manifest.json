@@ -52,7 +52,7 @@
                     "w": 300,
                     "h": 480
                 },
-                "windowClass": "printing-enhanced-widget"
+                "windowClass": "noPadding"
             }
         },
         {
@@ -75,7 +75,7 @@
                     "t": 125,
                     "l": 20
                 },
-                "windowClass": "printing-enhanced-widget"
+                "windowClass": "noPadding"
             }
         },
         {
@@ -98,7 +98,7 @@
                     "h": "100%",
                     "b": 0
                 },
-                "windowClass": "printing-enhanced-widget"
+                "windowClass": "noPadding"
             }
         }
     ],

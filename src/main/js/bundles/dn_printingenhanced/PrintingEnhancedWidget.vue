@@ -19,7 +19,7 @@
     <v-container
         grid-list-md
         fluid
-        class="pa-1">
+        class="pa-0">
         <v-tabs
             v-model="activeTab"
             slider-color="primary"
@@ -75,48 +75,53 @@
                     @rotate="rotate"/>
             </v-tab-item>
         </v-tabs>
-        <v-btn
-            block
-            ripple
-            color="primary"
-            @click="$emit('print', {})">
-            <v-icon left>
-                save_alt
-            </v-icon>
-            {{ i18n.print }}
-        </v-btn>
-        <v-divider class="my-3"></v-divider>
-        <h3 v-if="reverseExportedLinks.length">{{ i18n.exports }}</h3>
-        <v-list
-            dense>
-            <v-list-tile
-                v-for="exportedLink in reverseExportedLinks"
-                :key="exportedLink.id"
-                :href="exportedLink.url"
-                target="_blank"
-            >
-                <v-list-tile-action>
-                    <v-progress-circular
-                        v-if="exportedLink.loading"
-                        indeterminate
-                        size="22"
-                        color="primary"
-                    ></v-progress-circular>
-                    <v-icon
-                        v-else-if="exportedLink.error"
-                        color="red">
-                        error
-                    </v-icon>
-                    <v-icon
-                        v-else>
-                        cloud_download
-                    </v-icon>
-                </v-list-tile-action>
-                <v-list-tile-content>
-                    <v-list-tile-title v-text="exportedLink.name"></v-list-tile-title>
-                </v-list-tile-content>
-            </v-list-tile>
-        </v-list>
+        <v-container
+            grid-list-md
+            fluid
+            class="px-2 py-0">
+            <v-btn
+                block
+                ripple
+                color="primary"
+                @click="$emit('print', {})">
+                <v-icon left>
+                    save_alt
+                </v-icon>
+                {{ i18n.print }}
+            </v-btn>
+            <v-divider class="my-3"></v-divider>
+            <h3 v-if="reverseExportedLinks.length">{{ i18n.exports }}</h3>
+            <v-list
+                dense>
+                <v-list-tile
+                    v-for="exportedLink in reverseExportedLinks"
+                    :key="exportedLink.id"
+                    :href="exportedLink.url"
+                    target="_blank"
+                >
+                    <v-list-tile-action>
+                        <v-progress-circular
+                            v-if="exportedLink.loading"
+                            indeterminate
+                            size="22"
+                            color="primary"
+                        ></v-progress-circular>
+                        <v-icon
+                            v-else-if="exportedLink.error"
+                            color="red">
+                            error
+                        </v-icon>
+                        <v-icon
+                            v-else>
+                            cloud_download
+                        </v-icon>
+                    </v-list-tile-action>
+                    <v-list-tile-content>
+                        <v-list-tile-title v-text="exportedLink.name"></v-list-tile-title>
+                    </v-list-tile-content>
+                </v-list-tile>
+            </v-list>
+        </v-container>
     </v-container>
 </template>
 <script>

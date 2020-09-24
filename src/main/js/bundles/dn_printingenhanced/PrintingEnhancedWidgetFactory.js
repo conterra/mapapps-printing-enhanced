@@ -25,7 +25,7 @@ export default class PrintingEnhancedWidgetFactory {
     }
 
     createInstance() {
-        return new VueDijit(this.vm);
+        return new VueDijit(this.vm, {class: "printing-enhanced-widget"});
     }
 
     _initComponent() {

@@ -19,7 +19,7 @@
     <v-container
         grid-list-md
         fluid
-        class="pa-1">
+        class="pa-2">
         <v-layout
             row
             wrap>
