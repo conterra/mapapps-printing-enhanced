@@ -137,7 +137,7 @@ export default declare({
             this[_observers] = new Observers();
         }
         const properties = this._printingEnhancedProperties;
-        if (!properties.allowSketching) {
+        if (!properties.enablePrintPreviewSketching) {
             this[_observers].add(view.watch("stationary", (response) => {
                 if (response) {
                     this._handleDrawTemplateDimensions();

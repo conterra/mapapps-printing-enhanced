@@ -160,7 +160,7 @@ export default class PrintingPreviewDrawer {
         });
         map.add(graphicsLayer);
         const properties = this._printingEnhancedProperties;
-        if (!properties.allowSketching) {
+        if (!properties.enablePrintPreviewSketching) {
             return;
         }
         if (mapWidgetModel.view) {
