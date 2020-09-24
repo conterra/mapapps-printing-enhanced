@@ -129,7 +129,7 @@
                 </v-btn>
             </v-flex>
             <v-flex
-                v-if="showDpiSelect"
+                v-if="visibleUiElements.dpi"
                 md12>
                 <v-select
                     v-model="dpiValue"
@@ -212,9 +212,9 @@
                 type: Boolean,
                 default: true
             },
-            showDpiSelect: {
-                type: Boolean,
-                default: true
+            visibleUiElements: {
+                type: Object,
+                default: () => {}
             }
         },
         data() {

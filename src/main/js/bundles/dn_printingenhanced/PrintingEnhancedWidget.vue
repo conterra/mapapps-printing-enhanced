@@ -30,7 +30,7 @@
             <v-tab>
                 {{ i18n.layout }}
             </v-tab>
-            <v-tab>
+            <v-tab v-show="visibleUiElements.mapOnlyTab">
                 {{ i18n.onlyMap }}
             </v-tab>
             <v-tab
@@ -58,10 +58,10 @@
                     :format-list="formatList"
                     :layout-list="layoutList"
                     :enable-print-preview.sync="enablePrintPreview"
-                    :show-dpi-select="showDpiSelect"
+                    :visible-ui-elements="visibleUiElements"
                     @resetScale="$emit('resetScale')"/>
             </v-tab-item>
-            <v-tab-item>
+            <v-tab-item v-show="visibleUiElements.mapOnlyTab">
                 <map-only-widget
                     :i18n="i18n"
                     :attribution-enabled.sync="attributionEnabled"
@@ -76,7 +76,7 @@
                     :scale-values="scaleValues"
                     :scale-enabled.sync="scaleEnabled"
                     :enable-print-preview.sync="enablePrintPreview"
-                    :show-dpi-select="showDpiSelect"
+                    :visible-ui-elements="visibleUiElements"
                     @resetScale="$emit('resetScale')"
                     @rotate="rotate"/>
             </v-tab-item>
@@ -148,9 +148,9 @@
                 type: Array,
                 default: () => []
             },
-            showDpiSelect: {
-                type: Boolean,
-                default: true
+            visibleUiElements: {
+                type: Object,
+                default: () => {}
             }
         },
         data() {
