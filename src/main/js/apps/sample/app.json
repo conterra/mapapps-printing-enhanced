@@ -16,16 +16,11 @@
             "templatelayout",
             "template-seasons",
             "theme-everlasting",
-            "theme-winter",
-            "theme-spring",
-            "theme-summer",
-            "theme-autumn",
             "map-init",
             "map-preload-2D",
             "toolset",
             "toolrules",
             "banner",
-            "basemaptoggler",
             "mapnavigation",
             "popups-default",
             "scalebar",
@@ -110,6 +105,11 @@
                 ]
             }
         },
+        "toc": {
+            "Config": {
+                "showBasemaps" : true
+            }
+        },
         "themes": {
             "ThemeModel": {
                 "_selectedTheme": "everlasting"
@@ -125,11 +125,6 @@
                 "imageWidth": 200,
                 "imagePosition": "above",
                 "link": "http://developernetwork.conterra.de"
-            }
-        },
-        "basemaptoggler": {
-            "Config": {
-                "nextBasemap": "hybrid"
             }
         },
         "map-init": {
@@ -172,34 +167,33 @@
                 "map": {
                     "layers": [
                         {
-                            "id": "koeln1",
-                            "title": "${map.koeln1.title}",
-                            "description": "Basisdaten der Stadt Köln",
-                            "url": "https://services.conterra.de/arcgis/rest/services/common/koeln/MapServer",
-                            "type": "AGS_DYNAMIC",
-                            "visible": false,
-                            "minScale": 500000,
-                            "maxScale": 250000,
-                            "sublayers": [
+                            "id": "koeln2",
+                            "title": "${map.koeln2.title}",
+                            "description": "${map.koeln2.description}",
+                            "type": "GROUP",
+                            "layers": [
                                 {
-                                    "title": "${map.koeln1.districts.title}",
-                                    "id": 11,
-                                    "opacity": 0.5,
-                                    "minScale": 500000,
-                                    "maxScale": 250000,
+                                    "title": "${map.koeln2.libraries.title}",
+                                    "url": "https://services.arcgis.com/ObdAEOfl1Z5LP2D0/arcgis/rest/services/Köln/FeatureServer/1",
+                                    "type": "AGS_FEATURE",
+                                    "visible": true,
                                     "popupTemplate": {
-                                        "title": "{STV_NAME}",
+                                        "title": "{NAME_LANG}",
                                         "content": [
-                                            {
-                                                "type": "text",
-                                                "text": "${map.koeln1.districts.text}"
-                                            },
                                             {
                                                 "type": "fields",
                                                 "fieldInfos": [
                                                     {
-                                                        "fieldName": "STV_NR",
-                                                        "label": "${common.number}"
+                                                        "fieldName": "NAME_LANG",
+                                                        "label": "${common.name}"
+                                                    },
+                                                    {
+                                                        "fieldName": "ADRESSE",
+                                                        "label": "${common.address}"
+                                                    },
+                                                    {
+                                                        "fieldName": "PLZ",
+                                                        "label": "${common.zip}"
                                                     }
                                                 ]
                                             }
@@ -207,11 +201,185 @@
                                     }
                                 },
                                 {
-                                    "title": "${map.koeln1.boroughs.title}",
-                                    "id": 10,
+                                    "title": "${map.koeln2.museums.title}",
+                                    "url": "https://services.arcgis.com/ObdAEOfl1Z5LP2D0/arcgis/rest/services/Köln/FeatureServer/2",
+                                    "type": "AGS_FEATURE",
+                                    "visible": true,
+                                    "popupTemplate": {
+                                        "title": "Museum",
+                                        "content": [
+                                            {
+                                                "type": "text",
+                                                "text": "${map.koeln2.museums.text}"
+                                            },
+                                            {
+                                                "type": "fields",
+                                                "fieldInfos": [
+                                                    {
+                                                        "fieldName": "ADRESSE",
+                                                        "label": "${common.address}"
+                                                    },
+                                                    {
+                                                        "fieldName": "STADTBEZIR",
+                                                        "label": "${common.precint}"
+                                                    },
+                                                    {
+                                                        "fieldName": "HYPERLINK",
+                                                        "label": "${common.furtherinfo}"
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "id": "schools",
+                                    "title": "${map.koeln2.schools.title}",
+                                    "url": "https://services.arcgis.com/ObdAEOfl1Z5LP2D0/arcgis/rest/services/Köln/FeatureServer/3",
+                                    "type": "AGS_FEATURE",
+                                    "visible": false,
+                                    "popupTemplate": {
+                                        "title": "{NAME}",
+                                        "content": [
+                                            {
+                                                "type": "fields",
+                                                "fieldInfos": [
+                                                    {
+                                                        "fieldName": "SCHULNAME",
+                                                        "label": "${common.name}"
+                                                    },
+                                                    {
+                                                        "fieldName": "ADRESSE",
+                                                        "label": "${common.address}"
+                                                    },
+                                                    {
+                                                        "fieldName": "SCHULART",
+                                                        "label": "${common.type}"
+                                                    },
+                                                    {
+                                                        "fieldName": "TRAEGER",
+                                                        "label": "${common.provider}"
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "id": "koeln3",
+                            "title": "${map.koeln3.title}",
+                            "type": "GROUP",
+                            "visible": true,
+                            "layers": [
+                                {
+                                    "title": "${map.koeln3.sights.title}",
+                                    "url": "https://services.arcgis.com/ObdAEOfl1Z5LP2D0/arcgis/rest/services/Köln/FeatureServer/4",
+                                    "type": "AGS_FEATURE",
+                                    "popupTemplate": {
+                                        "title": "${map.koeln3.sights.titleSingle}",
+                                        "content": [
+                                            {
+                                                "type": "text",
+                                                "text": "${map.koeln3.sights.text}"
+                                            },
+                                            {
+                                                "type": "fields",
+                                                "fieldInfos": [
+                                                    {
+                                                        "fieldName": "ADRESSE",
+                                                        "label": "${common.address}"
+                                                    },
+                                                    {
+                                                        "fieldName": "STADTBEZIRK",
+                                                        "label": "${common.precint}"
+                                                    },
+                                                    {
+                                                        "fieldName": "HYPERLINK",
+                                                        "label": "${common.furtherinfo}"
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "title": "${map.koeln3.playgrounds.title}",
+                                    "url": "https://services.arcgis.com/ObdAEOfl1Z5LP2D0/arcgis/rest/services/Köln/FeatureServer/5",
+                                    "type": "AGS_FEATURE",
+                                    "visible": false,
+                                    "popupTemplate": {
+                                        "title": "{Typ}",
+                                        "content": [
+                                            {
+                                                "type": "text",
+                                                "text": "${map.koeln3.playgrounds.text}"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "title": "${map.koeln3.places.title}",
+                                    "url": "https://services.arcgis.com/ObdAEOfl1Z5LP2D0/arcgis/rest/services/Köln/FeatureServer/9",
+                                    "type": "AGS_FEATURE",
+                                    "popupTemplate": {
+                                        "title": "${map.koeln3.places.titleSingle}",
+                                        "content": [
+                                            {
+                                                "type": "text",
+                                                "text": "${map.koeln3.places.text}"
+                                            },
+                                            {
+                                                "type": "fields",
+                                                "fieldInfos": [
+                                                    {
+                                                        "fieldName": "ADRESSE",
+                                                        "label": "${common.address}"
+                                                    },
+                                                    {
+                                                        "fieldName": "STADTVIERT",
+                                                        "label": "${common.district}"
+                                                    },
+                                                    {
+                                                        "fieldName": "HYPERLINK",
+                                                        "label": "${common.furtherinfo}"
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "id": "koeln1",
+                            "title": "${map.koeln1.title}",
+                            "type": "GROUP",
+                            "visible": true,
+                            "layers": [
+                                {
+                                    "title": "${map.koeln1.districts.title}",
+                                    "url": "https://services.arcgis.com/ObdAEOfl1Z5LP2D0/arcgis/rest/services/Köln/FeatureServer/8",
+                                    "type": "AGS_FEATURE",
+                                    "visible": false,
                                     "opacity": 0.5,
-                                    "minScale": 500000,
-                                    "maxScale": 250000,
+                                    "popupTemplate": {
+                                        "title": "{STV_NAME}",
+                                        "content": [
+                                            {
+                                                "type": "text",
+                                                "text": "${map.koeln1.districts.text}"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "title": "${map.koeln1.boroughs.title}",
+                                    "url": "https://services.arcgis.com/ObdAEOfl1Z5LP2D0/arcgis/rest/services/Köln/FeatureServer/7",
+                                    "type": "AGS_FEATURE",
+                                    "opacity": 0.5,
+                                    "minScale": 80000,
                                     "popupTemplate": {
                                         "title": "{NAME}",
                                         "content": [
@@ -235,10 +403,6 @@
                                                             "places": 2,
                                                             "digitSeparator": true
                                                         }
-                                                    },
-                                                    {
-                                                        "fieldName": "NUMMER",
-                                                        "label": "${common.number}"
                                                     }
                                                 ]
                                             }
@@ -259,10 +423,10 @@
                                 },
                                 {
                                     "title": "${map.koeln1.precints.title}",
-                                    "id": 9,
+                                    "url": "https://services.arcgis.com/ObdAEOfl1Z5LP2D0/arcgis/rest/services/Köln/FeatureServer/6",
+                                    "type": "AGS_FEATURE",
                                     "opacity": 0.5,
-                                    "minScale": 500000,
-                                    "maxScale": 250000,
+                                    "maxScale": 80000,
                                     "popupTemplate": {
                                         "title": "{NAME}",
                                         "content": [
@@ -286,10 +450,6 @@
                                                             "places": 2,
                                                             "digitSeparator": true
                                                         }
-                                                    },
-                                                    {
-                                                        "fieldName": "NUMMER",
-                                                        "label": "${common.number}"
                                                     }
                                                 ]
                                             }
@@ -310,21 +470,16 @@
                                 }
                             ]
                         }
-                    ],
-                    "ground": {
-                        "url": "https://elevation3d.arcgis.com/arcgis/rest/services/WorldElevation3D/Terrain3D/ImageServer",
-                        "type": "ELEVATION"
-                    }
+                    ]
                 },
                 "view": {
                     "viewmode": "2D",
-                    "extent": {
-                        "xmin": 600000,
-                        "ymin": 5800000,
-                        "xmax": 1700000,
-                        "ymax": 7600000,
+                    "center": {
+                        "x": 774853,
+                        "y": 6610677,
                         "spatialReference": 3857
-                    }
+                    },
+                    "scale": 140000
                 }
             }
         },
