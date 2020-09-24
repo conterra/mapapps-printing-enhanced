@@ -17,6 +17,7 @@
     display: flex;
     flex-direction: column;
 }
+
 .ctAppRoot .printing-enhanced-widget .printing-button-container {
     flex: 0 0 auto;
 }
@@ -42,6 +43,10 @@
 .ctAppRoot .printing-enhanced-widget .v-tabs .v-window {
     flex: 1 1 auto;
     overflow: auto;
+}
+
+.ctAppRoot .printing-enhanced-widget .v-alert.info {
+    border: none;
 }
 
 

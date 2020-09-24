@@ -51,9 +51,14 @@
                 </v-list-tile-content>
             </v-list-tile>
         </v-list>
-        <div v-else>
+        <v-alert
+            v-else
+            :value="true"
+            type="info"
+            class="ma-0"
+        >
             {{ i18n.noPrintResults }}
-        </div>
+        </v-alert>
     </v-container>
 </template>
 <script>
