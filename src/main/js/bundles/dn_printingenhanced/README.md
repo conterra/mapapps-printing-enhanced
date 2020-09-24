@@ -26,6 +26,23 @@ Simply add the bundle "dn_printingenhanced" to your app.
             "title": "Print",
             "width": 600
         },
+        "visibleUiElements": {
+            "layoutTab": true,
+            "mapOnlyTab": true,
+            "title": true,
+            "fileName": true,
+            "author": true,
+            "format": true,
+            "widthAndHeight": true,
+            "dpi": true,
+            "layout": true,
+            "printPreviewCheckbox": false,
+            "scaleEnabled": false,
+            "scale": true,
+            "copyright": false,
+            "legendEnabled": false,
+            "attributionEnabled": false
+        },
         "enablePrintPreview": true,
         "enablePrintPreviewSketching": false
         "showDpiSelect": true,
