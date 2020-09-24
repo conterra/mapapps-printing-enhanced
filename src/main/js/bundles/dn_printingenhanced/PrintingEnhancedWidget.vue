@@ -97,7 +97,7 @@
                 color="primary"
                 @click="print()">
                 <v-icon left>
-                    save_alt
+                    print
                 </v-icon>
                 {{ i18n.print }}
             </v-btn>
