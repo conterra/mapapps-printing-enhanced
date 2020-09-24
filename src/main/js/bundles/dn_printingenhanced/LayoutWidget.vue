@@ -34,10 +34,29 @@
             </v-flex>
             <v-flex
                 md12>
+                <v-text-field
+                    v-model="authorValue"
+                    :label="i18n.author"
+                    :placeholder="i18n.authorPlaceholder"
+                    hide-details
+                ></v-text-field>
+            </v-flex>
+            <v-flex
+                md12>
                 <v-select
                     v-model="formatValue"
                     :items="formatList"
                     :label="i18n.format"
+                    hide-details
+                ></v-select>
+            </v-flex>
+            <v-flex
+                v-if="visibleUiElements.dpi"
+                md12>
+                <v-select
+                    v-model="dpiValue"
+                    :items="dpiValues"
+                    :label="i18n.dpi"
                     hide-details
                 ></v-select>
             </v-flex>
@@ -108,30 +127,11 @@
             <v-flex
                 md12>
                 <v-text-field
-                    v-model="authorValue"
-                    :label="i18n.author"
-                    :placeholder="i18n.authorPlaceholder"
-                    hide-details
-                ></v-text-field>
-            </v-flex>
-            <v-flex
-                md12>
-                <v-text-field
                     v-model="copyrightValue"
                     :label="i18n.copyright"
                     :placeholder="i18n.copyrightPlaceholder"
                     hide-details
                 ></v-text-field>
-            </v-flex>
-            <v-flex
-                v-if="visibleUiElements.dpi"
-                md12>
-                <v-select
-                    v-model="dpiValue"
-                    :items="dpiValues"
-                    :label="i18n.dpi"
-                    hide-details
-                ></v-select>
             </v-flex>
             <v-flex
                 md12>

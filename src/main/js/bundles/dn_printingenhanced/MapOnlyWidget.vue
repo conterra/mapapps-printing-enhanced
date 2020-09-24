@@ -42,6 +42,16 @@
                 ></v-select>
             </v-flex>
             <v-flex
+                v-if="visibleUiElements.dpi"
+                md12>
+                <v-select
+                    v-model="dpiValue"
+                    :items="dpiValues"
+                    :label="i18n.dpi"
+                    hide-details
+                ></v-select>
+            </v-flex>
+            <v-flex
                 md5>
                 <v-text-field
                     v-model="widthValue"
@@ -127,16 +137,6 @@
                     @click="$emit('resetScale')">
                     <v-icon>replay</v-icon>
                 </v-btn>
-            </v-flex>
-            <v-flex
-                v-if="visibleUiElements.dpi"
-                md12>
-                <v-select
-                    v-model="dpiValue"
-                    :items="dpiValues"
-                    :label="i18n.dpi"
-                    hide-details
-                ></v-select>
             </v-flex>
             <v-flex
                 md12>
