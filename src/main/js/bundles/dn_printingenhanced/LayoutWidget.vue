@@ -57,7 +57,7 @@
                     :label="i18n.showPrintPreview"
                     color="primary"
                     hide-details
-                    class="mb-2"
+                    class="pa-0 ma-0"
                 ></v-checkbox>
             </v-flex>
             <v-flex
