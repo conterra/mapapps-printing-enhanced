@@ -18,13 +18,13 @@ Simply add the bundle "dn_printingenhanced" to your app.
             "fileName": "Map Only",
             "forceFeatureAttributes ": false,
             "format": "pdf",
-            "height": 600
+            "height": 600,
             "layout": "a4-landscape",
             "legendEnabled ": true,
             "scale": 100000,
             "scaleEnabled": true,
-            "title": "Print"
-            "width": 600,
+            "title": "Print",
+            "width": 600
         },
         "showPrintPreview": true,
         "showAdvancedOptions": true,
