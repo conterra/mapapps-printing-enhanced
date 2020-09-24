@@ -50,113 +50,100 @@
                     hide-details
                 ></v-select>
             </v-flex>
+            <v-flex
+                md12>
+                <v-checkbox
+                    v-model="enablePrintPreviewValue"
+                    :label="i18n.showPrintPreview"
+                    color="primary"
+                    hide-details
+                    class="mb-2"
+                ></v-checkbox>
+            </v-flex>
+            <v-flex
+                md12>
+                <v-checkbox
+                    v-model="scaleEnabledValue"
+                    :label="i18n.scaleEnabled"
+                    color="primary"
+                    hide-details
+                    class="pa-0 ma-0"
+                ></v-checkbox>
+            </v-flex>
+            <v-flex
+                v-if="scaleValues.length"
+                md12>
+                <v-select
+                    v-model="scaleValue"
+                    :items="scaleValues"
+                    :label="i18n.scale"
+                    :disabled="!scaleEnabled"
+                    hide-details
+                ></v-select>
+            </v-flex>
+            <v-flex
+                v-if="!scaleValues.length"
+                md10>
+                <v-text-field
+                    v-model="scaleValue"
+                    :label="i18n.scale"
+                    :disabled="!scaleEnabled"
+                    step="1"
+                    type="number"
+                    hide-details
+                />
+            </v-flex>
+            <v-flex
+                v-if="!scaleValues.length"
+                md2>
+                <v-btn
+                    flat
+                    icon
+                    color="primary"
+                    :disabled="!scaleEnabled"
+                    @click="$emit('resetScale')">
+                    <v-icon>replay</v-icon>
+                </v-btn>
+            </v-flex>
+            <v-flex
+                md12>
+                <v-text-field
+                    v-model="authorValue"
+                    :label="i18n.author"
+                    :placeholder="i18n.authorPlaceholder"
+                    hide-details
+                ></v-text-field>
+            </v-flex>
+            <v-flex
+                md12>
+                <v-text-field
+                    v-model="copyrightValue"
+                    :label="i18n.copyright"
+                    :placeholder="i18n.copyrightPlaceholder"
+                    hide-details
+                ></v-text-field>
+            </v-flex>
+            <v-flex
+                v-if="showDpiSelect"
+                md12>
+                <v-select
+                    v-model="dpiValue"
+                    :items="dpiValues"
+                    :label="i18n.dpi"
+                    hide-details
+                ></v-select>
+            </v-flex>
+            <v-flex
+                md12>
+                <v-checkbox
+                    v-model="legendEnabledValue"
+                    :label="i18n.legendEnabled"
+                    color="primary"
+                    hide-details
+                    class="pa-0 ma-0"
+                ></v-checkbox>
+            </v-flex>
         </v-layout>
-        <v-checkbox
-            v-model="enablePrintPreviewValue"
-            :label="i18n.showPrintPreview"
-            color="primary"
-            hide-details
-            class="mb-2"
-        ></v-checkbox>
-        <v-expansion-panel
-            v-if="showAdvancedOptions"
-            v-model="advancedOptions">
-            <v-expansion-panel-content>
-                <template v-slot:header>
-                    <div>{{ i18n.advancedOptions }}</div>
-                </template>
-                <v-card
-                    class="pa-2">
-                    <v-layout
-                        row
-                        wrap>
-                        <v-flex
-                            md12>
-                            <v-checkbox
-                                v-model="scaleEnabledValue"
-                                :label="i18n.scaleEnabled"
-                                color="primary"
-                                hide-details
-                                class="pa-0 ma-0"
-                            ></v-checkbox>
-                        </v-flex>
-                        <v-flex
-                            v-if="scaleValues.length"
-                            md12>
-                            <v-select
-                                v-model="scaleValue"
-                                :items="scaleValues"
-                                :label="i18n.scale"
-                                :disabled="!scaleEnabled"
-                                hide-details
-                            ></v-select>
-                        </v-flex>
-                        <v-flex
-                            v-if="!scaleValues.length"
-                            md10>
-                            <v-text-field
-                                v-model="scaleValue"
-                                :label="i18n.scale"
-                                :disabled="!scaleEnabled"
-                                step="1"
-                                type="number"
-                                hide-details
-                            />
-                        </v-flex>
-                        <v-flex
-                            v-if="!scaleValues.length"
-                            md2>
-                            <v-btn
-                                flat
-                                icon
-                                color="primary"
-                                :disabled="!scaleEnabled"
-                                @click="$emit('resetScale')">
-                                <v-icon>replay</v-icon>
-                            </v-btn>
-                        </v-flex>
-                        <v-flex
-                            md12>
-                            <v-text-field
-                                v-model="authorValue"
-                                :label="i18n.author"
-                                :placeholder="i18n.authorPlaceholder"
-                                hide-details
-                            ></v-text-field>
-                        </v-flex>
-                        <v-flex
-                            md12>
-                            <v-text-field
-                                v-model="copyrightValue"
-                                :label="i18n.copyright"
-                                :placeholder="i18n.copyrightPlaceholder"
-                                hide-details
-                            ></v-text-field>
-                        </v-flex>
-                        <v-flex
-                            v-if="showDpiSelect"
-                            md12>
-                            <v-select
-                                v-model="dpiValue"
-                                :items="dpiValues"
-                                :label="i18n.dpi"
-                                hide-details
-                            ></v-select>
-                        </v-flex>
-                        <v-flex
-                            md12>
-                            <v-checkbox
-                                v-model="legendEnabledValue"
-                                :label="i18n.legendEnabled"
-                                color="primary"
-                                hide-details
-                                class="pa-0 ma-0"
-                            ></v-checkbox>
-                        </v-flex>
-                    </v-layout>
-                </v-card>
-            </v-expansion-panel-content>
-        </v-expansion-panel>
     </v-container>
 </template>
 <script>
@@ -225,10 +212,6 @@
                 default: () => []
             },
             enablePrintPreview: {
-                type: Boolean,
-                default: true
-            },
-            showAdvancedOptions: {
                 type: Boolean,
                 default: true
             },

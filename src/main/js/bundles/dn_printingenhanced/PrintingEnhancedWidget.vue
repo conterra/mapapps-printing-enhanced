@@ -51,7 +51,6 @@
                     :layout-list="layoutList"
                     :enable-print-preview.sync="enablePrintPreview"
                     :show-dpi-select="showDpiSelect"
-                    :show-advanced-options="showAdvancedOptions"
                     @resetScale="$emit('resetScale')"/>
             </v-tab-item>
             <v-tab-item>
@@ -70,7 +69,6 @@
                     :scale-enabled.sync="scaleEnabled"
                     :enable-print-preview.sync="enablePrintPreview"
                     :show-dpi-select="showDpiSelect"
-                    :show-advanced-options="showAdvancedOptions"
                     @resetScale="$emit('resetScale')"
                     @rotate="rotate"/>
             </v-tab-item>
@@ -165,10 +163,6 @@
             exportedLinks: {
                 type: Array,
                 default: () => []
-            },
-            showAdvancedOptions: {
-                type: Boolean,
-                default: true
             },
             showDpiSelect: {
                 type: Boolean,

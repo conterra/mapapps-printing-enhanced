@@ -52,7 +52,6 @@
                     "height": 600
                 },
                 "enablePrintPreview": true,
-                "showAdvancedOptions": true,
                 "showDpiSelect": true,
                 "layoutTemplatesInfoTaskName": "Get%20Layout%20Templates%20Info%20Task",
                 "defaultPageUnit": "CENTIMETER",

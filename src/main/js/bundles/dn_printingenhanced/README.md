@@ -27,7 +27,6 @@ Simply add the bundle "dn_printingenhanced" to your app.
             "width": 600
         },
         "enablePrintPreview": true,
-        "showAdvancedOptions": true,
         "showDpiSelect": true,
         "layoutTemplatesInfoTaskName": "Get Layout Templates Info Task",
         "defaultPageUnit": "CENTIMETER",
@@ -110,7 +109,6 @@ Simply add the bundle "dn_printingenhanced" to your app.
 |--------------------------------|--------------------|------------------------------------|--------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | templateOptions                | Object             |                                    |                                      | Esri Print Widget TemplateOptions:https://developers.arcgis.com/javascript/latest/api-reference/esri-widgets-Print-TemplateOptions.html                                                                                           |
 | enablePrintPreview             | Boolean            | ```true``` &#124; ```false```      | ```true```                           | Default value for the print preview.                                                                                                                                                                                                         |
-| showAdvancedOptions            | Boolean            | ```true``` &#124; ```false```      | ```true```                           | Show advanced options.                                                                                                                                                                                                            |
 | showDpiSelect                  | Boolean            | ```true``` &#124; ```false```      | ```true```                           | Show DPI select.                                                                                                                                                                                                                  |
 | layoutTemplatesInfoTaskName    | String             |                                    | ```Get Layout Templates Info Task``` | Layout templates task name.                                                                                                                                                                                                       |
 | defaultPageUnit                | String             | ```MILLIMETER, CENTIMETER, INCH``` | ```CENTIMETER```                     | Default template unit (ArcGIS Server < 10.6).                                                                                                                                                                                     |
