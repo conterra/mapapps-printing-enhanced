@@ -88,7 +88,7 @@ export default class PrintingEnhancedWidgetFactory {
             .syncToLeftNow();
 
         Binding.for(vm, templateOptions)
-            .syncAll("attributionEnabled", "author", "copyright", "dpi", "forceFeatureAttributes",
+            .syncAll("attributionEnabled", "author", "copyright", "dpi", "fileName", "forceFeatureAttributes",
                 "format", "height", "layout", "legendEnabled", "scale", "scaleEnabled", "title", "width")
             .enable()
             .syncToLeftNow();

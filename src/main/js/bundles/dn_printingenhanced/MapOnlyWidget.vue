@@ -26,7 +26,7 @@
             <v-flex
                 md12>
                 <v-text-field
-                    v-model="titleValue"
+                    v-model="fileNameValue"
                     :label="i18n.file"
                     :placeholder="i18n.filePlaceholder"
                     hide-details
@@ -193,6 +193,10 @@
                 type: Array,
                 default: () => []
             },
+            fileName: {
+                type: String,
+                default: ""
+            },
             format: {
                 type: String,
                 default: "pdf"
@@ -212,10 +216,6 @@
             scaleEnabled: {
                 type: Boolean,
                 default: false
-            },
-            title: {
-                type: String,
-                default: ""
             },
             formatList: {
                 type: Array,
@@ -304,12 +304,12 @@
                     this.$emit('update:show-print-preview', showPrintPreview);
                 }
             },
-            titleValue: {
+            fileNameValue: {
                 get: function () {
-                    return this.title;
+                    return this.fileName;
                 },
-                set: function (title) {
-                    this.$emit('update:title', title);
+                set: function (fileName) {
+                    this.$emit('update:file-name', fileName);
                 }
             }
         },

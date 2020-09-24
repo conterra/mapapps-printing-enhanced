@@ -60,14 +60,14 @@
                     :attribution-enabled.sync="attributionEnabled"
                     :dpi.sync="dpi"
                     :dpi-values="dpiValues"
+                    :file-name.sync="fileName"
                     :format.sync="format"
+                    :format-list="formatList"
                     :width.sync="width"
                     :height.sync="height"
                     :scale.sync="scale"
                     :scale-values="scaleValues"
                     :scale-enabled.sync="scaleEnabled"
-                    :title.sync="title"
-                    :format-list="formatList"
                     :show-print-preview.sync="showPrintPreview"
                     :show-dpi-select="showDpiSelect"
                     :show-advanced-options="showAdvancedOptions"
@@ -187,6 +187,10 @@
                 dpi: {
                     type: Number,
                     default: 96
+                },
+                fileName: {
+                    type: String,
+                    default: ""
                 },
                 format: {
                     type: String,
