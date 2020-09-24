@@ -144,13 +144,16 @@ export default declare({
     _handleDrawTemplateDimensions(zoomTo) {
         this._printingPreviewDrawer._removeGraphicFromGraphicsLayer();
         const properties = this._printingEnhancedProperties._properties;
-        if (((this._printingToggleTool && this._printingToggleTool.active) || this._printingEnhancedToggleTool.active) && this.showPrintPreview) {
-            const geometry = this._printingPreviewDrawer
-                .drawTemplateDimensions(this[_printInfos], this[_templateOptions], properties.defaultPageUnit);
-            if (geometry && zoomTo && this[_templateOptions].scaleEnabled) {
-                this._zoomToTemplateExtent(geometry);
+        async(()=>{
+            if (((this._printingToggleTool && this._printingToggleTool.active) ||
+                this._printingEnhancedToggleTool.active) && this.showPrintPreview) {
+                const geometry = this._printingPreviewDrawer
+                    .drawTemplateDimensions(this[_printInfos], this[_templateOptions], properties.defaultPageUnit);
+                if (geometry && zoomTo && this[_templateOptions].scaleEnabled) {
+                    this._zoomToTemplateExtent(geometry);
+                }
             }
-        }
+        }, 100);
     },
 
     _zoomToTemplateExtent(geometry) {

@@ -104,6 +104,18 @@
                             ></v-checkbox>
                         </v-flex>
                         <v-flex
+                            v-if="scaleValues.length"
+                            md12>
+                            <v-select
+                                v-model="scaleValue"
+                                :items="scaleValues"
+                                :label="i18n.scale"
+                                :disabled="!scaleEnabled"
+                                hide-details
+                            ></v-select>
+                        </v-flex>
+                        <v-flex
+                            v-if="!scaleValues.length"
                             md10>
                             <v-text-field
                                 v-model="scaleValue"
@@ -115,6 +127,7 @@
                             />
                         </v-flex>
                         <v-flex
+                            v-if="!scaleValues.length"
                             md2>
                             <v-btn
                                 flat
@@ -173,6 +186,10 @@
                 default: 96
             },
             dpiValues: {
+                type: Array,
+                default: () => []
+            },
+            scaleValues: {
                 type: Array,
                 default: () => []
             },

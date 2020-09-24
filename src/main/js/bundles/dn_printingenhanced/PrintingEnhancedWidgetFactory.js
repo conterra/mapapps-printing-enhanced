@@ -73,6 +73,7 @@ export default class PrintingEnhancedWidgetFactory {
         vm.showAdvancedOptions = properties.showAdvancedOptions;
         vm.showDpiSelect = properties.showDpiSelect;
         vm.dpiValues = properties.dpiValues;
+        vm.scaleValues = properties.scaleValues;
         // listen to view model methods
         vm.$on('print', () => {
             esriPrintWidget._handlePrintMap();
@@ -87,7 +88,8 @@ export default class PrintingEnhancedWidgetFactory {
             .syncToLeftNow();
 
         Binding.for(vm, templateOptions)
-            .syncAll("attributionEnabled", "author", "copyright", "dpi", "forceFeatureAttributes", "format", "height", "layout", "legendEnabled", "scale", "scaleEnabled", "title", "width")
+            .syncAll("attributionEnabled", "author", "copyright", "dpi", "forceFeatureAttributes",
+                "format", "height", "layout", "legendEnabled", "scale", "scaleEnabled", "title", "width")
             .enable()
             .syncToLeftNow();
     }

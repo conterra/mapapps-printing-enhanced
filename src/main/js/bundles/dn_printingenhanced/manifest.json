@@ -185,6 +185,7 @@
                         "text": "300"
                     }
                 ],
+                "scaleValues": [],
                 "allowedFormats": "all",
                 "allowedLayouts": "all",
                 "printingPreviewSymbol": {

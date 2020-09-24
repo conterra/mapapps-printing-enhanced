@@ -44,6 +44,7 @@
                     :layout.sync="layout"
                     :legend-enabled.sync="legendEnabled"
                     :scale.sync="scale"
+                    :scale-values="scaleValues"
                     :scale-enabled.sync="scaleEnabled"
                     :title.sync="title"
                     :format-list="formatList"
@@ -63,6 +64,7 @@
                     :width.sync="width"
                     :height.sync="height"
                     :scale.sync="scale"
+                    :scale-values="scaleValues"
                     :scale-enabled.sync="scaleEnabled"
                     :title.sync="title"
                     :format-list="formatList"
@@ -136,6 +138,10 @@
                 }
             },
             dpiValues: {
+                type: Array,
+                default: () => []
+            },
+            scaleValues: {
                 type: Array,
                 default: () => []
             },
