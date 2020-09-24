@@ -27,7 +27,7 @@
             centered
             grow
         >
-            <v-tab>
+            <v-tab v-show="visibleUiElements.layoutTab">
                 {{ i18n.layout }}
             </v-tab>
             <v-tab v-show="visibleUiElements.mapOnlyTab">
@@ -41,7 +41,7 @@
                 v-else>
                 {{ i18n.printResults }} ({{ exportedLinks.length }})
             </v-tab>
-            <v-tab-item>
+            <v-tab-item v-show="visibleUiElements.layoutTab">
                 <layout-widget
                     :i18n="i18n"
                     :author.sync="author"

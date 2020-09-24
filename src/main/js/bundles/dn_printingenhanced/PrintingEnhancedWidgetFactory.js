@@ -70,7 +70,24 @@ export default class PrintingEnhancedWidgetFactory {
 
         vm.i18n = this._i18n.get().ui;
         vm.exportedItems = [];
-        vm.visibleUiElements = properties.visibleUiElements;
+        const defaultVisibleUiElements = {
+            "layoutTab": true,
+            "mapOnlyTab": false,
+            "title": true,
+            "fileName": true,
+            "author": true,
+            "format": true,
+            "widthAndHeight": true,
+            "dpi": true,
+            "layout": true,
+            "printPreviewCheckbox": false,
+            "scaleEnabled": false,
+            "scale": true,
+            "copyright": false,
+            "legendEnabled": false,
+            "attributionEnabled": false
+        }
+        vm.visibleUiElements = {...defaultVisibleUiElements, ...properties.visibleUiElements};
         vm.dpiValues = properties.dpiValues;
         vm.scaleValues = properties.scaleValues;
         // listen to view model methods

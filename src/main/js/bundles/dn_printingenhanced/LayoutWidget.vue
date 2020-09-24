@@ -24,6 +24,7 @@
             row
             wrap>
             <v-flex
+                v-if="visibleUiElements.title"
                 md12>
                 <v-text-field
                     v-model="titleValue"
@@ -33,6 +34,7 @@
                 ></v-text-field>
             </v-flex>
             <v-flex
+                v-if="visibleUiElements.author"
                 md12>
                 <v-text-field
                     v-model="authorValue"
@@ -42,6 +44,7 @@
                 ></v-text-field>
             </v-flex>
             <v-flex
+                v-if="visibleUiElements.format"
                 md12>
                 <v-select
                     v-model="formatValue"
@@ -61,6 +64,7 @@
                 ></v-select>
             </v-flex>
             <v-flex
+                v-if="visibleUiElements.layout"
                 md12>
                 <v-select
                     v-model="layoutValue"
@@ -70,6 +74,7 @@
                 ></v-select>
             </v-flex>
             <v-flex
+                v-if="visibleUiElements.printPreviewCheckbox"
                 md12>
                 <v-checkbox
                     v-model="enablePrintPreviewValue"
@@ -80,6 +85,7 @@
                 ></v-checkbox>
             </v-flex>
             <v-flex
+                v-if="visibleUiElements.scaleEnabled"
                 md12>
                 <v-checkbox
                     v-model="scaleEnabledValue"
@@ -90,7 +96,7 @@
                 ></v-checkbox>
             </v-flex>
             <v-flex
-                v-if="scaleValues.length"
+                v-if="scaleValues.length && visibleUiElements.scale"
                 md12>
                 <v-select
                     v-model="scaleValue"
@@ -101,7 +107,7 @@
                 ></v-select>
             </v-flex>
             <v-flex
-                v-if="!scaleValues.length"
+                v-if="!scaleValues.length && visibleUiElements.scale"
                 md10>
                 <v-text-field
                     v-model="scaleValue"
@@ -113,7 +119,7 @@
                 />
             </v-flex>
             <v-flex
-                v-if="!scaleValues.length"
+                v-if="!scaleValues.length && visibleUiElements.scale"
                 md2>
                 <v-btn
                     flat
@@ -125,6 +131,7 @@
                 </v-btn>
             </v-flex>
             <v-flex
+                v-if="visibleUiElements.copyright"
                 md12>
                 <v-text-field
                     v-model="copyrightValue"
@@ -134,6 +141,7 @@
                 ></v-text-field>
             </v-flex>
             <v-flex
+                v-if="visibleUiElements.legendEnabled"
                 md12>
                 <v-checkbox
                     v-model="legendEnabledValue"
