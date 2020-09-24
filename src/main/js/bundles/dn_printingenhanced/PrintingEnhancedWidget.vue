@@ -19,7 +19,7 @@
     <v-container
         grid-list-md
         fluid
-        class="pa-0">
+        class="pa-0 fullHeight printing-enhanced-container">
         <v-tabs
             v-model="activeTab"
             slider-color="primary"
@@ -90,7 +90,7 @@
             v-if="activeTab!==2"
             grid-list-md
             fluid
-            class="px-2 py-0">
+            class="pa-0 px-2 pt-2 printing-button-container">
             <v-btn
                 block
                 ripple
