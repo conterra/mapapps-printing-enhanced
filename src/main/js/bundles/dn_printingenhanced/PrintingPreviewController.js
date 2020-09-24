@@ -45,8 +45,10 @@ export default declare({
             this._handleDrawTemplateDimensions();
         });
 
+        if (!this[_observers]) {
+            this[_observers] = new Observers();
+        }
         // watch for changes
-        this[_observers] = new Observers();
         this._watchForTemplateOptionsChanges(esriPrintWidget);
 
         // handle print preview before and after printing
@@ -131,6 +133,9 @@ export default declare({
     },
 
     _watchForExtentChange(view) {
+        if (!this[_observers]) {
+            this[_observers] = new Observers();
+        }
         const properties = this._printingEnhancedProperties;
         if (!properties.allowSketching) {
             this[_observers].add(view.watch("stationary", (response) => {
@@ -144,7 +149,7 @@ export default declare({
     _handleDrawTemplateDimensions(zoomTo) {
         this._printingPreviewDrawer._removeGraphicFromGraphicsLayer();
         const properties = this._printingEnhancedProperties._properties;
-        async(()=>{
+        async(() => {
             if (((this._printingToggleTool && this._printingToggleTool.active) ||
                 this._printingEnhancedToggleTool.active) && this.showPrintPreview) {
                 const geometry = this._printingPreviewDrawer
