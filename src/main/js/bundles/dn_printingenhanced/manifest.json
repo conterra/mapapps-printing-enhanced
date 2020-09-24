@@ -43,8 +43,8 @@
                 "minimizeOnClose": true,
                 "resizable": true,
                 "marginBox": {
-                    "w": 435,
-                    "h": 550,
+                    "w": 300,
+                    "h": 480,
                     "t": 125,
                     "l": 20
                 },
@@ -95,7 +95,7 @@
                 "resizable": false,
                 "marginBox": {
                     "w": "100%",
-                    "h": "100%",
+                    "h": "50%",
                     "b": 0
                 },
                 "windowClass": "noPadding"
