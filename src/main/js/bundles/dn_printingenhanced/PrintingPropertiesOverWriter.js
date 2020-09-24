@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import ct_lang from "ct/_lang";
 
 export default class PrintingPropertiesOverWriter {
 
@@ -51,20 +52,10 @@ export default class PrintingPropertiesOverWriter {
 
     _setDefaultValues(templateOptions) {
         const properties = this._printingEnhancedProperties._properties;
-        if (properties.defaultFormat) {
-            templateOptions.format = properties.defaultFormat;
-        }
-        if (properties.defaultLayout) {
-            templateOptions.layout = properties.defaultLayout;
-        }
-        if (properties.defaultDpi) {
-            templateOptions.dpi = properties.defaultDpi;
-        }
-        if (properties.defaultSetScaleEnabled) {
-            templateOptions.scaleEnabled = properties.defaultSetScaleEnabled;
-        }
-        if (properties.defaultScale) {
-            templateOptions.scale = properties.defaultScale;
+        if (properties.templateOptions) {
+            ct_lang.forEachOwnProp(properties.templateOptions, function (v, n) {
+                templateOptions[n] = v;
+            });
         }
     }
 

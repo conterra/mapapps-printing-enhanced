@@ -41,16 +41,21 @@
     "bundles": {
         "dn_printingenhanced": {
             "Config": {
+                "templateOptions": {
+                    "format": "pdf",
+                    "layout": "a4-landscape",
+                    "dpi": 96,
+                    "scale": 100000,
+                    "scaleEnabled": true,
+                    "copyright": "Developer Network",
+                    "width": 600,
+                    "height": 600
+                },
                 "showPrintPreview": true,
                 "showAdvancedOptions": true,
                 "showDpiSelect": true,
                 "layoutTemplatesInfoTaskName": "Get%20Layout%20Templates%20Info%20Task",
                 "defaultPageUnit": "CENTIMETER",
-                "defaultFormat": "pdf",
-                "defaultLayout": "a4-landscape",
-                "defaultDpi": 96,
-                "defaultScale": 100000,
-                "defaultSetScaleEnabled": true,
                 "dpiValues": [
                     {
                         "value": 96,

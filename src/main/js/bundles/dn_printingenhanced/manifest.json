@@ -161,16 +161,14 @@
             ],
             "propertiesConstructor": true,
             "properties": {
+                "templateOptions": {
+                    "scaleEnabled": true
+                },
                 "showPrintPreview": true,
                 "showAdvancedOptions": true,
                 "showDpiSelect": true,
                 "layoutTemplatesInfoTaskName": "Get%20Layout%20Templates%20Info%20Task",
                 "defaultPageUnit": "CENTIMETER",
-                "defaultFormat": "pdf",
-                "defaultLayout": "a4-landscape",
-                "defaultDpi": 96,
-                "defaultScale": null,
-                "defaultSetScaleEnabled": true,
                 "dpiValues": [
                     {
                         "value": 96,
