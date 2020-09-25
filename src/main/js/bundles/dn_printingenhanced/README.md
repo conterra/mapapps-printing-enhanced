@@ -28,7 +28,7 @@ Simply add the bundle "dn_printingenhanced" to your app.
         },
         "visibleUiElements": {
             "layoutTab": true,
-            "mapOnlyTab": true,
+            "mapOnlyTab": false,
             "title": true,
             "fileName": true,
             "author": true,
