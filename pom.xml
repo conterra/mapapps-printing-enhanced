@@ -20,7 +20,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>de.conterra.devnet</groupId>
     <artifactId>mapapps-printing-enhanced</artifactId>
-    <version>2.0.0-SNAPSHOT</version>
+    <version>2.0.0</version>
     <packaging>jar</packaging>
     <repositories>
         <repository>
@@ -517,7 +517,7 @@
         <developerConnection>scm:git:https://github.com/conterra/mapapps-printing-enhanced.git
         </developerConnection>
         <url>https://github.com/conterra/mapapps-printing-enhanced</url>
-        <tag>HEAD</tag>
+        <tag>2.0.0</tag>
     </scm>
     <distributionManagement>
         <repository>
