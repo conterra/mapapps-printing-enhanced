@@ -90,6 +90,11 @@ module.exports = {
             municipal: "municipal",
             zip: "Zip code",
             type: "Type"
+        },
+        dpi: {
+            low: "Low",
+            medium: "Medium",
+            high: "High"
         }
     },
     "de": true

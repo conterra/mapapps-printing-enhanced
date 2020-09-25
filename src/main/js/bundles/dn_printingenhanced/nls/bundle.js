@@ -59,7 +59,10 @@ module.exports = {
                 "letter-ansi-a-portrait": "Letter ANSI A Portrait",
                 "tabloid-ansi-b-landscape": "Tabloid ANSI B Landscape",
                 "tabloid-ansi-b-portrait": "Tabloid ANSI B Portrait"
-            }
+            },
+            low: "Low",
+            medium: "Medium",
+            high: "High"
         }
     },
     de: true

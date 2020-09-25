@@ -44,7 +44,7 @@
                 "templateOptions": {
                     "format": "pdf",
                     "layout": "a4-landscape",
-                    "dpi": 96,
+                    "dpi": 150,
                     "scale": 100000,
                     "scaleEnabled": true,
                     "copyright": "",
@@ -75,15 +75,15 @@
                 "dpiValues": [
                     {
                         "value": 96,
-                        "text": "96"
+                        "text": "${dpi.low}"
                     },
                     {
                         "value": 150,
-                        "text": "150"
+                        "text": "${dpi.medium}"
                     },
                     {
                         "value": 300,
-                        "text": "300"
+                        "text": "${dpi.high}"
                     }
                 ],
                 "scaleValues": [

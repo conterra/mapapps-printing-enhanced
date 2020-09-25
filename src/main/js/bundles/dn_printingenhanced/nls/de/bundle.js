@@ -59,6 +59,9 @@ module.exports = {
             "letter-ansi-a-portrait": "Letter ANSI A Hochformat",
             "tabloid-ansi-b-landscape": "Tabloid ANSI B Querformat",
             "tabloid-ansi-b-portrait": "Tabloid ANSI B Hochformat"
-        }
+        },
+        low: "Niedrig",
+        medium: "Mittel",
+        high: "Hoch"
     }
 };

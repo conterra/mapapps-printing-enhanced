@@ -164,7 +164,8 @@
                 "templateOptions": {
                     "attributionEnabled": true,
                     "legendEnabled": true,
-                    "scaleEnabled": true
+                    "scaleEnabled": true,
+                    "dpi": 150
                 },
                 "visibleUiElements": {
                     "layoutTab": true,
@@ -190,15 +191,15 @@
                 "dpiValues": [
                     {
                         "value": 96,
-                        "text": "96"
+                        "text": "${ui.low}"
                     },
                     {
                         "value": 150,
-                        "text": "150"
+                        "text": "${ui.medium}"
                     },
                     {
                         "value": 300,
-                        "text": "300"
+                        "text": "${ui.high}"
                     }
                 ],
                 "scaleValues": [],

@@ -90,5 +90,10 @@ module.exports = {
         municipal: "st\xE4dtischer",
         zip: "PLZ",
         type: "Art"
+    },
+    dpi: {
+        low: "Niedrig",
+        medium: "Mittel",
+        high: "Hoch"
     }
 };
