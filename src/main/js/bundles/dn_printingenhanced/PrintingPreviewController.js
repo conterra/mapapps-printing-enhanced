@@ -58,9 +58,6 @@ export default declare({
             this._printingPreviewDrawer.showGraphicsLayer(false);
         });
         d_aspect.after(printViewModel, "print", (promise) => {
-            /*promise.then(() => {
-                this._handleDrawTemplateDimensions();
-            });*/
             async(() => {
                 this._printingPreviewDrawer.showGraphicsLayer(true);
             }, 2000);

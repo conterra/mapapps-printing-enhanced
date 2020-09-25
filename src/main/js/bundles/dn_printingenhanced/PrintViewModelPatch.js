@@ -56,38 +56,33 @@ export default class PrintingPropertiesOverWriter {
             }
         }
         // set sketching properties to view
+        let oldRotation = null;
         if (this._enablePrintPreviewMovement) {
             if (this._printExtent) {
                 r.extent = this._printExtent;
-                const oldRotation = r.view.rotation;
+                oldRotation = r.view.rotation;
                 r.view.rotation = this._printRotation;
-                async(() => {
-                    r.view.rotation = oldRotation;
-                }, 500);
             } else {
-                const oldRotation = r.view.rotation;
+                oldRotation = r.view.rotation;
                 r.view.rotation = 0;
-                async(() => {
-                    r.view.rotation = oldRotation;
-                }, 500);
             }
         }
         const oldScale = r.view.scale;
-        const outScale = r.template.outScale;
-        return r.view.goTo({
-            scale: outScale
-        }).then(() => {
+        r.view.scale = r.template.outScale;
+        return async(() => {
             const execute = this._printTask.execute(r);
             execute.catch(function (e) {
                 return f.reject(new u("print:export-error", "An error occurred while exporting the web map.", {error: e}))
             });
             async(() => {
-                r.view.goTo({
-                    scale: oldScale
-                });
-            }, 2000);
+                r.view.scale = oldScale;
+                if (oldRotation !== null) {
+                    r.view.rotation = oldRotation;
+                    oldRotation = null;
+                }
+            }, 500);
             return execute;
-        });
+        }, 500);
     }
 
     setPrintSettings(event) {
