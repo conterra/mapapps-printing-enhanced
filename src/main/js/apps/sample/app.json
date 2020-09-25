@@ -161,14 +161,6 @@
                 "showBasemaps" : true
             }
         },
-        "themes": {
-            "ThemeModel": {
-                "_selectedTheme": "everlasting"
-            },
-            "ThemeSelector": {
-                "componentEnabled": true
-            }
-        },
         "banner": {
             "BannerWidget": {
                 "label": "Developer Network",
