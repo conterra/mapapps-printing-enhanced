@@ -27,7 +27,7 @@ export default class PrintingPropertiesOverWriter {
         PrintViewModel.prototype._printExtent = null;
         PrintViewModel.prototype.print = this.print;
         const properties = this._printingEnhancedProperties;
-        PrintViewModel.prototype._enablePrintPreviewSketching = properties.enablePrintPreviewSketching;
+        PrintViewModel.prototype._enablePrintPreviewMovement = properties.enablePrintPreviewMovement;
         PrintViewModel.prototype._customTextElements = properties.customTextElements;
     }
 
@@ -56,7 +56,7 @@ export default class PrintingPropertiesOverWriter {
             }
         }
         // set sketching properties to view
-        if (this._enablePrintPreviewSketching) {
+        if (this._enablePrintPreviewMovement) {
             if (this._printExtent) {
                 r.extent = this._printExtent;
                 const oldRotation = r.view.rotation;

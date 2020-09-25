@@ -69,7 +69,7 @@
                     "attributionEnabled": false
                 },
                 "enablePrintPreview": true,
-                "enablePrintPreviewSketching": false,
+                "enablePrintPreviewMovement": false,
                 "layoutTemplatesInfoTaskName": "Get%20Layout%20Templates%20Info%20Task",
                 "defaultPageUnit": "CENTIMETER",
                 "dpiValues": [

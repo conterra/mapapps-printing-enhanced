@@ -44,7 +44,7 @@ Simply add the bundle "dn_printingenhanced" to your app.
             "attributionEnabled": false
         },
         "enablePrintPreview": true,
-        "enablePrintPreviewSketching": false
+        "enablePrintPreviewMovement": false
         "showDpiSelect": true,
         "layoutTemplatesInfoTaskName": "Get Layout Templates Info Task",
         "defaultPageUnit": "CENTIMETER",
@@ -128,7 +128,7 @@ Simply add the bundle "dn_printingenhanced" to your app.
 | templateOptions                | Object             |                                    |                                      | Esri Print Widget TemplateOptions:https://developers.arcgis.com/javascript/latest/api-reference/esri-widgets-Print-TemplateOptions.html                                                                                           |
 | visibleUiElements              | Object             |                                    |                                      | Controls visibility of UI elements.                                                                                                                                                                                               |
 | enablePrintPreview             | Boolean            | ```true``` &#124; ```false```      | ```true```                           | Default value for the print preview.                                                                                                                                                                                              |
-| enablePrintPreviewSketching    | Boolean            | ```true``` &#124; ```false```      | ```false```                          | Allows the user to edit the print preview in map.                                                                                                                                                                                 |
+| enablePrintPreviewMovement    | Boolean            | ```true``` &#124; ```false```      | ```false```                          | Allows the user to edit the print preview in map.                                                                                                                                                                                 |
 | layoutTemplatesInfoTaskName    | String             |                                    | ```Get Layout Templates Info Task``` | Layout templates task name.                                                                                                                                                                                                       |
 | defaultPageUnit                | String             | ```MILLIMETER, CENTIMETER, INCH``` | ```CENTIMETER```                     | Default template unit (ArcGIS Server < 10.6).                                                                                                                                                                                     |
 | dpiValues                      | Array              |                                    | ```[]```                             | Available dpi values.                                                                                                                                                                                                             |
