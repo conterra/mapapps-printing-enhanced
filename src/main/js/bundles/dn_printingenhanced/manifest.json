@@ -44,7 +44,7 @@
                 "resizable": true,
                 "marginBox": {
                     "w": 340,
-                    "h": 485,
+                    "h": 425,
                     "t": 125,
                     "l": 25
                 },
@@ -71,7 +71,7 @@
                 "draggable": false,
                 "marginBox": {
                     "w": 340,
-                    "h": 485,
+                    "h": 425,
                     "t": 125,
                     "l": 25
                 },
