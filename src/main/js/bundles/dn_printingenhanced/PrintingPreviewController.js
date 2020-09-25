@@ -26,6 +26,7 @@ const _printServiceUrl = Symbol("_printServiceUrl");
 const _connect = Symbol("_connect");
 const _observers = Symbol("_observers");
 const _lastPopupState = Symbol("_lastPopupState");
+const _view = Symbol("_view");
 
 export default declare({
 
@@ -75,16 +76,17 @@ export default declare({
         this._printingPreviewDrawer._removeGraphicFromGraphicsLayer();
         this[_connect].disconnect();
         this[_observers].destroy();
+        this[_lastPopupState]?.reset();
     },
 
     setMapWidgetModel(mapWidgetModel) {
         if (mapWidgetModel.view) {
             this._watchForExtentChange(mapWidgetModel.view);
-            this._view = mapWidgetModel.view;
+            this[_view] = mapWidgetModel.view;
         } else {
             mapWidgetModel.watch("view", ({value: view}) => {
                 this._watchForExtentChange(view)
-                this._view = mapWidgetModel.view;
+                this[_view] = mapWidgetModel.view;
             });
         }
     },
@@ -98,7 +100,7 @@ export default declare({
         });
         connect.connect(tool, "onDeactivate", () => {
             this._printingPreviewDrawer._removeGraphicFromGraphicsLayer();
-            this[_lastPopupState].reset();
+            this[_lastPopupState]?.reset();
         });
     },
 
@@ -167,25 +169,25 @@ export default declare({
     },
 
     _zoomToTemplateExtent(geometry) {
-        if (!this._view) {
+        if (!this[_view]) {
             return;
         }
         const expandFactor = 1.2;
-        this._view.goTo(geometry.extent.expand(expandFactor));
+        this[_view].goTo(geometry.extent.expand(expandFactor));
     },
 
     _enablePopups() {
-        if (!this._view) {
+        if (!this[_view]) {
             return;
         }
     },
 
     _disablePopups() {
         const properties = this._printingEnhancedProperties._properties;
-        if (!this._view || !properties.enablePrintPreview) {
+        if (!this[_view] || !properties.enablePrintPreview) {
             return;
         }
-        const view = this._view;
+        const view = this[_view];
         const savedState = view.popup.autoOpenEnabled;
         view.popup.autoOpenEnabled = false;
         let executed = false;
