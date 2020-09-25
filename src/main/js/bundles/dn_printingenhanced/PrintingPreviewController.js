@@ -25,6 +25,7 @@ const _printInfos = Symbol("_printInfos");
 const _printServiceUrl = Symbol("_printServiceUrl");
 const _connect = Symbol("_connect");
 const _observers = Symbol("_observers");
+const _lastPopupState = Symbol("_lastPopupState");
 
 export default declare({
 
@@ -93,9 +94,11 @@ export default declare({
         const connect = this[_connect] = new Connect();
         connect.connect(tool, "onActivate", () => {
             this._handleDrawTemplateDimensions();
+            this[_lastPopupState] = this._disablePopups();
         });
         connect.connect(tool, "onDeactivate", () => {
             this._printingPreviewDrawer._removeGraphicFromGraphicsLayer();
+            this[_lastPopupState].reset();
         });
     },
 
@@ -104,9 +107,11 @@ export default declare({
         const connect = this[_connect] = new Connect();
         connect.connect(tool, "onActivate", () => {
             this._handleDrawTemplateDimensions();
+            this[_lastPopupState] = this._disablePopups();
         });
         connect.connect(tool, "onDeactivate", () => {
             this._printingPreviewDrawer._removeGraphicFromGraphicsLayer();
+            this[_lastPopupState]?.reset();
         });
     },
 
@@ -167,6 +172,31 @@ export default declare({
         }
         const expandFactor = 1.2;
         this._view.goTo(geometry.extent.expand(expandFactor));
+    },
+
+    _enablePopups() {
+        if (!this._view) {
+            return;
+        }
+    },
+
+    _disablePopups() {
+        const properties = this._printingEnhancedProperties._properties;
+        if (!this._view || !properties.enablePrintPreview) {
+            return;
+        }
+        const view = this._view;
+        const savedState = view.popup.autoOpenEnabled;
+        view.popup.autoOpenEnabled = false;
+        let executed = false;
+        return {
+            reset() {
+                if (!executed && view.popup && !view.popup.destroyed) {
+                    view.popup.autoOpenEnabled = savedState;
+                }
+                executed = true;
+            }
+        }
     }
 
 });
