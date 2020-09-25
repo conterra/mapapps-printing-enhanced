@@ -28,10 +28,10 @@
             grow
         >
             <v-tab v-show="visibleUiElements.layoutTab">
-                {{ i18n.layout }}
+                {{ i18n.layoutTab }}
             </v-tab>
             <v-tab v-show="visibleUiElements.mapOnlyTab">
-                {{ i18n.onlyMap }}
+                {{ i18n.mapOnlyTab }}
             </v-tab>
             <v-tab
                 v-if="!exportedLinks.length">

@@ -24,9 +24,9 @@ module.exports = {
         },
         ui: {
             print: "Print",
-            layout: "Layout",
+            layoutTab: "Settings",
+            mapOnlyTab: "Map Only",
             format: "Format",
-            onlyMap: "Only Map",
             title: "Title",
             titlePlaceholder: "Print title",
             file: "File name",
@@ -43,7 +43,7 @@ module.exports = {
             attributionEnabled: "Enable attribution",
             dpi: "DPI",
             showPrintPreview: "Show print preview",
-            printResults: "Print Results",
+            printResults: "Results",
             noPrintResults: "No print results",
             errors: {
                 unknown: "Printing: An unknown error occurred!",

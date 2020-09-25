@@ -23,9 +23,10 @@ module.exports = {
     },
     ui: {
         print: "Drucken",
+        layoutTab: "Einstellungen",
+        mapOnlyTab: "Nur Karte",
         layout: "Layout",
         format: "Dateiformat",
-        onlyMap: "Nur Karte",
         title: "Titel",
         titlePlaceholder: "Titel des Drucks",
         file: "Dateiname",
@@ -42,7 +43,7 @@ module.exports = {
         attributionEnabled: "Quellennachweis einfügen",
         dpi: "DPI",
         showPrintPreview: "Druckrahmen anzeigen",
-        printResults: "Druckergebnisse",
+        printResults: "Ergebnisse",
         noPrintResults: "Keine Druckergebnisse vorhanden",
         errors: {
             unknown: "Drucken: Ein unbekannter Fehler ist aufgetreten!",
