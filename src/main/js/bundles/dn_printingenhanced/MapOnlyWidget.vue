@@ -35,7 +35,8 @@
             </v-flex>
             <v-flex
                 v-if="visibleUiElements.format"
-                md12>
+                md6
+                :class="{ md12: !visibleUiElements.dpi }">
                 <v-select
                     v-model="formatValue"
                     :items="formatList"
@@ -45,7 +46,8 @@
             </v-flex>
             <v-flex
                 v-if="visibleUiElements.dpi"
-                md12>
+                md6
+                :class="{ md12: !visibleUiElements.format }">
                 <v-select
                     v-model="dpiValue"
                     :items="dpiValues"
