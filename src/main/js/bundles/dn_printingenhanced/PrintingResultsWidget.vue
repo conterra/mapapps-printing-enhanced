@@ -54,7 +54,8 @@
         <v-alert
             v-else
             :value="true"
-            type="info"
+            type="warning"
+            outline
             class="ma-0"
         >
             {{ i18n.noPrintResults }}
