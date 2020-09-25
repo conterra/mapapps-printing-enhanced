@@ -41,7 +41,7 @@ module.exports = {
         scaleEnabled: "Maßstab festlegen",
         legendEnabled: "Legende einbeziehen",
         attributionEnabled: "Quellennachweis einfügen",
-        dpi: "DPI",
+        dpi: "Qualität",
         showPrintPreview: "Druckrahmen anzeigen",
         printResults: "Ergebnisse",
         noPrintResults: "Keine Druckergebnisse vorhanden",

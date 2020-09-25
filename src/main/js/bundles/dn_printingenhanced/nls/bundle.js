@@ -41,7 +41,7 @@ module.exports = {
             scaleEnabled: "Set scale",
             legendEnabled: "Enable legend",
             attributionEnabled: "Enable attribution",
-            dpi: "DPI",
+            dpi: "Quality",
             showPrintPreview: "Show print preview",
             printResults: "Results",
             noPrintResults: "No print results",
