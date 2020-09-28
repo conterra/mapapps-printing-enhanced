@@ -44,7 +44,7 @@ Simply add the bundle "dn_printingenhanced" to your app.
             "attributionEnabled": false
         },
         "enablePrintPreview": true,
-        "enablePrintPreviewMovement": true
+        "enablePrintPreviewMovement": true,
         "showDpiSelect": true,
         "layoutTemplatesInfoTaskName": "Get Layout Templates Info Task",
         "defaultPageUnit": "CENTIMETER",
