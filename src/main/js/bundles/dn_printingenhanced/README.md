@@ -14,7 +14,7 @@ Simply add the bundle "dn_printingenhanced" to your app.
             "attributionEnabled": true,
             "author": "Author Name",
             "copyright": "Developer Network",
-            "dpi": 96,
+            "dpi": 150,
             "fileName": "Map Only",
             "forceFeatureAttributes ": false,
             "format": "pdf",
@@ -51,15 +51,15 @@ Simply add the bundle "dn_printingenhanced" to your app.
         "dpiValues": [
             {
                 "value": 96,
-                "text": "96"
+                "text": "Niedrig (96 DPI)"
             },
             {
                 "value": 150,
-                "text": "150"
+                "text": "Mittel (150 DPI)"
             },
             {
                 "value": 300,
-                "text": "300"
+                "text": "Hoch (300 DPI)"
             }
         ],
         "allowedFormats": [
@@ -91,6 +91,36 @@ Simply add the bundle "dn_printingenhanced" to your app.
                 "width": "2px"
             }
         },
+        "scaleValues": [
+            {
+                "value": 1000,
+                "text": "1:1.000"
+            },
+            {
+                "value": 2500,
+                "text": "1:2.500"
+            },
+            {
+                "value": 5000,
+                "text": "1:5.000"
+            },
+            {
+                "value": 10000,
+                "text": "1:10.000"
+            },
+            {
+                "value": 25000,
+                "text": "1:25.000"
+            },
+            {
+                "value": 50000,
+                "text": "1:50.000"
+            },
+            {
+                "value": 100000,
+                "text": "1:100.000"
+            }
+        ],
         "useUsernameAsAuthor": true,
         "usernameAttributes": [
             "givenname",
