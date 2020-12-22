@@ -17,6 +17,7 @@ import PrintingEnhancedWidget from "./PrintingEnhancedWidget.vue";
 import Vue from "apprt-vue/Vue";
 import VueDijit from "apprt-vue/VueDijit";
 import Binding from "apprt-binding/Binding";
+import apprt_request from "apprt-request";
 
 export default class PrintingEnhancedWidgetFactory {
 
@@ -59,7 +60,7 @@ export default class PrintingEnhancedWidgetFactory {
             event.item.watch("state", (state) => {
                 if (state === "ready") {
                     exportedItem.loading = false;
-                    exportedItem.url = item.url;
+                    exportedItem.url = apprt_request.getProxiedUrl(item.url);
                 } else if (state === "error") {
                     exportedItem.loading = false;
                     exportedItem.url = null;
