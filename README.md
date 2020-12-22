@@ -1,4 +1,5 @@
 # Printing Enhanced
+
 The Printing Enhanced Bundle extends the Printing bundle by further capabilities.
 
 ![Screenshot App](https://github.com/conterra/mapapps-printing-enhanced/blob/master/screenshot.JPG)
