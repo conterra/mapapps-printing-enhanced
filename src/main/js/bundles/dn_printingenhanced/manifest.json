@@ -107,9 +107,17 @@
             "name": "PrintingPreviewController",
             "immediate": true,
             "provides": [
+                "ct.framework.api.EventHandler",
                 "dn_printingenhanced.PrintingPreviewController"
             ],
-            "properties": {},
+            "properties": {
+                "Event-Topics": [
+                    {
+                        "topic": "dn_printingenhanced/PRINTSETTINGS",
+                        "method": "setPrintSettings"
+                    }
+                ]
+            },
             "references": [
                 {
                     "name": "_printingWidget",
@@ -144,6 +152,11 @@
                 {
                     "name": "mapWidgetModel",
                     "providing": "map-widget.MapWidgetModel",
+                    "cardinality": "0..1"
+                },
+                {
+                    "name": "userService",
+                    "providing": "ct.framework.api.UserAdmin",
                     "cardinality": "0..1"
                 },
                 {
@@ -345,36 +358,6 @@
                 {
                     "name": "_configAdminService",
                     "providing": "ct.framework.api.ConfigurationAdmin"
-                }
-            ]
-        },
-        {
-            "name": "PrintViewModelPatch",
-            "provides": [
-                "ct.framework.api.EventHandler",
-                "dn_printingenhanced.PrintViewModelPatch"
-            ],
-            "properties": {
-                "Event-Topics": [
-                    {
-                        "topic": "dn_printingenhanced/PRINTSETTINGS",
-                        "method": "setPrintSettings"
-                    },
-                    {
-                        "topic": "dn_printingenhanced/CUSTOM_TEXTELEMENTS",
-                        "method": "setCustomTextElements"
-                    }
-                ]
-            },
-            "references": [
-                {
-                    "name": "_printingEnhancedProperties",
-                    "providing": "dn_printingenhanced.PrintingEnhancedProperties"
-                },
-                {
-                    "name": "userService",
-                    "providing": "ct.framework.api.UserAdmin",
-                    "cardinality": "0..1"
                 }
             ]
         }

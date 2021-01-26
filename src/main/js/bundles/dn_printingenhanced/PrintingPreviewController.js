@@ -16,9 +16,11 @@
 import {declare} from "apprt-core/Mutable";
 import Connect from "ct/_Connect";
 import Observers from "apprt-core/Observers";
-import d_aspect from "dojo/aspect";
 import apprt_when from "apprt-core/when";
 import async from "apprt-core/async";
+import d_aspect from "dojo/aspect";
+import d_string from "dojo/string";
+import ct_lang from "ct/_lang";
 
 const _templateOptions = Symbol("_templateOptions");
 const _printInfos = Symbol("_printInfos");
@@ -54,12 +56,58 @@ export default declare({
         this._watchForTemplateOptionsChanges(esriPrintWidget);
 
         // handle print preview before and after printing
-        d_aspect.before(printViewModel, "print", () => {
+        d_aspect.before(printViewModel, "print", (printTemplate) => {
+            // show print preview
             this._printingPreviewDrawer.showGraphicsLayer(false);
+
+            const properties = this._printingEnhancedProperties;
+            // set customTextElements
+            if (properties.customTextElements.length) {
+                if (!printTemplate.layoutOptions.customTextElements) {
+                    printTemplate.layoutOptions.customTextElements = [];
+                }
+                const customTextElements = printTemplate.layoutOptions.customTextElements;
+                if (this._user) {
+                    properties.customTextElements.forEach((element) => {
+                        ct_lang.forEachOwnProp(element, (value, name) => {
+                            element[name] = d_string.substitute(value, this._user);
+                        });
+                        customTextElements.push(element)
+                    });
+                } else {
+                    properties.customTextElements.forEach((element) => {
+                        customTextElements.push(element);
+                    })
+                }
+            }
+            // set sketching properties to view
+            const view = printViewModel.view;
+            this._oldRotation = null;
+            this._oldScale = view.scale;
+            if (properties.enablePrintPreviewMovement) {
+                if (this._printExtent) {
+                    view.extent = this._printExtent;
+                    this._oldRotation = view.rotation;
+                    view.rotation = this._printRotation;
+                } else {
+                    this._oldRotation = view.rotation;
+                    view.rotation = 0;
+                }
+            }
+            view.scale = printTemplate.outScale;
         });
+
         d_aspect.after(printViewModel, "print", (promise) => {
             async(() => {
                 this._printingPreviewDrawer.showGraphicsLayer(true);
+                const view = printViewModel.view;
+
+                // reset view properties
+                view.scale = this._oldScale;
+                if (this._oldRotation !== null) {
+                    view.rotation = this._oldRotation;
+                    this._oldRotation = null;
+                }
             }, 2000);
             return promise;
         });
@@ -88,6 +136,12 @@ export default declare({
         }
     },
 
+    setPrintSettings(event) {
+        const geometry = event.getProperty("geometry");
+        this._printExtent = geometry.extent;
+        this._printRotation = this._computeAngle(geometry.rings[0][0], geometry.rings[0][1]);
+    },
+
     setPrintingToggleTool(tool) {
         this._printingToggleTool = tool;
         const connect = this[_connect] = new Connect();
@@ -112,6 +166,18 @@ export default declare({
             this._printingPreviewDrawer._removeGraphicFromGraphicsLayer();
             this[_lastPopupState]?.reset();
         });
+    },
+
+    setUserService(userService) {
+        const properties = this._printingEnhancedProperties._properties;
+        if (properties.useUsernameAsAuthor) {
+            const authentication = userService.getAuthentication();
+            if (!authentication.isAuthenticated()) {
+                console.log("User not authenticated!");
+                return;
+            }
+            this._user = authentication.getUser();
+        }
     },
 
     _watchForTemplateOptionsChanges(esriPrintWidget) {
@@ -171,6 +237,10 @@ export default declare({
         }
         const expandFactor = 1.2;
         this[_view].goTo(geometry.extent.expand(expandFactor));
+    },
+
+    _computeAngle(pointA, pointB) {
+        return Math.atan2(pointB[1] - pointA[1], pointB[0] - pointA[0]) * 180 / Math.PI;
     },
 
     _enablePopups() {

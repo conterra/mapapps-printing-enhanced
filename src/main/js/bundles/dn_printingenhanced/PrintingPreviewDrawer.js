@@ -207,6 +207,9 @@ export default class PrintingPreviewDrawer {
             symbol: symbol
         });
         this[_graphicsLayer].add(graphic);
+        if (properties.enablePrintPreviewMovement) {
+            this._eventService.postEvent("dn_printingenhanced/PRINTSETTINGS", {geometry: graphic.geometry});
+        }
     }
 
     _removeGraphicFromGraphicsLayer() {
