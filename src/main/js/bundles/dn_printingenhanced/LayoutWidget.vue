@@ -101,7 +101,7 @@
                 v-if="scaleValues.length && visibleUiElements.scale"
                 md12>
                 <v-select
-                    v-model="scaleValue"
+                    v-model.number="scaleValue"
                     :items="scaleValues"
                     :label="i18n.scale"
                     :disabled="!scaleEnabled"
@@ -112,7 +112,7 @@
                 v-if="!scaleValues.length && visibleUiElements.scale"
                 md10>
                 <v-text-field
-                    v-model="scaleValue"
+                    v-model.number="scaleValue"
                     :label="i18n.scale"
                     :disabled="!scaleEnabled"
                     step="1"
