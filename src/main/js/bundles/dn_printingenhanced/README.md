@@ -181,7 +181,7 @@ To make the functions of this bundle available to the user, the following tool c
 
 ### Change the print service url
 
-The Printing Enhanced bundle uses components of the default [printing](https://demos.conterra.de/mapapps/resources/jsregistry/root/printing/4.11.1/README.md) bundle.
+The Printing Enhanced bundle uses components of the default [printing](https://demos.conterra.de/mapapps/resources/jsregistry/root/printing/latest/README.md) bundle.
 This means that the print URL must be configured on this bundle.
 
 ```json
