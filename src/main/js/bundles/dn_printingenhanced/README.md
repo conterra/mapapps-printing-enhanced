@@ -3,9 +3,18 @@
 The Printing Enhanced Bundle extends the Printing bundle by further capabilities.
 
 ## Usage
-Simply add the bundle "dn_printingenhanced" to your app.
+1. First you need to add the bundle dn_printingenhanced to your app.
+2. Then you can configure it.
+
+To make the functions of this bundle available to the user, the following tool can be added to a toolset:
+
+| Tool ID                    | Component                  | Description              |
+|----------------------------|----------------------------|--------------------------|
+| printingEnhancedToggleTool | PrintingEnhancedToggleTool | Show or hide the widget. |
 
 ## Configuration Reference
+
+### Config
 
 ```json
 "dn_printingenhanced": {
@@ -169,3 +178,16 @@ Simply add the bundle "dn_printingenhanced" to your app.
 | useUsernameAsAuthor            | Boolean            | ```true``` &#124; ```false```      | ```true```                           | Use the currently logged in user to pre-enter the author.                                                                                                                                                                         |
 | usernameAttributes             | Array              |                                    | ```["givenname","sn"]```             | Attributes of the user for determining the user name. https://demos.conterra.de/mapapps/resources/jsregistry/root/authentication/latest/README.md                                                                                                                                                                             |
 | customTextElements             | Array              |                                    | ```[]```                             | Define custom text elements that are available in the print template. You can use strings or replacer for values of the user object.                                                                                              |
+
+### Change the print service url
+
+The Printing Enhanced bundle uses components of the default [printing](https://demos.conterra.de/mapapps/resources/jsregistry/root/printing/4.11.1/README.md) bundle.
+This means that the print URL must be configured on this bundle.
+
+```json
+"printing": {
+    "Config": {
+        "url": "https://url.to/arcgis/rest/services/Utilities/GPServer/Export%20Web%20Map%20Task"
+    }
+}
+```
