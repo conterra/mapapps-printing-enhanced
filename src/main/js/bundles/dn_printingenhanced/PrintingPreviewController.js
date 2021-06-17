@@ -99,7 +99,6 @@ export default declare({
 
         d_aspect.after(printViewModel, "print", (promise) => {
             async(() => {
-                this._printingPreviewDrawer.showGraphicsLayer(true);
                 const view = printViewModel.view;
 
                 // reset view properties
@@ -108,6 +107,7 @@ export default declare({
                     view.rotation = this._oldRotation;
                     this._oldRotation = null;
                 }
+                this._printingPreviewDrawer.showGraphicsLayer(true);
             }, 2000);
             return promise;
         });
@@ -118,7 +118,7 @@ export default declare({
     },
 
     deactivate() {
-        this._printingPreviewDrawer._removeGraphicFromGraphicsLayer();
+        this._printingPreviewDrawer.removeGraphicFromGraphicsLayer();
         this[_connect].disconnect();
         this[_observers].destroy();
         this[_lastPopupState]?.reset();
@@ -150,7 +150,7 @@ export default declare({
             this[_lastPopupState] = this._disablePopups();
         });
         connect.connect(tool, "onDeactivate", () => {
-            this._printingPreviewDrawer._removeGraphicFromGraphicsLayer();
+            this._printingPreviewDrawer.removeGraphicFromGraphicsLayer();
             this[_lastPopupState]?.reset();
         });
     },
@@ -163,7 +163,7 @@ export default declare({
             this[_lastPopupState] = this._disablePopups();
         });
         connect.connect(tool, "onDeactivate", () => {
-            this._printingPreviewDrawer._removeGraphicFromGraphicsLayer();
+            this._printingPreviewDrawer.removeGraphicFromGraphicsLayer();
             this[_lastPopupState]?.reset();
         });
     },
@@ -217,7 +217,7 @@ export default declare({
     },
 
     _handleDrawTemplateDimensions(zoomTo) {
-        this._printingPreviewDrawer._removeGraphicFromGraphicsLayer();
+        this._printingPreviewDrawer.removeGraphicFromGraphicsLayer();
         const properties = this._printingEnhancedProperties._properties;
         async(() => {
             if (((this._printingToggleTool && this._printingToggleTool.active) ||

@@ -64,7 +64,7 @@ export default class PrintingPreviewDrawer {
             rotation: mapWidgetModel.rotation
         };
         const geometry = this._getMainFrameGeometry(geometryParams);
-        this._removeGraphicFromGraphicsLayer();
+        this.removeGraphicFromGraphicsLayer();
         this._addGraphicToGraphicsLayer(geometry);
         return geometry;
     }
@@ -212,15 +212,20 @@ export default class PrintingPreviewDrawer {
         }
     }
 
-    _removeGraphicFromGraphicsLayer() {
+    removeGraphicFromGraphicsLayer() {
         if (this[_graphic]) {
             this[_graphicsLayer].remove(this[_graphic]);
         }
+        this._completeSketching();
+    }
+
+    _completeSketching() {
         const sketchViewModel = this[_sketchViewModel];
         sketchViewModel && sketchViewModel.complete();
     }
 
     showGraphicsLayer(value) {
         this[_graphicsLayer].visible = value;
+        this._completeSketching();
     }
 }
