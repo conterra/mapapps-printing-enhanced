@@ -74,9 +74,6 @@ pipeline {
         stage('Test'){
             when { expression { return buildParams.test && !buildParams.release} }
             steps {
-                echo "run java tests"
-                // need to run install to have submodules ready for webapp jetty start
-                sh "mvn install"
                 echo "run js tests"
                 sh "mvn prepare-package -P run-js-tests,include-mapapps-deps"
 

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (C) 2020 con terra GmbH (info@conterra.de)
+    Copyright (C) 2021 con terra GmbH (info@conterra.de)
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -16,7 +16,8 @@
     limitations under the License.
 
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>de.conterra.devnet</groupId>
     <artifactId>mapapps-printing-enhanced</artifactId>
@@ -39,7 +40,6 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <!-- import dependencies management from mapapps -->
                 <groupId>de.conterra.mapapps</groupId>
                 <artifactId>ct-mapapps</artifactId>
                 <version>${mapapps.version}</version>
@@ -66,7 +66,6 @@
             <classifier>dev</classifier>
             <scope>test</scope>
         </dependency>
-
         <dependency>
             <groupId>org.vuetifyjs</groupId>
             <artifactId>vuetify</artifactId>
@@ -249,7 +248,7 @@
             <plugin>
                 <groupId>de.conterra.maven</groupId>
                 <artifactId>setproperties-maven-plugin</artifactId>
-                <version>1.0.2</version>
+                <version>1.0.3</version>
                 <executions>
                     <execution>
                         <goals>
@@ -406,13 +405,17 @@
                     <properties>
                         <owner>con terra GmbH</owner>
                         <email>info@conterra.de</email>
-                        <project.inceptionYear>2020</project.inceptionYear>
+                        <project.inceptionYear>2021</project.inceptionYear>
                     </properties>
                     <includes>
                         <include>src/main/js/**/*.js</include>
                         <include>src/main/js/**/*.ts</include>
                         <include>src/main/js/**/*.vue</include>
                         <include>src/main/js/**/*.css</include>
+                        <include>src/test/**/*.js</include>
+                        <include>src/test/**/*.html</include>
+                        <include>src/test/**/*.css</include>
+                        <include>src/test/**/application.properties</include>
                         <include>src/main/config/assembly.xml</include>
                         <include>**/build.properties</include>
                         <include>**/gulpfile.js</include>
@@ -464,6 +467,13 @@
                 <artifactId>mapapps-maven-plugin</artifactId>
                 <executions>
                     <execution>
+                        <!-- used to create .zip files containing the apps during the build -->
+                        <id>create-app-zips</id>
+                        <goals>
+                            <goal>deployApps</goal>
+                        </goals>
+                    </execution>
+                    <execution>
                         <id>build-app-template</id>
                         <phase>prepare-package</phase>
                         <goals>
@@ -483,8 +493,11 @@
                     </execution>
                 </executions>
                 <configuration>
+                    <!-- only build zip files -->
                     <skipDeploy>true</skipDeploy>
                     <createApp>false</createApp>
+                    <sourceDirectory>${js.build.outputPath}/apps</sourceDirectory>
+                    <outputDirectory>${project.build.directory}</outputDirectory>
                 </configuration>
             </plugin>
             <plugin>
@@ -546,12 +559,12 @@
         <root.build.outputPath>${project.build.directory}/webapp</root.build.outputPath>
         <js.build.outputPath>${root.build.outputPath}/js</js.build.outputPath>
 
-        <mapapps.version>4.11.1</mapapps.version>
+        <mapapps.version>4.12.0</mapapps.version>
         <!-- JS lib versions -->
         <apprt.version>${mapapps.version}</apprt.version>
         <!-- java lib versions -->
-        <ct.jsregistry.version>1.4.0</ct.jsregistry.version>
-        <ct.jsrt-test.version>2.0.0</ct.jsrt-test.version>
+        <ct.jsregistry.version>1.4.3</ct.jsregistry.version>
+        <ct.jsrt-test.version>2.0.2</ct.jsrt-test.version>
 
         <!-- the default app, replaced in the *.html files to switch app names-->
         <default.app.name>sample</default.app.name>
@@ -565,6 +578,15 @@
         <jetty.port>9090</jetty.port>
         <mvn.cmd>mvn</mvn.cmd>
         <gulp.task/>
+
+        <mapapps.user><!-- set correct username for map.apps remote installation--></mapapps.user>
+        <mapapps.pw><!-- set correct password for map.apps remote installation--></mapapps.pw>
+        <!-- set to false if map.apps is configured behind integrated windows authentication is required -->
+        <mapapps.useChunkedRequestEncoding>true</mapapps.useChunkedRequestEncoding>
+        <!-- enable this if "upload" profile should only deploy bundles -->
+        <skip.apps.upload>false</skip.apps.upload>
+        <!-- enable this if "upload" profile should pre-optimize apps -->
+        <triggerPreOptimization>false</triggerPreOptimization>
 
         <!-- required for release build -->
         <scm.push>false</scm.push>
@@ -585,7 +607,7 @@
                                 <goals>
                                     <goal>reserve-network-port</goal>
                                 </goals>
-                                <phase>process-test-classes</phase>
+                                <phase>process-test-resources</phase>
                                 <configuration>
                                     <portNames>
                                         <portName>jetty.server.port</portName>
@@ -632,7 +654,7 @@
                                     <goal>gulp</goal>
                                 </goals>
                                 <configuration>
-                                    <arguments>run-js-tests --tests "http://localhost:${jetty.server.port}/resources/jsregistry/root/intern/latest/runner.html?boot=/js/tests/test-init.js&amp;test=dn_printingenhanced/tests/all"</arguments>
+                                    <arguments>run-browser-tests --tests http://localhost:${jetty.server.port}/resources/jsregistry/root/@conterra/mapapps-mocha-runner/latest/mocha.html?boot=/js/tests/test-init.js&amp;timeout=5000&amp;test=sample_helloworld/tests/all&amp;reporter=tap</arguments>
                                 </configuration>
                             </execution>
                         </executions>
@@ -781,8 +803,7 @@
                                     <async>true</async>
                                     <executable>${maven.home}/bin/${mvn.cmd}</executable>
                                     <arguments>
-                                        <argument>com.github.eirslett:frontend-maven-plugin:gulp@watch-changes
-                                        </argument>
+                                        <argument>com.github.eirslett:frontend-maven-plugin:gulp@watch-changes</argument>
                                     </arguments>
                                 </configuration>
                             </execution>
@@ -927,8 +948,7 @@
                         <groupId>de.conterra.mapapps</groupId>
                         <artifactId>mapapps-maven-plugin</artifactId>
                         <configuration>
-                            <!-- enable deploy options -->
-                            <skipDeploy>false</skipDeploy>
+                            <skipDeploy>${skip.apps.upload}</skipDeploy>
                             <deployAsApp>true</deployAsApp>
                             <appName>${project.artifactId}</appName>
                             <appTitle>${project.artifactId}-${project.version}</appTitle>
