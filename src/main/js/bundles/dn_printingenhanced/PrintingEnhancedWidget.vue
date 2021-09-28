@@ -19,7 +19,8 @@
     <v-container
         grid-list-md
         fluid
-        class="pa-0 fullHeight printing-enhanced-container">
+        class="pa-0 fullHeight printing-enhanced-container"
+    >
         <v-tabs
             v-model="activeTab"
             slider-color="primary"
@@ -34,11 +35,13 @@
                 {{ i18n.mapOnlyTab }}
             </v-tab>
             <v-tab
-                v-if="!exportedLinks.length">
+                v-if="!exportedLinks.length"
+            >
                 {{ i18n.printResults }}
             </v-tab>
             <v-tab
-                v-else>
+                v-else
+            >
                 {{ i18n.printResults }} ({{ exportedLinks.length }})
             </v-tab>
             <v-tab-item v-show="visibleUiElements.layoutTab">
@@ -59,7 +62,8 @@
                     :layout-list="layoutList"
                     :enable-print-preview.sync="enablePrintPreview"
                     :visible-ui-elements="visibleUiElements"
-                    @resetScale="$emit('resetScale')"/>
+                    @resetScale="$emit('resetScale')"
+                />
             </v-tab-item>
             <v-tab-item v-show="visibleUiElements.mapOnlyTab">
                 <map-only-widget
@@ -78,24 +82,28 @@
                     :enable-print-preview.sync="enablePrintPreview"
                     :visible-ui-elements="visibleUiElements"
                     @resetScale="$emit('resetScale')"
-                    @rotate="rotate"/>
+                    @rotate="rotate"
+                />
             </v-tab-item>
             <v-tab-item>
                 <printing-results-widget
                     :i18n="i18n"
-                    :exported-links="exportedLinks"/>
+                    :exported-links="exportedLinks"
+                />
             </v-tab-item>
         </v-tabs>
         <v-container
             v-if="activeTab!==2"
             grid-list-md
             fluid
-            class="pa-0 px-2 pt-2 printing-button-container">
+            class="pa-0 px-2 pt-2 printing-button-container"
+        >
             <v-btn
                 block
                 ripple
                 color="primary"
-                @click="print()">
+                @click="print()"
+            >
                 <v-icon left>
                     print
                 </v-icon>
