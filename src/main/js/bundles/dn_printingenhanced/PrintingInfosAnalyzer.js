@@ -74,13 +74,23 @@ export default class PrintingInfosAnalyzer {
         const outputParamName = properties.layoutTemplatesInfoTaskResultParameter || "Output_JSON";
         return new Promise((resolve, reject) => {
             gp.submitJob({}).then((jobInfo) => {
-                if (jobInfo.jobStatus === "job-succeeded") {
-                    gp.getResultData(jobInfo.jobId, outputParamName).then((results) => {
-                        resolve(results.value);
-                    });
-                } else if (jobInfo.jobStatus === "job-failed") {
-                    reject(jobInfo.messages[0]);
-                }
+                const jobId = jobInfo.jobId;
+                const options = {
+                    interval: 1000,
+                    statusCallback: (j) => {
+                        console.info("Get Layout Templates Info Task Job Status: ", j.jobStatus);
+                    }
+                };
+
+                gp.waitForJobCompletion(jobId, options).then((jobInfo) => {
+                    if (jobInfo.jobStatus === "job-succeeded") {
+                        gp.getResultData(jobInfo.jobId, outputParamName).then((results) => {
+                            resolve(results.value);
+                        });
+                    } else if (jobInfo.jobStatus === "job-failed") {
+                        reject(jobInfo.messages[0]);
+                    }
+                });
             });
         });
     }
