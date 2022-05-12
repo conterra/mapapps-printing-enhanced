@@ -13,39 +13,39 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-.ctAppRoot .printing-enhanced-widget .printing-enhanced-container {
+.ctAppRoot .vue-base.printing-enhanced-widget .printing-enhanced-container {
     display: flex;
     flex-direction: column;
 }
 
-.ctAppRoot .printing-enhanced-widget .printing-button-container {
+.ctAppRoot .vue-base.printing-enhanced-widget .container.printing-button-container {
     flex: 0 0 auto;
 }
 
-.ctAppRoot .printing-enhanced-widget .v-tabs {
+.ctAppRoot .vue-base.printing-enhanced-widget .v-tabs {
     flex: 1 1 auto;
     overflow: auto;
     display: flex;
     flex-direction: column;
 }
 
-.ctAppRoot .printing-enhanced-widget .v-tabs {
+.ctAppRoot .vue-base.printing-enhanced-widget .v-tabs {
     flex: 1 1 auto;
     overflow: auto;
     display: flex;
     flex-direction: column;
 }
 
-.ctAppRoot .printing-enhanced-widget .v-tabs .v-tabs__bar {
+.ctAppRoot .vue-base.printing-enhanced-widget .v-tabs .v-tabs__bar {
     flex: 0 0 auto;
 }
 
-.ctAppRoot .printing-enhanced-widget .v-tabs .v-window {
+.ctAppRoot .vue-base.printing-enhanced-widget .v-tabs .v-window {
     flex: 1 1 auto;
     overflow: auto;
 }
 
-.ctAppRoot .printing-enhanced-widget .v-alert.info {
+.ctAppRoot .vue-base.printing-enhanced-widget .v-alert.info {
     border: none;
 }
 
