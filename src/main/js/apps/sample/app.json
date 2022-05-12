@@ -177,34 +177,14 @@
                         "id": "esri_street",
                         "title": "Straßenkarte (grau)",
                         "thumbnailUrl": "resource('${app}:/images/streets.png')",
-                        "basemap": "gray-vector"
+                        "selected": true,
+                        "basemap": "gray"
                     },
                     {
                         "id": "esri_hybrid",
                         "title": "Luftbild (hybrid)",
                         "thumbnailUrl": "resource('${app}:/images/hybrid.png')",
                         "basemap": "hybrid"
-                    },
-                    {
-                        "id": "esri_topo",
-                        "title": "Topographische Karte",
-                        "thumbnailUrl": "resource('${app}:/images/topo.png')",
-                        "selected": true,
-                        "basemap": {
-                            "type": "GROUP",
-                            "layers": [
-                                {
-                                    "basemap": "topo-vector",
-                                    "type": "AGS_VECTORTILE",
-                                    "url": "https://www.arcgis.com/sharing/rest/content/items/6f65bc1351b7411588a8cb43fe23dad7/resources/styles/root.json"
-                                },
-                                {
-                                    "id": "esri_topo1",
-                                    "type": "AGS_TILED",
-                                    "url": "https://services.arcgisonline.com/arcgis/rest/services/Elevation/World_Hillshade/MapServer"
-                                }
-                            ]
-                        }
                     }
                 ],
                 "map": {
