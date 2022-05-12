@@ -16,6 +16,8 @@
             "templatelayout",
             "template-seasons",
             "theme-autumn",
+            "theme-everlasting",
+            "themes",
             "map-init",
             "map-preload-2D",
             "toolset",
@@ -582,6 +584,11 @@
                         ]
                     }
                 ]
+            }
+        },
+        "themes": {
+            "ThemeSelector": {
+                "componentEnabled": true
             }
         },
         "toolset": {
