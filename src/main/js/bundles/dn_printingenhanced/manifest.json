@@ -32,9 +32,6 @@
     "layout-widgets": [
         {
             "widgetRole": "printingEnhancedWidget",
-            "sublayout": [
-                "desktop"
-            ],
             "window": {
                 "title": "${windowTitle}",
                 "dockTool": "printingEnhancedToggleTool",
