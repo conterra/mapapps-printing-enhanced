@@ -32,15 +32,25 @@
     "layout-widgets": [
         {
             "widgetRole": "printingEnhancedWidget",
-            "sublayout": [
-                "desktop"
-            ],
             "window": {
                 "title": "${windowTitle}",
                 "dockTool": "printingEnhancedToggleTool",
                 "closable": true,
                 "maximizable": false,
                 "minimizeOnClose": true,
+                "windowClass": "noPadding",
+                "marginBox": {
+                    "w": 340,
+                    "h": 425
+                }
+            }
+        },
+        {
+            "widgetRole": "printingEnhancedWidget",
+            "sublayout": [
+                "desktop"
+            ],
+            "window": {
                 "resizable": true,
                 "marginBox": {
                     "w": 340,
@@ -51,8 +61,7 @@
                 "minSize": {
                     "w": 340,
                     "h": 350
-                },
-                "windowClass": "noPadding"
+                }
             }
         },
         {
@@ -62,11 +71,6 @@
                 "tablet_portrait"
             ],
             "window": {
-                "title": "${windowTitle}",
-                "dockTool": "printingEnhancedToggleTool",
-                "closable": true,
-                "maximizable": false,
-                "minimizeOnClose": true,
                 "resizable": false,
                 "draggable": false,
                 "marginBox": {
@@ -74,8 +78,7 @@
                     "h": 425,
                     "t": 125,
                     "l": 25
-                },
-                "windowClass": "noPadding"
+                }
             }
         },
         {
@@ -85,20 +88,14 @@
                 "mobile_portrait"
             ],
             "window": {
-                "title": "${windowTitle}",
-                "dockTool": "printingEnhancedToggleTool",
                 "dockable": true,
                 "dockingBar": "${id}-dockingBarBottomLeft",
-                "closable": true,
-                "maximizable": false,
-                "minimizeOnClose": true,
                 "resizable": false,
                 "marginBox": {
                     "w": "100%",
                     "h": "50%",
                     "b": 0
-                },
-                "windowClass": "noPadding"
+                }
             }
         }
     ],
