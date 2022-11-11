@@ -62,8 +62,9 @@ export default class PrintingInfosAnalyzer {
         }
     }
 
-    _fetchTemplateInfosSync(url) {
-        return geoprocessor.execute(url, {}).then((response) => response.results[0].value);
+    async _fetchTemplateInfosSync(url) {
+        const result = await geoprocessor.execute(url, {});
+        return result.results[0].value;
     }
 
     async _fetchTemplateInfosAsync(url) {
