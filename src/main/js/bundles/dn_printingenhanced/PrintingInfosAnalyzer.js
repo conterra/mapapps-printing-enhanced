@@ -15,7 +15,7 @@
  */
 import apprt_when from "apprt-core/when";
 import apprt_request from "apprt-request";
-import Geoprocessor from "esri/tasks/Geoprocessor";
+import * as geoprocessor from "esri/rest/geoprocessor";
 
 const _printInfos = Symbol("_printInfos");
 
@@ -54,43 +54,39 @@ export default class PrintingInfosAnalyzer {
     _fetchTemplateInfos(url) {
         const properties = this._printingEnhancedProperties._properties;
         const printUrl = url;
-        const templateUrl = printUrl.substr(0, printUrl.lastIndexOf("/") + 1) + properties.layoutTemplatesInfoTaskName;
-        const gp = new Geoprocessor({url: templateUrl});
+        const templateUrl = printUrl.substring(0, printUrl.lastIndexOf("/") + 1) + properties.layoutTemplatesInfoTaskName;
         if (this._isAsync()) {
-            return this._fetchTemplateInfosAsync(gp);
+            return this._fetchTemplateInfosAsync(templateUrl);
         } else {
-            return this._fetchTemplateInfosSync(gp);
+            return this._fetchTemplateInfosSync(templateUrl);
         }
     }
 
-    _fetchTemplateInfosSync(gp) {
-        return gp.execute({}).then((response) => {
-            return response.results[0].value;
-        });
+    _fetchTemplateInfosSync(url) {
+        return geoprocessor.execute(url, {}).then((response) => response.results[0].value);
     }
 
-    _fetchTemplateInfosAsync(gp) {
+    async _fetchTemplateInfosAsync(url) {
         const properties = this._printingEnhancedProperties._properties;
         const outputParamName = properties.layoutTemplatesInfoTaskResultParameter || "Output_JSON";
-        return new Promise((resolve, reject) => {
-            gp.submitJob({}).then((jobInfo) => {
-                const jobId = jobInfo.jobId;
-                const options = {
-                    interval: 1000,
-                    statusCallback: (j) => {
-                        console.info("Get Layout Templates Info Task Job Status: ", j.jobStatus);
-                    }
-                };
 
-                gp.waitForJobCompletion(jobId, options).then((jobInfo) => {
-                    if (jobInfo.jobStatus === "job-succeeded") {
-                        gp.getResultData(jobInfo.jobId, outputParamName).then((results) => {
-                            resolve(results.value);
-                        });
-                    } else if (jobInfo.jobStatus === "job-failed") {
-                        reject(jobInfo.messages[0]);
-                    }
-                });
+        const jobInfo = await geoprocessor.submitJob(url, {});
+        const options = {
+            interval: 1000,
+            statusCallback: (j) => {
+                console.info("Get Layout Templates Info Task Job Status: ", j.jobStatus);
+            }
+        };
+
+        return new Promise((resolve, reject) => {
+            jobInfo.waitForJobCompletion(options).then(() => {
+                if (jobInfo.jobStatus === "job-succeeded") {
+                    jobInfo.fetchResultData(outputParamName).then((results) => {
+                        resolve(results.value);
+                    });
+                } else if (jobInfo.jobStatus === "job-failed") {
+                    reject(jobInfo.messages[0]);
+                }
             });
         });
     }
