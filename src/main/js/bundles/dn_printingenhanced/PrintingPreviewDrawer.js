@@ -156,7 +156,9 @@ export default class PrintingPreviewDrawer {
     _addGraphicsLayerToMap(map) {
         const mapWidgetModel = this._mapWidgetModel;
         const graphicsLayer = this[_graphicsLayer] = new GraphicsLayer({
-            listMode: "hide"
+            listMode: "hide",
+            title: "Printing Enhanced GraphicsLayer",
+            internal: true
         });
         map.add(graphicsLayer);
         const properties = this._printingEnhancedProperties;
