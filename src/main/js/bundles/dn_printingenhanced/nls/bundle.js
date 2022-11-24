@@ -62,7 +62,8 @@ module.exports = {
             },
             low: "Low",
             medium: "Medium",
-            high: "High"
+            high: "High",
+            graphicsLayerTitle: "Printing Preview"
         }
     },
     de: true

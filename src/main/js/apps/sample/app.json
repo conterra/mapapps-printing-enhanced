@@ -30,8 +30,8 @@
             "share-link",
             "printing",
             "toc",
-            "dn_printingenhanced",
-            "authentication"
+            "authentication",
+            "dn_printingenhanced"
         ],
         "require": [
             "${app}.app"

@@ -62,6 +62,7 @@ module.exports = {
         },
         low: "Niedrig",
         medium: "Mittel",
-        high: "Hoch"
+        high: "Hoch",
+        graphicsLayerTitle: "Druckvorschau"
     }
 };

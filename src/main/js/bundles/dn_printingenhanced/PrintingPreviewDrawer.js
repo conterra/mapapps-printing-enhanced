@@ -154,14 +154,15 @@ export default class PrintingPreviewDrawer {
     }
 
     _addGraphicsLayerToMap(map) {
+        const properties = this._printingEnhancedProperties;
         const mapWidgetModel = this._mapWidgetModel;
         const graphicsLayer = this[_graphicsLayer] = new GraphicsLayer({
+            id: properties.graphicsLayerId,
+            title: properties.graphicsLayerTitle,
             listMode: "hide",
-            title: "Printing Enhanced GraphicsLayer",
             internal: true
         });
         map.add(graphicsLayer);
-        const properties = this._printingEnhancedProperties;
         if (!properties.enablePrintPreviewMovement) {
             return;
         }

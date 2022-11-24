@@ -239,7 +239,9 @@
                     "givenname",
                     "sn"
                 ],
-                "customTextElements": []
+                "customTextElements": [],
+                "graphicsLayerId": "printing-enhanced-graphics",
+                "graphicsLayerTitle": "${ui.graphicsLayerTitle}"
             }
         },
         {
