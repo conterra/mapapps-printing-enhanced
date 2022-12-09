@@ -100,7 +100,7 @@ export default class PrintingInfosAnalyzer {
     }
 
     _printError(error) {
-        const i18nErrors = this._i18n.get().ui.error;
+        const i18nErrors = this._i18n.get().ui.errors;
         let errorMsg = i18nErrors.unknown;
         const errorCode = error.status;
         const customError = i18nErrors["code" + errorCode];
