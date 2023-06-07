@@ -31,7 +31,7 @@ export default class PrintingInfosAnalyzer {
             "query": {
                 "f": "json"
             }
-        }), function (printInfos) {
+        }), (printInfos) => {
             // side effect (cache infos and template infos)
             this[_printInfos] = printInfos;
             return apprt_when(this._fetchTemplateInfos(url), function (templateInfos) {
@@ -41,12 +41,8 @@ export default class PrintingInfosAnalyzer {
                 // ignore missing template info
                 return printInfos;
             }, this);
-        }, function (error) {
+        }, (error) => {
             this._printError(error);
-            this.onPrintInfosError({
-                src: this,
-                error: error
-            });
             throw error;
         }, this);
     }
