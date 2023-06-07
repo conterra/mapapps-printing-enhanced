@@ -116,14 +116,14 @@ export default class PrintingEnhancedWidgetFactory {
             return {
                 value: format,
                 text: format.toUpperCase()
-            }
+            };
         });
         const layoutStrings = this._i18n.get().ui.layouts;
         this.vm.layoutList = templatesInfo.layout.choiceList.map((layout) => {
             return {
                 value: layout,
                 text: layoutStrings[layout] || layout
-            }
+            };
         });
     }
 }
