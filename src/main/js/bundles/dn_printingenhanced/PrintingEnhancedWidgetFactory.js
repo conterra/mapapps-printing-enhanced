@@ -87,7 +87,7 @@ export default class PrintingEnhancedWidgetFactory {
             "copyright": false,
             "legendEnabled": false,
             "attributionEnabled": false
-        }
+        };
         vm.visibleUiElements = {...defaultVisibleUiElements, ...properties.visibleUiElements};
         vm.dpiValues = properties.dpiValues;
         vm.scaleValues = properties.scaleValues;
