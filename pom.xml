@@ -20,8 +20,8 @@
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>de.conterra.devnet</groupId>
-    <artifactId>mapapps-devnet-blueprint</artifactId>
-    <version>4.15.1-SNAPSHOT</version>
+    <artifactId>mapapps-printing-enhanced</artifactId>
+    <version>2.0.9-SNAPSHOT</version>
     <packaging>jar</packaging>
     <repositories>
         <repository>
