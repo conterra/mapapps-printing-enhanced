@@ -33,7 +33,7 @@ export default class PrintingPropertiesOverWriter {
         if (properties.useUsernameAsAuthor) {
             const authentication = userService.getAuthentication();
             if (!authentication.isAuthenticated()) {
-                console.log("User not authenticated!");
+                console.warn("User not authenticated!");
                 return;
             }
             const user = authentication.getUser();
@@ -72,8 +72,10 @@ export default class PrintingPropertiesOverWriter {
 
     _filterChoiceLists(templatesInfo) {
         const properties = this._printingEnhancedProperties._properties;
-        templatesInfo.format.choiceList = this._filterChoiceList(templatesInfo.format.choiceList, properties.allowedFormats);
-        templatesInfo.layout.choiceList = this._filterChoiceList(templatesInfo.layout.choiceList, properties.allowedLayouts);
+        templatesInfo.format.choiceList =
+            this._filterChoiceList(templatesInfo.format.choiceList, properties.allowedFormats);
+        templatesInfo.layout.choiceList =
+            this._filterChoiceList(templatesInfo.layout.choiceList, properties.allowedLayouts);
         return templatesInfo;
     }
 

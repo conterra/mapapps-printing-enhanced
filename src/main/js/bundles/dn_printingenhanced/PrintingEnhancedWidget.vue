@@ -129,7 +129,7 @@
             i18n: {
                 type: Object,
                 default: function () {
-                    return {}
+                    return {};
                 }
             },
             dpiValues: {
@@ -223,7 +223,7 @@
                     type: Number,
                     default: 0
                 }
-            }
+            };
         },
         watch: {
             activeTab: function(tab) {
@@ -249,7 +249,7 @@
         },
         methods: {
             rotate: function () {
-                [this.height, this.width] = [this.width, this.height]
+                [this.height, this.width] = [this.width, this.height];
             },
             print: function () {
                 this.$emit('print', {});

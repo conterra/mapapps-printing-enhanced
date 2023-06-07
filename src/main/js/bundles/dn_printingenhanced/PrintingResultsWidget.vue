@@ -51,6 +51,7 @@
                     </v-icon>
                 </v-list-tile-action>
                 <v-list-tile-content>
+                    <!-- eslint-disable-next-line vue/no-v-text-v-html-on-component -->
                     <v-list-tile-title v-text="exportedLink.name" />
                 </v-list-tile-content>
             </v-list-tile>
@@ -72,7 +73,7 @@
             i18n: {
                 type: Object,
                 default: function () {
-                    return {}
+                    return {};
                 }
             },
             exportedLinks: {

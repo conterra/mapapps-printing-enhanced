@@ -36,4 +36,4 @@ export default {
         return value ? value.name : layoutId;
     }
 
-}
+};

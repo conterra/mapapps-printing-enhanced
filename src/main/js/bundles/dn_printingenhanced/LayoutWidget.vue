@@ -19,98 +19,109 @@
     <v-container
         grid-list-md
         fluid
-        class="pa-2">
+        class="pa-2"
+    >
         <v-layout
             row
-            wrap>
+            wrap
+        >
             <v-flex
                 v-if="visibleUiElements.title"
-                md12>
+                md12
+            >
                 <v-text-field
                     v-model="titleValue"
                     :label="i18n.title"
                     :placeholder="i18n.titlePlaceholder"
                     hide-details
-                ></v-text-field>
+                />
             </v-flex>
             <v-flex
                 v-if="visibleUiElements.author"
-                md12>
+                md12
+            >
                 <v-text-field
                     v-model="authorValue"
                     :label="i18n.author"
                     :placeholder="i18n.authorPlaceholder"
                     hide-details
-                ></v-text-field>
+                />
             </v-flex>
             <v-flex
                 v-if="visibleUiElements.format"
                 md6
-                :class="{ md12: !visibleUiElements.dpi }">
+                :class="{ md12: !visibleUiElements.dpi }"
+            >
                 <v-select
                     v-model="formatValue"
                     :items="formatList"
                     :label="i18n.format"
                     hide-details
-                ></v-select>
+                />
             </v-flex>
             <v-flex
                 v-if="visibleUiElements.dpi"
                 md6
-                :class="{ md12: !visibleUiElements.format }">
+                :class="{ md12: !visibleUiElements.format }"
+            >
                 <v-select
                     v-model="dpiValue"
                     :items="dpiValues"
                     :label="i18n.dpi"
                     hide-details
-                ></v-select>
+                />
             </v-flex>
             <v-flex
                 v-if="visibleUiElements.layout"
-                md12>
+                md12
+            >
                 <v-select
                     v-model="layoutValue"
                     :items="layoutList"
                     :label="i18n.layout"
                     hide-details
-                ></v-select>
+                />
             </v-flex>
             <v-flex
                 v-if="visibleUiElements.printPreviewCheckbox"
-                md12>
+                md12
+            >
                 <v-checkbox
                     v-model="enablePrintPreviewValue"
                     :label="i18n.showPrintPreview"
                     color="primary"
                     hide-details
                     class="pa-0 ma-0"
-                ></v-checkbox>
+                />
             </v-flex>
             <v-flex
                 v-if="visibleUiElements.scaleEnabled"
-                md12>
+                md12
+            >
                 <v-checkbox
                     v-model="scaleEnabledValue"
                     :label="i18n.scaleEnabled"
                     color="primary"
                     hide-details
                     class="pa-0 ma-0"
-                ></v-checkbox>
+                />
             </v-flex>
             <v-flex
                 v-if="scaleValues.length && visibleUiElements.scale"
-                md12>
+                md12
+            >
                 <v-select
                     v-model.number="scaleValue"
                     :items="scaleValues"
                     :label="i18n.scale"
                     :disabled="!scaleEnabled"
                     hide-details
-                ></v-select>
+                />
             </v-flex>
             <v-flex
                 v-if="!scaleValues.length && visibleUiElements.scale"
-                md10>
+                md10
+            >
                 <v-text-field
                     v-model.number="scaleValue"
                     :label="i18n.scale"
@@ -122,36 +133,40 @@
             </v-flex>
             <v-flex
                 v-if="!scaleValues.length && visibleUiElements.scale"
-                md2>
+                md2
+            >
                 <v-btn
                     flat
                     icon
                     color="primary"
                     :disabled="!scaleEnabled"
-                    @click="$emit('resetScale')">
+                    @click="$emit('resetScale')"
+                >
                     <v-icon>replay</v-icon>
                 </v-btn>
             </v-flex>
             <v-flex
                 v-if="visibleUiElements.copyright"
-                md12>
+                md12
+            >
                 <v-text-field
                     v-model="copyrightValue"
                     :label="i18n.copyright"
                     :placeholder="i18n.copyrightPlaceholder"
                     hide-details
-                ></v-text-field>
+                />
             </v-flex>
             <v-flex
                 v-if="visibleUiElements.legendEnabled"
-                md12>
+                md12
+            >
                 <v-checkbox
                     v-model="legendEnabledValue"
                     :label="i18n.legendEnabled"
                     color="primary"
                     hide-details
                     class="pa-0 ma-0"
-                ></v-checkbox>
+                />
             </v-flex>
         </v-layout>
     </v-container>
@@ -166,7 +181,7 @@
             i18n: {
                 type: Object,
                 default: function () {
-                    return {}
+                    return {};
                 }
             },
             author: {
@@ -233,7 +248,7 @@
         data() {
             return {
                 advancedOptions: [0]
-            }
+            };
         },
         computed: {
             authorValue: {

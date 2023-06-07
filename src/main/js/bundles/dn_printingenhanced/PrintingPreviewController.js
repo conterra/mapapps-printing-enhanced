@@ -72,12 +72,12 @@ export default declare({
                         ct_lang.forEachOwnProp(element, (value, name) => {
                             element[name] = d_string.substitute(value, this._user);
                         });
-                        customTextElements.push(element)
+                        customTextElements.push(element);
                     });
                 } else {
                     properties.customTextElements.forEach((element) => {
                         customTextElements.push(element);
-                    })
+                    });
                 }
             }
             // set sketching properties to view
@@ -114,7 +114,7 @@ export default declare({
 
         this.watch("enablePrintPreview", (args) => {
             this._handleDrawTemplateDimensions();
-        })
+        });
     },
 
     deactivate() {
@@ -130,7 +130,7 @@ export default declare({
             this[_view] = mapWidgetModel.view;
         } else {
             mapWidgetModel.watch("view", ({value: view}) => {
-                this._watchForExtentChange(view)
+                this._watchForExtentChange(view);
                 this[_view] = mapWidgetModel.view;
             });
         }
@@ -173,7 +173,7 @@ export default declare({
         if (properties.useUsernameAsAuthor) {
             const authentication = userService.getAuthentication();
             if (!authentication.isAuthenticated()) {
-                console.log("User not authenticated!");
+                console.warn("User not authenticated!");
                 return;
             }
             this._user = authentication.getUser();
@@ -265,7 +265,7 @@ export default declare({
                 }
                 executed = true;
             }
-        }
+        };
     }
 
 });
