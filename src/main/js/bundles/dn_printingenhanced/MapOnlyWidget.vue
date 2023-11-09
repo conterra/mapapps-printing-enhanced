@@ -105,6 +105,7 @@
             >
                 <v-checkbox
                     v-model="enablePrintPreviewValue"
+                    disabled
                     :label="i18n.showPrintPreview"
                     color="primary"
                     hide-details
@@ -174,6 +175,13 @@
                     class="pa-0 ma-0"
                 />
             </v-flex>
+            <div
+                v-if="!scaleEnabled"
+                aria-live="polite"
+                class="ct-message ct-message--info mt-2"
+            >
+                {{ i18n.helperTextScaleEnabled }}
+            </div>
         </v-layout>
     </v-container>
 </template>
