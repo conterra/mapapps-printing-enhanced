@@ -86,14 +86,33 @@
                 v-if="visibleUiElements.printPreviewCheckbox"
                 md12
             >
-                <v-checkbox
-                    v-model="enablePrintPreviewValue"
-                    :label="i18n.showPrintPreview"
-                    :disabled="!scaleEnabled"
-                    color="primary"
-                    hide-details
-                    class="pa-0 ma-0"
-                />
+                <div class="pa-0 ma-0 infoContainer">
+                    <v-checkbox
+                        v-model="enablePrintPreviewValue"
+                        :label="i18n.showPrintPreview"
+                        :disabled="!scaleEnabled"
+                        color="primary"
+                        hide-details
+                        class="pa-0 ma-0"
+                    />
+                    <v-btn
+                        v-if="!scaleEnabled"
+                        icon
+                        small
+                        top
+                        class="infoButton"
+                        @click="showInfo=!showInfo"
+                    >
+                        <v-icon color="primary">info</v-icon>
+                    </v-btn>
+                </div>
+                <div
+                    v-if="showInfo && !scaleEnabled"
+                    aria-live="polite"
+                    class="ct-message ct-message--info mt-2"
+                >
+                    {{ i18n.helperTextScaleEnabled }}
+                </div>
             </v-flex>
             <v-flex
                 v-if="visibleUiElements.scaleEnabled"
@@ -169,13 +188,6 @@
                     class="pa-0 ma-0"
                 />
             </v-flex>
-            <div
-                v-if="!scaleEnabled"
-                aria-live="polite"
-                class="ct-message ct-message--info mt-2"
-            >
-                {{ i18n.helperTextScaleEnabled }}
-            </div>
         </v-layout>
     </v-container>
 </template>
@@ -255,7 +267,8 @@
         },
         data() {
             return {
-                advancedOptions: [0]
+                advancedOptions: [0],
+                showInfo: false
             };
         },
         computed: {

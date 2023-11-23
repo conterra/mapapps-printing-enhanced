@@ -49,4 +49,13 @@
     border: none;
 }
 
+.ctAppRoot .vue-base.printing-enhanced-widget .infoContainer {
+
+    display: inline-flex;
+}
+
+.ctAppRoot .vue-base.printing-enhanced-widget .infoButton {
+    margin: 0px;
+    top: 0px
+}
 
