@@ -56,6 +56,6 @@
 
 .ctAppRoot .vue-base.printing-enhanced-widget .infoButton {
     margin: 0px;
-    top: 0px
+    top: 0px !important;
 }
 
