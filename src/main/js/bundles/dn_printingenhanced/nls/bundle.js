@@ -63,7 +63,8 @@ module.exports = {
             low: "Low",
             medium: "Medium",
             high: "High",
-            graphicsLayerTitle: "Printing Preview"
+            graphicsLayerTitle: "Printing Preview",
+            helperTextScaleEnabled: "Print preview can only be displayed if a scale is set."
         }
     },
     de: true

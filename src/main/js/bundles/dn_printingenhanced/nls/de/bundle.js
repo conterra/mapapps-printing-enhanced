@@ -63,6 +63,7 @@ module.exports = {
         low: "Niedrig",
         medium: "Mittel",
         high: "Hoch",
-        graphicsLayerTitle: "Druckvorschau"
+        graphicsLayerTitle: "Druckvorschau",
+        helperTextScaleEnabled: "Der Druckrahmen kann nur angezeigt werden, wenn ein Maßstab festgelegt ist."
     }
 };

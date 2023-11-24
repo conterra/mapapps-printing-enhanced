@@ -237,6 +237,11 @@
                     }
                     this.layout = "MAP_ONLY";
                 }
+            },
+            scaleEnabled: function(scaleEnabled) {
+                if (scaleEnabled === false) {
+                    this.enablePrintPreview=false;
+                }
             }
         },
         mounted: function () {
