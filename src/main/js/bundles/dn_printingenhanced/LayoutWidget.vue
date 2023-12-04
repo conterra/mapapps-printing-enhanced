@@ -118,6 +118,13 @@
                 v-if="visibleUiElements.scaleEnabled"
                 md12
             >
+                <div
+                    v-if="!scaleEnabled && !visibleUiElements.printPreviewCheckbox"
+                    aria-live="polite"
+                    class="ct-message ct-message--info mt-2"
+                >
+                    {{ i18n.helperTextScaleEnabled }}
+                </div>
                 <v-checkbox
                     v-model="scaleEnabledValue"
                     :label="i18n.scaleEnabled"
