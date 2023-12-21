@@ -142,6 +142,11 @@ export default declare({
         this._printRotation = this._computeAngle(geometry.rings[0][0], geometry.rings[0][1]);
     },
 
+    resetPrintGeometry() {
+        this._printExtent = null;
+        this._printRotation = null;
+    },
+
     setPrintingToggleTool(tool) {
         this._printingToggleTool = tool;
         const connect = this[_connect] = new Connect();

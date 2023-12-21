@@ -240,7 +240,11 @@
             },
             scaleEnabled: function(scaleEnabled) {
                 if (scaleEnabled === false) {
-                    this.enablePrintPreview=false;
+                    this.enablePrintPreview = false;
+                    this.$emit('resetPrintGeometry');
+                }
+                if (scaleEnabled && !this.visibleUiElements.printPreviewCheckbox) {
+                    this.enablePrintPreview = this.printPreviewInitallyVisible;
                 }
             }
         },
