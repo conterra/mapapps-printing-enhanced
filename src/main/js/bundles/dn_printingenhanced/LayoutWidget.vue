@@ -1,6 +1,6 @@
 <!--
 
-    Copyright (C) 2020 con terra GmbH (info@conterra.de)
+    Copyright (C) 2023 con terra GmbH (info@conterra.de)
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -118,6 +118,13 @@
                 v-if="visibleUiElements.scaleEnabled"
                 md12
             >
+                <div
+                    v-if="!scaleEnabled && !visibleUiElements.printPreviewCheckbox"
+                    aria-live="polite"
+                    class="ct-message ct-message--info mt-2"
+                >
+                    {{ i18n.helperTextScaleEnabled }}
+                </div>
                 <v-checkbox
                     v-model="scaleEnabledValue"
                     :label="i18n.scaleEnabled"

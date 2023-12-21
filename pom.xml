@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (C) 2020 con terra GmbH (info@conterra.de)
+    Copyright (C) 2023 con terra GmbH (info@conterra.de)
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>de.conterra.devnet</groupId>
     <artifactId>mapapps-printing-enhanced</artifactId>
-    <version>2.0.9-SNAPSHOT</version>
+    <version>2.0.12-SNAPSHOT</version>
     <packaging>jar</packaging>
     <repositories>
         <repository>
@@ -86,11 +86,6 @@
     <build>
         <pluginManagement>
             <plugins>
-                <plugin>
-                    <groupId>de.conterra.mapapps</groupId>
-                    <artifactId>mapapps-maven-plugin</artifactId>
-                    <version>${mapapps.version}</version>
-                </plugin>
                 <plugin>
                     <groupId>de.conterra.jsregistry</groupId>
                     <artifactId>ct-jsregistry-maven-plugin</artifactId>
@@ -326,7 +321,7 @@
                     <properties>
                         <owner>con terra GmbH</owner>
                         <email>info@conterra.de</email>
-                        <project.inceptionYear>2020</project.inceptionYear>
+                        <project.inceptionYear>2023</project.inceptionYear>
                     </properties>
                     <includes>
                         <include>src/main/js/**/*.js</include>
@@ -394,7 +389,8 @@
                             <goal>buildPacksProperties</goal>
                         </goals>
                         <configuration>
-                            <!-- don't list not shipped bundles in the META-INF\js-registry-packs.properties file -->
+                            <!-- don't list not shipped bundles in the
+                            META-INF\js-registry-packs.properties file -->
                             <scanPackagesExcludes>apps/**,bundles/sample_tests</scanPackagesExcludes>
                         </configuration>
                     </execution>
@@ -473,10 +469,10 @@
         </plugins>
     </build>
     <scm>
-        <connection>scm:git:https://github.com/conterra/mapapps-devnet-blueprint.git</connection>
-        <developerConnection>scm:git:https://github.com/conterra/mapapps-devnet-blueprint.git
+        <connection>scm:git:https://github.com/conterra/mapapps-printing-enhanced.git</connection>
+        <developerConnection>scm:git:https://github.com/conterra/mapapps-printing-enhanced.git
         </developerConnection>
-        <url>https://github.com/conterra/mapapps-devnet-blueprint</url>
+        <url>https://github.com/conterra/mapapps-printing-enhanced</url>
         <tag>HEAD</tag>
     </scm>
     <distributionManagement>
@@ -494,11 +490,11 @@
         <root.build.outputPath>${project.build.directory}/webapp</root.build.outputPath>
         <js.build.outputPath>${root.build.outputPath}/js</js.build.outputPath>
 
-        <mapapps.version>4.15.0</mapapps.version>
+        <mapapps.version>4.15.1</mapapps.version>
         <!-- JS lib versions -->
         <apprt.version>${mapapps.version}</apprt.version>
         <!-- java lib versions -->
-        <ct.jsregistry.version>1.5.9</ct.jsregistry.version>
+        <ct.jsregistry.version>1.5.10</ct.jsregistry.version>
         <ct.jsrt-test.version>2.0.2</ct.jsrt-test.version>
 
         <!-- the default app, replaced in the *.html files to switch app names-->
@@ -528,7 +524,7 @@
         required -->
         <mapapps.useChunkedRequestEncoding>true</mapapps.useChunkedRequestEncoding>
         <!-- enable this if "upload" profile should only deploy bundles -->
-        <skip.apps.upload>false</skip.apps.upload>
+        <skip.apps.upload>true</skip.apps.upload>
         <!-- enable this if "upload" profile should pre-optimize apps -->
         <triggerPreOptimization>false</triggerPreOptimization>
     </properties>

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2020 con terra GmbH (info@conterra.de)
+ * Copyright (C) 2023 con terra GmbH (info@conterra.de)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -98,7 +98,12 @@ mapappsBrowserSync.registerTask({
 
     // to prevent auto open of browser, set this to false
     urlToOpen: localOverrides?.openBrowser ?? true,
-
+    properties: {
+        paths: [
+            // Ensure @@key@@ expressions filtered in tests files
+            /^\/js\/tests\/(runTests.html|test-init.js|init-packs.js)$/
+        ]
+    },
     jsreg: {
         //npmDir : __dirname + "/node_modules/",
         npmModules: [
@@ -126,7 +131,9 @@ gulp.task("build",
 gulp.task("lint",
     gulp.parallel(
         "js-lint"
-        //,"style-lint"
+        /*, comment in to lint .css/.less files
+        "style-lint"
+        */
     ));
 
 gulp.task("preview",
