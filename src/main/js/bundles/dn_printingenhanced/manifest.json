@@ -112,6 +112,10 @@
                     {
                         "topic": "dn_printingenhanced/PRINTSETTINGS",
                         "method": "setPrintSettings"
+                    },
+                    {
+                        "topic": "dn_printingenhanced/RESETPRINTGEOMETRY",
+                        "method": "resetPrintGeometry"
                     }
                 ]
             },
@@ -329,6 +333,10 @@
                 {
                     "name": "_printingEnhancedProperties",
                     "providing": "dn_printingenhanced.PrintingEnhancedProperties"
+                },
+                {
+                    "name": "_eventService",
+                    "providing": "ct.framework.api.EventService"
                 }
             ]
         },

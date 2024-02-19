@@ -98,6 +98,10 @@ export default class PrintingEnhancedWidgetFactory {
         vm.$on('resetScale', () => {
             esriPrintWidget._resetToCurrentScale();
         });
+        vm.$on('resetPrintGeometry', () => {
+            esriPrintWidget._resetToCurrentScale();
+            this._eventService.postEvent("dn_printingenhanced/RESETPRINTGEOMETRY");
+        });
 
         Binding.for(vm, printingPreviewController)
             .syncAll("enablePrintPreview")

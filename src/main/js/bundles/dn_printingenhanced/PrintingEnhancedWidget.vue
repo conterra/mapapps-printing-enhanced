@@ -244,10 +244,14 @@
             },
             scaleEnabled: function(scaleEnabled) {
                 if (scaleEnabled === false) {
+                    this.printPreviewInitallyVisible = this.enablePrintPreview;
                     this.enablePrintPreview = false;
+                    this.$emit('resetPrintGeometry');
                 }
                 if (scaleEnabled && !this.visibleUiElements.printPreviewCheckbox) {
-                    this.enablePrintPreview = this.printPreviewInitallyVisible;
+                    if (this.printPreviewInitallyVisible === true) {
+                        this.enablePrintPreview = this.printPreviewInitallyVisible;
+                    }
                 }
             }
         },
@@ -256,9 +260,6 @@
                 this.activeTab = 1;
             } else {
                 this.activeTab = 0;
-            }
-            if (!this.visibleUiElements.printPreviewCheckbox) {
-                this.printPreviewInitallyVisible = this.enablePrintPreview;
             }
             this.$emit('startup');
         },
