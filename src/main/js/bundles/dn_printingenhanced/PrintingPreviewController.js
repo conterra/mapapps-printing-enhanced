@@ -32,14 +32,14 @@ const _view = Symbol("_view");
 
 export default declare({
 
-    enablePrintPreview: false,
+    drawPrintPreview: false,
 
     activate() {
         const printWidget = this._printingWidget;
         const esriPrintWidget = printWidget._esriWidget;
         const printViewModel = esriPrintWidget.viewModel;
         const properties = this._printingEnhancedProperties._properties;
-        this.enablePrintPreview = properties.enablePrintPreview;
+        this.drawPrintPreview = properties.enablePrintPreview && properties.scaleEnabled;
 
         // get print infos
         const url = this[_printServiceUrl] = esriPrintWidget.printServiceUrl;
@@ -81,20 +81,22 @@ export default declare({
                 }
             }
             // set sketching properties to view
-            const view = printViewModel.view;
-            this._oldRotation = null;
-            this._oldScale = view.scale;
-            if (properties.enablePrintPreviewMovement) {
-                if (this._printExtent) {
-                    view.extent = this._printExtent;
-                    this._oldRotation = view.rotation;
-                    view.rotation = this._printRotation;
-                } else {
-                    this._oldRotation = view.rotation;
-                    view.rotation = 0;
+            if(printTemplate.scalePreserved) {
+                const view = printViewModel.view;
+                this._oldRotation = null;
+                this._oldScale = view.scale;
+                if (properties.enablePrintPreviewMovement) {
+                    if (this._printExtent) {
+                        view.extent = this._printExtent;
+                        this._oldRotation = view.rotation;
+                        view.rotation = this._printRotation;
+                    } else {
+                        this._oldRotation = view.rotation;
+                        view.rotation = 0;
+                    }
                 }
+                view.scale = printTemplate.outScale;
             }
-            view.scale = printTemplate.outScale;
         });
 
         d_aspect.after(printViewModel, "print", (promise) => {
@@ -112,7 +114,7 @@ export default declare({
             return promise;
         });
 
-        this.watch("enablePrintPreview", (args) => {
+        this.watch("drawPrintPreview", (args) => {
             this._handleDrawTemplateDimensions();
         });
     },
@@ -140,11 +142,6 @@ export default declare({
         const geometry = event.getProperty("geometry");
         this._printExtent = geometry.extent;
         this._printRotation = this._computeAngle(geometry.rings[0][0], geometry.rings[0][1]);
-    },
-
-    resetPrintGeometry() {
-        this._printExtent = null;
-        this._printRotation = null;
     },
 
     setPrintingToggleTool(tool) {
@@ -226,7 +223,7 @@ export default declare({
         const properties = this._printingEnhancedProperties._properties;
         async(() => {
             if (((this._printingToggleTool && this._printingToggleTool.active) ||
-                this._printingEnhancedToggleTool.active) && this.enablePrintPreview) {
+                this._printingEnhancedToggleTool.active) && this.drawPrintPreview) {
                 const geometry = this._printingPreviewDrawer
                     .drawTemplateDimensions(this[_printInfos], this[_templateOptions], properties.defaultPageUnit);
                 if (geometry && zoomTo && this[_templateOptions].scaleEnabled) {
@@ -256,7 +253,7 @@ export default declare({
 
     _disablePopups() {
         const properties = this._printingEnhancedProperties._properties;
-        if (!this[_view] || !properties.enablePrintPreview) {
+        if (!this[_view] || !properties.drawPrintPreview) {
             return;
         }
         const view = this[_view];

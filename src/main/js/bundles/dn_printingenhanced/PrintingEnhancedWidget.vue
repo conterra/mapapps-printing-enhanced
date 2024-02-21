@@ -241,18 +241,6 @@
                     }
                     this.layout = "MAP_ONLY";
                 }
-            },
-            scaleEnabled: function(scaleEnabled) {
-                if (scaleEnabled === false) {
-                    this.printPreviewInitallyVisible = this.enablePrintPreview;
-                    this.enablePrintPreview = false;
-                    this.$emit('resetPrintGeometry');
-                }
-                if (scaleEnabled && !this.visibleUiElements.printPreviewCheckbox) {
-                    if (this.printPreviewInitallyVisible === true) {
-                        this.enablePrintPreview = this.printPreviewInitallyVisible;
-                    }
-                }
             }
         },
         mounted: function () {

@@ -26,7 +26,7 @@ export default class PrintingEnhancedWidgetFactory {
     }
 
     createInstance() {
-        return new VueDijit(this.vm, {class: "printing-enhanced-widget"});
+        return new VueDijit(this.vm, { class: "printing-enhanced-widget" });
     }
 
     _initComponent() {
@@ -88,7 +88,7 @@ export default class PrintingEnhancedWidgetFactory {
             "legendEnabled": false,
             "attributionEnabled": false
         };
-        vm.visibleUiElements = {...defaultVisibleUiElements, ...properties.visibleUiElements};
+        vm.visibleUiElements = { ...defaultVisibleUiElements, ...properties.visibleUiElements };
         vm.dpiValues = properties.dpiValues;
         vm.scaleValues = properties.scaleValues;
         // listen to view model methods
@@ -98,13 +98,22 @@ export default class PrintingEnhancedWidgetFactory {
         vm.$on('resetScale', () => {
             esriPrintWidget._resetToCurrentScale();
         });
-        vm.$on('resetPrintGeometry', () => {
-            esriPrintWidget._resetToCurrentScale();
-            this._eventService.postEvent("dn_printingenhanced/RESETPRINTGEOMETRY");
-        });
 
         Binding.for(vm, printingPreviewController)
-            .syncAll("enablePrintPreview")
+            .syncToRight("enablePrintPreview", "drawPrintPreview", (enablePrintPreview) => {
+                if (enablePrintPreview && vm.scaleEnabled) {
+                    return true;
+                } else {
+                    return false;
+                }
+            })
+            .syncToRight("scaleEnabled", "drawPrintPreview", (scaleEnabled) => {
+                if (scaleEnabled && vm.enablePrintPreview) {
+                    return true;
+                } else {
+                    return false;
+                }
+            })
             .enable()
             .syncToLeftNow();
 
