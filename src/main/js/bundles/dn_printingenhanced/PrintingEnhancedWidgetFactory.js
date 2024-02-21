@@ -91,6 +91,7 @@ export default class PrintingEnhancedWidgetFactory {
         vm.visibleUiElements = { ...defaultVisibleUiElements, ...properties.visibleUiElements };
         vm.dpiValues = properties.dpiValues;
         vm.scaleValues = properties.scaleValues;
+        vm.enablePrintPreview = properties.enablePrintPreview;
         // listen to view model methods
         vm.$on('print', () => {
             esriPrintWidget._handlePrintMap();
