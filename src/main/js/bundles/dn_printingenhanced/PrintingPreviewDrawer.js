@@ -25,6 +25,9 @@ const _geometry = Symbol("_geometry");
 const _graphic = Symbol("_graphic");
 const _graphicsLayer = Symbol("_graphicsLayer");
 const _sketchViewModel = Symbol("_sketchViewModel");
+let _templateWidth = null;
+let _templateUnit = null;
+let _layout = null;
 
 export default class PrintingPreviewDrawer {
 
@@ -64,6 +67,7 @@ export default class PrintingPreviewDrawer {
             rotation: mapWidgetModel.rotation
         };
         const geometry = this._getMainFrameGeometry(geometryParams);
+        console.info(geometry);
         this.removeGraphicFromGraphicsLayer();
         this._addGraphicToGraphicsLayer(geometry);
         return geometry;
@@ -71,7 +75,6 @@ export default class PrintingPreviewDrawer {
 
     _getPrintSize(printInfos, templateOptions, defaultPageUnit) {
         const printSize = {};
-        let templateWidth;
         let templateHeight;
         const printScale = templateOptions.scale;
         const dpi = templateOptions.dpi;
@@ -80,33 +83,43 @@ export default class PrintingPreviewDrawer {
 
         // get templateinfo
         const templateInfos = printInfos.templateInfos;
-        const layout = templateOptions.layout;
-        if (!layout || layout && layout === "MAP_ONLY") {
+        _layout = templateOptions.layout;
+        console.info(_layout);
+        if (!_layout || _layout && _layout === "MAP_ONLY") {
             const resolution = geometry.calcPixelResolutionAtScale(printScale, spatialReference, dpi);
-            templateWidth = templateOptions.width;
+            _templateWidth = templateOptions.width;
             templateHeight = templateOptions.height;
-            printSize.width = (templateWidth * resolution);
+            printSize.width = (_templateWidth * resolution);
             printSize.height = (templateHeight * resolution);
         } else {
             const templateInfo = templateInfos.find((templateInfo) => {
                 const layoutName = templateInfo.layoutTemplate;
-                const currentLayoutName = LayoutHelper.getLayoutName(layout);
+                const currentLayoutName = LayoutHelper.getLayoutName(_layout);
                 return layoutName === currentLayoutName;
             });
             if (!templateInfo) {
                 return null;
             }
             const frameSize = templateInfo.activeDataFrameSize || templateInfo.webMapFrameSize;
-            templateWidth = frameSize[0];
+            _templateWidth = frameSize[0];
             templateHeight = frameSize[1];
 
             // currently only meter is supported
-            const templateUnit = templateInfo.pageUnits || defaultPageUnit;
+            _templateUnit = templateInfo.pageUnits || defaultPageUnit;
 
-            printSize.width = this._convertTemplateSizeTo(templateWidth, printScale, templateUnit);
-            printSize.height = this._convertTemplateSizeTo(templateHeight, printScale, templateUnit);
+            console.info(printScale);
+            console.info(_templateWidth);
+            console.info(_templateUnit);
+            printSize.width = this._convertTemplateSizeTo(_templateWidth, printScale, _templateUnit);
+            printSize.height = this._convertTemplateSizeTo(templateHeight, printScale, _templateUnit);
         }
         return printSize;
+    }
+
+    _getScale(geometry){
+        let scale;
+        scale = this._backconvertTemplateSizeTo(geometry.extent.width, _templateWidth, _templateUnit);
+        return scale;
     }
 
     _convertTemplateSizeTo(value, scale, unit) {
@@ -126,6 +139,25 @@ export default class PrintingPreviewDrawer {
                 break;
         }
         return value * scale / factor;
+    }
+
+    _backconvertTemplateSizeTo(value, templateWidth, unit) {
+        const coordinateTransformer = this._coordinateTransformer;
+        //let spatialRederence = this._mapWidgetModel && this._mapWidgetModel.spatialReference;
+        //let wkid = spatialRederence && spatialRederence.wkid || spatialRederence.latestWkid;
+        let factor;
+        switch (unit) {
+            case "MILLIMETER":
+                factor = 1000;
+                break;
+            case "CENTIMETER":
+                factor = 100;
+                break;
+            case "INCH":
+                factor = 39.3701;
+                break;
+        }
+        return value *factor / templateWidth;
     }
 
     _getMainFrameGeometry(geometryParams) {
@@ -180,24 +212,27 @@ export default class PrintingPreviewDrawer {
     }
 
     _createSketchViewModel(graphicsLayer, view) {
+        const updateOptions = {
+            toggleToolOnClick: false,
+            enableRotation: true,
+            enableScaling: true,
+            preserveAspectRatio: true,
+            multipleSelectionEnabled: false
+        };
         const sketchViewModel = this[_sketchViewModel] = new SketchViewModel({
             view: view,
             layer: graphicsLayer,
             updateOnGraphicClick: true,
-            defaultUpdateOptions: {
-                toggleToolOnClick: false,
-                enableRotation: true,
-                enableScaling: false,
-                multipleSelectionEnabled: false
-            }
+            defaultUpdateOptions: updateOptions
         });
         sketchViewModel.on("update", (event) => {
             const graphics = event.graphics;
             if (graphics.length) {
                 const graphic = graphics[0];
                 const geometry = graphic.geometry;
+                const scale= this._getScale(geometry);
                 this[_geometry] = geometry;
-                this._eventService.postEvent("dn_printingenhanced/PRINTSETTINGS", {geometry: geometry});
+                this._eventService.postEvent("dn_printingenhanced/PRINTSETTINGS", {geometry: geometry, scale: scale});
             }
         });
     }
