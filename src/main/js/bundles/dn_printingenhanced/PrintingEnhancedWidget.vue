@@ -241,14 +241,6 @@
                     }
                     this.layout = "MAP_ONLY";
                 }
-            },
-            scaleEnabled: function(scaleEnabled) {
-                if (scaleEnabled === false) {
-                    this.enablePrintPreview = false;
-                }
-                if (scaleEnabled && !this.visibleUiElements.printPreviewCheckbox) {
-                    this.enablePrintPreview = this.printPreviewInitallyVisible;
-                }
             }
         },
         mounted: function () {
@@ -256,9 +248,6 @@
                 this.activeTab = 1;
             } else {
                 this.activeTab = 0;
-            }
-            if (!this.visibleUiElements.printPreviewCheckbox) {
-                this.printPreviewInitallyVisible = this.enablePrintPreview;
             }
             this.$emit('startup');
         },
