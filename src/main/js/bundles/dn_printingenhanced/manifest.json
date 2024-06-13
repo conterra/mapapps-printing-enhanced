@@ -9,6 +9,9 @@
         "AGS"
     ],
     "icon": {},
+    "i18n": [
+        "bundle"
+    ],
     "license": {},
     "productName": "devnet-mapapps-printing-enhanced",
     "dependencies": {

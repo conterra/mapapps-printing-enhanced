@@ -114,7 +114,7 @@ export default declare({
             return promise;
         });
 
-        this.watch("drawPrintPreview", (args) => {
+        this.watch("drawPrintPreview", () => {
             this._handleDrawTemplateDimensions();
         });
     },

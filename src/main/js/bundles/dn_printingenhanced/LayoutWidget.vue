@@ -103,7 +103,9 @@
                         class="infoButton"
                         @click="showInfo=!showInfo"
                     >
-                        <v-icon color="primary">info</v-icon>
+                        <v-icon color="primary">
+                            info
+                        </v-icon>
                     </v-btn>
                 </div>
                 <div

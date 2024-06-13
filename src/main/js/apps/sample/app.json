@@ -33,9 +33,6 @@
             "authentication",
             "dn_printingenhanced"
         ],
-        "require": [
-            "${app}.app"
-        ],
         "i18n": [
             "bundle"
         ]
