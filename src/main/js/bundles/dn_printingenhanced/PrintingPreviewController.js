@@ -19,8 +19,7 @@ import Observers from "apprt-core/Observers";
 import apprt_when from "apprt-core/when";
 import async from "apprt-core/async";
 import d_aspect from "dojo/aspect";
-import d_string from "dojo/string";
-import ct_lang from "ct/_lang";
+import {replace} from "apprt-core/string-replace";
 
 const _templateOptions = Symbol("_templateOptions");
 const _printInfos = Symbol("_printInfos");
@@ -69,8 +68,8 @@ export default declare({
                 const customTextElements = printTemplate.layoutOptions.customTextElements;
                 if (this._user) {
                     properties.customTextElements.forEach((element) => {
-                        ct_lang.forEachOwnProp(element, (value, name) => {
-                            element[name] = d_string.substitute(value, this._user);
+                        Object.getOwnPropertyNames(element).forEach(propName => {
+                            element[propName] = replace(element[propName], this._user);
                         });
                         customTextElements.push(element);
                     });
@@ -81,7 +80,7 @@ export default declare({
                 }
             }
             // set sketching properties to view
-            if(printTemplate.scalePreserved) {
+            if (printTemplate.scalePreserved) {
                 const view = printViewModel.view;
                 this._oldRotation = null;
                 this._oldScale = view.scale;
