@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (C) 2023 con terra GmbH (info@conterra.de)
+    Copyright (C) 2024 con terra GmbH (info@conterra.de)
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>de.conterra.devnet</groupId>
     <artifactId>mapapps-printing-enhanced</artifactId>
-    <version>2.0.13</version>
+    <version>2.0.14-SNAPSHOT</version>
     <packaging>jar</packaging>
     <repositories>
         <repository>
