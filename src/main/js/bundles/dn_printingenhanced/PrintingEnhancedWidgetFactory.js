@@ -43,7 +43,7 @@ export default class PrintingEnhancedWidgetFactory {
         } else {
             console.warn("templatesInfo not yet available. Did you configure the property 'printtask.service.url` in map.apps' application.properties file? Still waiting for templatesInfo to get available...");
             const watcher = printViewModel.watch("templatesInfo", (templatesInfo) => {
-                console.warn("templatesInfo now available.")
+                console.warn("templatesInfo now available.");
                 this._setTemplatesInfos(templatesInfo);
                 watcher.remove();
             });
