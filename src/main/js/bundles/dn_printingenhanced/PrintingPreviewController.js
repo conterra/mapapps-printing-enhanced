@@ -139,8 +139,12 @@ export default declare({
 
     setPrintSettings(event) {
         const geometry = event.getProperty("geometry");
+        const scale = event.getProperty("scale");
         this._printExtent = geometry.extent;
         this._printRotation = this._computeAngle(geometry.rings[0][0], geometry.rings[0][1]);
+        if(scale){
+            this._printingWidget._esriWidget.templateOptions.scale = scale;
+        }
     },
 
     setPrintingToggleTool(tool) {
