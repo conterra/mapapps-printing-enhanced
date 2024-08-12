@@ -194,7 +194,7 @@ export default class PrintingPreviewDrawer {
             defaultUpdateOptions: {
                 toggleToolOnClick: false,
                 enableRotation: true,
-                enableScaling: false,
+                enableScaling: true,
                 multipleSelectionEnabled: false
             }
         });
