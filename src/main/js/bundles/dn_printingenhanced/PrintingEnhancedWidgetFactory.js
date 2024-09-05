@@ -26,50 +26,94 @@ export default class PrintingEnhancedWidgetFactory {
     }
 
     createInstance() {
-        return new VueDijit(this.vm, { class: "printing-enhanced-widget" });
+        const vm = this.vm;
+        const widget = new VueDijit(vm, { class: "printing-enhanced-widget" });
+
+        const printingPreviewController = this._printingPreviewController;
+        const printWidget = this._printingWidget;
+        const esriPrintWidget = printWidget._esriWidget;
+        const templateOptions = esriPrintWidget.templateOptions;
+
+        this.printingPreviewControllerBinding =
+            this._createPrintingPreviewControllerBinding(vm, printingPreviewController);
+        this.templateOptionsBinding = this._createTemplateBinding(vm, templateOptions);
+
+        widget.activateTool = () => {
+            this.exportedLinksWatcher = esriPrintWidget.exportedLinks.on("after-add", function (event) {
+                const item = event.item;
+                const exportedItem = {
+                    id: item.count,
+                    name: item.formattedName,
+                    loading: true,
+                    error: false,
+                    url: ""
+                };
+                vm.exportedLinks.push(exportedItem);
+                const stateWatcher = event.item.watch("state", (state) => {
+                    stateWatcher.remove();
+                    if (state === "ready") {
+                        exportedItem.loading = false;
+                        exportedItem.url = apprt_request.getProxiedUrl(item.url);
+                    } else if (state === "error") {
+                        exportedItem.loading = false;
+                        exportedItem.url = null;
+                        exportedItem.error = true;
+                    }
+                });
+            });
+
+            // listen to view model methods
+            vm.$on('print', () => {
+                esriPrintWidget._handlePrintMap();
+            });
+            vm.$on('resetScale', () => {
+                esriPrintWidget._resetToCurrentScale();
+            });
+
+            this.printingPreviewControllerBinding.enable()
+                .syncToLeftNow();
+
+            this.templateOptionsBinding.enable()
+                .syncToLeftNow();
+        };
+        widget.deactivateTool = () => {
+            this.vm.$off();
+            this.printingPreviewControllerBinding.disable();
+            this.templateOptionsBinding.disable();
+            this.exportedLinksWatcher.remove();
+        };
+
+        widget.own({
+            remove() {
+                this.printingPreviewControllerBinding.unbind();
+                this.printingPreviewControllerBinding = undefined;
+                this.templateOptionsBinding.unbind();
+                this.templateOptionsBinding = undefined;
+                this.vm.$off();
+                this.printingPreviewController.resetGraphic();
+            }
+        });
+
+        return widget;
     }
 
     _initComponent() {
         const properties = this._printingEnhancedProperties;
         const vm = this.vm = new Vue(PrintingEnhancedWidget);
         const printWidget = this._printingWidget;
-        const printingPreviewController = this._printingPreviewController;
         const esriPrintWidget = printWidget._esriWidget;
         const printViewModel = esriPrintWidget.viewModel;
-        const templateOptions = esriPrintWidget.templateOptions;
 
         if (printViewModel.templatesInfo) {
             this._setTemplatesInfos(printViewModel.templatesInfo);
         } else {
-            console.warn("templatesInfo not yet available. Did you configure the property 'printtask.service.url` in map.apps' application.properties file? Still waiting for templatesInfo to get available...");
+            console.info("templatesInfo not yet available. Did you configure the property 'printtask.service.url` in map.apps' application.properties file? Still waiting for templatesInfo to get available...");
             const watcher = printViewModel.watch("templatesInfo", (templatesInfo) => {
-                console.warn("templatesInfo now available.");
+                console.info("templatesInfo now available.");
                 this._setTemplatesInfos(templatesInfo);
                 watcher.remove();
             });
         }
-
-        esriPrintWidget.exportedLinks.on("after-add", function (event) {
-            const item = event.item;
-            const exportedItem = {
-                id: item.count,
-                name: item.formattedName,
-                loading: true,
-                error: false,
-                url: ""
-            };
-            vm.exportedLinks.push(exportedItem);
-            event.item.watch("state", (state) => {
-                if (state === "ready") {
-                    exportedItem.loading = false;
-                    exportedItem.url = apprt_request.getProxiedUrl(item.url);
-                } else if (state === "error") {
-                    exportedItem.loading = false;
-                    exportedItem.url = null;
-                    exportedItem.error = true;
-                }
-            });
-        });
 
         vm.i18n = this._i18n.get().ui;
         vm.exportedItems = [];
@@ -94,15 +138,10 @@ export default class PrintingEnhancedWidgetFactory {
         vm.dpiValues = properties.dpiValues;
         vm.scaleValues = properties.scaleValues;
         vm.enablePrintPreview = properties.enablePrintPreview;
-        // listen to view model methods
-        vm.$on('print', () => {
-            esriPrintWidget._handlePrintMap();
-        });
-        vm.$on('resetScale', () => {
-            esriPrintWidget._resetToCurrentScale();
-        });
+    }
 
-        Binding.for(vm, printingPreviewController)
+    _createPrintingPreviewControllerBinding(vm, printingPreviewController) {
+        return Binding.for(vm, printingPreviewController)
             .syncToRight("enablePrintPreview", "drawPrintPreview", (enablePrintPreview) => {
                 if (enablePrintPreview && vm.scaleEnabled) {
                     return true;
@@ -116,15 +155,13 @@ export default class PrintingEnhancedWidgetFactory {
                 } else {
                     return false;
                 }
-            })
-            .enable()
-            .syncToLeftNow();
+            });
+    }
 
-        Binding.for(vm, templateOptions)
+    _createTemplateBinding(vm, templateOptions) {
+        return Binding.for(vm, templateOptions)
             .syncAll("attributionEnabled", "author", "copyright", "dpi", "fileName", "forceFeatureAttributes",
-                "format", "height", "layout", "legendEnabled", "scale", "scaleEnabled", "title", "width")
-            .enable()
-            .syncToLeftNow();
+                "format", "height", "layout", "legendEnabled", "scale", "scaleEnabled", "title", "width");
     }
 
     _setTemplatesInfos(templatesInfo) {

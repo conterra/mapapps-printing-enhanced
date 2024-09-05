@@ -309,7 +309,8 @@
         {
             "name": "PrintingEnhancedWidgetFactory",
             "provides": [
-                "dijit.Widget"
+                "dijit.Widget",
+                "dn_printingenhanced.Widget"
             ],
             "instanceFactory": true,
             "properties": {
@@ -351,8 +352,16 @@
                 "togglable": true,
                 "rules": {
                     "noGroup": true
+                },
+                "activateHandler": "activateTool",
+                "deactivateHandler": "deactivateTool"
+            },
+            "references": [
+                {
+                    "name": "handlerScope",
+                    "providing": "dn_printingenhanced.Widget"
                 }
-            }
+            ]
         },
         {
             "name": "PrintingToggleToolHandler",
