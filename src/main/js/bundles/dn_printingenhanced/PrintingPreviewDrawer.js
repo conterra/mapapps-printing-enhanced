@@ -131,16 +131,10 @@ export default class PrintingPreviewDrawer {
     _getMainFrameGeometry(geometryParams) {
         const mapWidgetModel = this._mapWidgetModel;
         const view = mapWidgetModel.view;
+        const centerPoint = mapWidgetModel.center;
 
-        let x;
-        let y;
-        if (this[_graphic]) {
-            x = this[_graphic].geometry.centroid.x;
-            y = this[_graphic].geometry.centroid.y;
-        } else {
-            x = mapWidgetModel.center.x;
-            y = mapWidgetModel.center.y;
-        }
+        const x = centerPoint.x;
+        const y = centerPoint.y;
         const halfWidth = geometryParams.width / 2;
         const halfHeight = geometryParams.height / 2;
 
@@ -156,7 +150,6 @@ export default class PrintingPreviewDrawer {
             rings: rings,
             spatialReference: view.spatialReference
         });
-
         return geometryEngine.rotate(polygon, geometryParams.rotation);
     }
 
