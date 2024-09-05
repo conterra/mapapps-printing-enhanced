@@ -152,6 +152,7 @@ export default declare({
         });
         connect.connect(tool, "onDeactivate", () => {
             this._printingPreviewDrawer.removeGraphicFromGraphicsLayer();
+            this._printingPreviewDrawer.resetGraphic();
             this[_lastPopupState]?.reset();
         });
     },
@@ -165,6 +166,7 @@ export default declare({
         });
         connect.connect(tool, "onDeactivate", () => {
             this._printingPreviewDrawer.removeGraphicFromGraphicsLayer();
+            this._printingPreviewDrawer.resetGraphic();
             this[_lastPopupState]?.reset();
         });
     },
