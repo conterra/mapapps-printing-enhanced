@@ -163,70 +163,22 @@
         },
         data() {
             return {
-                attributionEnabled: {
-                    type: Boolean,
-                    default: true
-                },
-                author: {
-                    type: String,
-                    default: ""
-                },
-                copyright: {
-                    type: String,
-                    default: ""
-                },
-                dpi: {
-                    type: Number,
-                    default: 96
-                },
-                fileName: {
-                    type: String,
-                    default: ""
-                },
-                format: {
-                    type: String,
-                    default: "pdf"
-                },
-                height: {
-                    type: Number,
-                    default: 1100
-                },
-                layout: {
-                    type: String,
-                    default: "a3-portrait"
-                },
-                legendEnabled: {
-                    type: Boolean,
-                    default: true
-                },
-                scale: {
-                    type: Number,
-                    default: 0
-                },
-                scaleEnabled: {
-                    type: Boolean,
-                    default: false
-                },
-                title: {
-                    type: String,
-                    default: ""
-                },
-                width: {
-                    type: Number,
-                    default: 800
-                },
-                enablePrintPreview: {
-                    type: Boolean,
-                    default: true
-                },
-                printPreviewInitallyVisible:{
-                    type: Boolean,
-                    default: null
-                },
-                activeTab: {
-                    type: Number,
-                    default: 0
-                }
+                attributionEnabled: true,
+                author: "",
+                copyright: "",
+                dpi: 96,
+                fileName: "",
+                format: "pdf",
+                height: 1100,
+                layout: "a3-portrait",
+                legendEnabled: true,
+                scale: 0,
+                scaleEnabled: false,
+                title: "",
+                width: 800,
+                enablePrintPreview: true,
+                printPreviewInitallyVisible: null,
+                activeTab: 0
             };
         },
         watch: {
