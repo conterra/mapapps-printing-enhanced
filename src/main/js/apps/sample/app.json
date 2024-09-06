@@ -52,7 +52,7 @@
                 },
                 "visibleUiElements": {
                     "layoutTab": true,
-                    "mapOnlyTab": false,
+                    "mapOnlyTab": true,
                     "title": true,
                     "fileName": true,
                     "author": true,

@@ -33,7 +33,7 @@ export default class PrintingPreviewDrawer {
         if (mapWidgetModel.map) {
             this._addGraphicsLayerToMap(mapWidgetModel.map);
         } else {
-            mapWidgetModel.watch("map", ({value: map}) => {
+            mapWidgetModel.watch("map", ({ value: map }) => {
                 this._addGraphicsLayerToMap(map);
             });
         }
@@ -131,16 +131,14 @@ export default class PrintingPreviewDrawer {
     _getMainFrameGeometry(geometryParams) {
         const mapWidgetModel = this._mapWidgetModel;
         const view = mapWidgetModel.view;
-
-        let x;
-        let y;
+        let centerPoint = mapWidgetModel.center;
         if (this[_graphic]) {
-            x = this[_graphic].geometry.centroid.x;
-            y = this[_graphic].geometry.centroid.y;
-        } else {
-            x = mapWidgetModel.center.x;
-            y = mapWidgetModel.center.y;
+            centerPoint = this[_graphic].geometry.centroid;
         }
+
+        const x = centerPoint.x;
+        const y = centerPoint.y;
+
         const halfWidth = geometryParams.width / 2;
         const halfHeight = geometryParams.height / 2;
 
@@ -156,7 +154,6 @@ export default class PrintingPreviewDrawer {
             rings: rings,
             spatialReference: view.spatialReference
         });
-
         return geometryEngine.rotate(polygon, geometryParams.rotation);
     }
 
@@ -176,7 +173,7 @@ export default class PrintingPreviewDrawer {
         if (mapWidgetModel.view) {
             this._createSketchViewModel(graphicsLayer, mapWidgetModel.view);
         } else {
-            mapWidgetModel.watch("view", ({value: view}) => {
+            mapWidgetModel.watch("view", ({ value: view }) => {
                 this._createSketchViewModel(graphicsLayer, view);
             });
         }
@@ -204,7 +201,7 @@ export default class PrintingPreviewDrawer {
                 const graphic = graphics[0];
                 const geometry = graphic.geometry;
                 this[_geometry] = geometry;
-                this._eventService.postEvent("dn_printingenhanced/PRINTSETTINGS", {geometry: geometry});
+                this._eventService.postEvent("dn_printingenhanced/PRINTSETTINGS", { geometry: geometry });
             }
         });
     }
@@ -218,7 +215,18 @@ export default class PrintingPreviewDrawer {
         });
         this[_graphicsLayer].add(graphic);
         if (properties.enablePrintPreviewMovement) {
-            this._eventService.postEvent("dn_printingenhanced/PRINTSETTINGS", {geometry: graphic.geometry});
+            this._eventService.postEvent("dn_printingenhanced/PRINTSETTINGS", { geometry: graphic.geometry });
+        }
+    }
+
+    _completeSketching() {
+        const sketchViewModel = this[_sketchViewModel];
+        sketchViewModel && sketchViewModel.complete();
+    }
+
+    resetGraphic() {
+        if (this[_graphic]) {
+            this[_graphic] = null;
         }
     }
 
@@ -227,11 +235,6 @@ export default class PrintingPreviewDrawer {
             this[_graphicsLayer].remove(this[_graphic]);
         }
         this._completeSketching();
-    }
-
-    _completeSketching() {
-        const sketchViewModel = this[_sketchViewModel];
-        sketchViewModel && sketchViewModel.complete();
     }
 
     showGraphicsLayer(value) {
