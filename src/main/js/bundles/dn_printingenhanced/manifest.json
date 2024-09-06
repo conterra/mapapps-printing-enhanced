@@ -1,6 +1,6 @@
 {
     "name": "dn_printingenhanced",
-    "version": "2.0.14",
+    "version": "2.0.15-SNAPSHOT",
     "title": "${bundleName}",
     "description": "${bundleDescription}",
     "vendor": "con terra GmbH",
