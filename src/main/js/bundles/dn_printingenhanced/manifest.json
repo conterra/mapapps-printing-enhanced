@@ -216,6 +216,8 @@
                     }
                 ],
                 "scaleValues": [],
+                "addCurrentScaleOption": true,
+                "autoselectCurrentScaleOption": true,
                 "allowedFormats": "all",
                 "allowedLayouts": "all",
                 "printingPreviewSymbol": {

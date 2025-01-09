@@ -64,6 +64,9 @@ export default class PrintingEnhancedWidgetFactory {
 
             // listen to view model methods
             vm.$on('print', () => {
+                if (esriPrintWidget.templateOptions.scale === -1) {
+                    esriPrintWidget.templateOptions.scale = esriPrintWidget.view.scale;
+                }
                 esriPrintWidget._handlePrintMap();
             });
             vm.$on('resetScale', () => {
@@ -115,7 +118,7 @@ export default class PrintingEnhancedWidgetFactory {
             });
         }
 
-        vm.i18n = this._i18n.get().ui;
+        const i18n = vm.i18n = this._i18n.get().ui;
         vm.exportedItems = [];
         const defaultVisibleUiElements = {
             "layoutTab": true,
@@ -136,8 +139,12 @@ export default class PrintingEnhancedWidgetFactory {
         };
         vm.visibleUiElements = { ...defaultVisibleUiElements, ...properties.visibleUiElements };
         vm.dpiValues = properties.dpiValues;
-        vm.scaleValues = properties.scaleValues;
         vm.enablePrintPreview = properties.enablePrintPreview;
+
+        if (properties.addCurrentScaleOption) {
+            properties.scaleValues.unshift({ value: -1, text: i18n.currentScale });
+        }
+        vm.scaleValues = properties.scaleValues;
     }
 
     _createPrintingPreviewControllerBinding(vm, printingPreviewController) {

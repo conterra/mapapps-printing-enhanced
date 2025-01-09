@@ -44,7 +44,7 @@
                     "format": "pdf",
                     "layout": "a4-landscape",
                     "dpi": 150,
-                    "scale": 100000,
+                    "scale": -1,
                     "scaleEnabled": true,
                     "copyright": "",
                     "width": 600,

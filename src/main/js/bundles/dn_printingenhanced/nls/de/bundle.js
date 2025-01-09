@@ -39,6 +39,7 @@ module.exports = {
         height: "Höhe",
         scale: "Maßstab",
         scaleEnabled: "Maßstab festlegen",
+        currentScale: "Aktueller Maßstab",
         legendEnabled: "Legende einbeziehen",
         attributionEnabled: "Quellennachweis einfügen",
         dpi: "Qualität",

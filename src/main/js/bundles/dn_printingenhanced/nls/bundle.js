@@ -39,6 +39,7 @@ module.exports = {
             height: "Height",
             scale: "Scale",
             scaleEnabled: "Set scale",
+            currentScale: "Current scale",
             legendEnabled: "Enable legend",
             attributionEnabled: "Enable attribution",
             dpi: "Quality",
