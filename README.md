@@ -2,7 +2,7 @@
 
 The Printing Enhanced Bundle extends the Printing bundle by further capabilities.
 
-![Screenshot App](https://github.com/conterra/mapapps-printing-enhanced/blob/master/screenshot.JPG)
+![Screenshot App](https://github.com/conterra/mapapps-printing-enhanced/blob/main/screenshot.JPG)
 
 ## Build Status
 [![devnet-bundle-snapshot](https://github.com/conterra/mapapps-printing-enhanced/actions/workflows/devnet-bundle-snapshot.yml/badge.svg)](https://github.com/conterra/mapapps-printing-enhanced/actions/workflows/devnet-bundle-snapshot.yml)
