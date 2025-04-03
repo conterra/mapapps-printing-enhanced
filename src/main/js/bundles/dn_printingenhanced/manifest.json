@@ -369,8 +369,10 @@
                 "iconClass": "icon-print",
                 "toolRole": "toolset",
                 "togglable": true,
+                "noGroup": true,
                 "rules": {
-                    "noGroup": true
+                    "viewmode": "2D",
+                    "ruleSuccessProperty": "visibility"
                 },
                 "activateHandler": "activateTool",
                 "deactivateHandler": "deactivateTool"
