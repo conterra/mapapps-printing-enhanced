@@ -37,6 +37,7 @@ module.exports = {
         copyrightPlaceholder: "Urheberrecht",
         width: "Breite",
         height: "Höhe",
+        rotatePrintFrame: "Druckrahmen drehen",
         scale: "Maßstab",
         scaleEnabled: "Maßstab festlegen",
         legendEnabled: "Legende einbeziehen",

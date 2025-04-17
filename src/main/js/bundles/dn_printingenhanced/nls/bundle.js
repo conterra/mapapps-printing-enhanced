@@ -37,6 +37,7 @@ module.exports = {
             copyrightPlaceholder: "Copyright",
             width: "Width",
             height: "Height",
+            rotatePrintFrame: "Rotate print frame",
             scale: "Scale",
             scaleEnabled: "Set scale",
             legendEnabled: "Enable legend",
