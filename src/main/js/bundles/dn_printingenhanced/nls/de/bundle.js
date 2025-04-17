@@ -45,6 +45,9 @@ module.exports = {
         dpi: "Qualität",
         showPrintPreview: "Druckrahmen anzeigen",
         printResults: "Ergebnisse",
+        printResultLoading: "Druckergebnis wird geladen",
+        printError: "Es ist ein Fehler beim Laden des Druckergebnisses aufgetreten",
+        printResultAvailable: ": Druckergebnis ist verfügbar",
         noPrintResults: "Keine Druckergebnisse vorhanden",
         errors: {
             unknown: "Drucken: Ein unbekannter Fehler ist aufgetreten!",

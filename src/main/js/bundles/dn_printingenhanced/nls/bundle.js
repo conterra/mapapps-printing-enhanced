@@ -45,6 +45,9 @@ module.exports = {
             dpi: "Quality",
             showPrintPreview: "Show print preview",
             printResults: "Results",
+            printResultLoading: "Print result is loading",
+            printError: "An error occurred while loading the print result",
+            printResultAvailable: ": print result is available",
             noPrintResults: "No print results",
             errors: {
                 unknown: "Printing: An unknown error occurred!",
