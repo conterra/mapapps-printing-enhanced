@@ -33,7 +33,7 @@ export default class PrintingPreviewDrawer {
         if (mapWidgetModel.map) {
             this._addGraphicsLayerToMap(mapWidgetModel.map);
         } else {
-            mapWidgetModel.watch("map", ({ value: map }) => {
+            mapWidgetModel.watch("map", ({value: map}) => {
                 this._addGraphicsLayerToMap(map);
             });
         }
@@ -73,7 +73,11 @@ export default class PrintingPreviewDrawer {
         const printSize = {};
         let templateWidth;
         let templateHeight;
-        const printScale = templateOptions.scale;
+        let printScale = templateOptions.scale;
+
+        if (printScale === -1) {
+            printScale = this._mapWidgetModel.scale;
+        }
         const dpi = templateOptions.dpi;
         const mapWidgetModel = this._mapWidgetModel;
         const spatialReference = mapWidgetModel.spatialReference;
@@ -173,7 +177,7 @@ export default class PrintingPreviewDrawer {
         if (mapWidgetModel.view) {
             this._createSketchViewModel(graphicsLayer, mapWidgetModel.view);
         } else {
-            mapWidgetModel.watch("view", ({ value: view }) => {
+            mapWidgetModel.watch("view", ({value: view}) => {
                 this._createSketchViewModel(graphicsLayer, view);
             });
         }
@@ -201,7 +205,7 @@ export default class PrintingPreviewDrawer {
                 const graphic = graphics[0];
                 const geometry = graphic.geometry;
                 this[_geometry] = geometry;
-                this._eventService.postEvent("dn_printingenhanced/PRINTSETTINGS", { geometry: geometry });
+                this._eventService.postEvent("dn_printingenhanced/PRINTSETTINGS", {geometry: geometry});
             }
         });
     }
@@ -215,7 +219,7 @@ export default class PrintingPreviewDrawer {
         });
         this[_graphicsLayer].add(graphic);
         if (properties.enablePrintPreviewMovement) {
-            this._eventService.postEvent("dn_printingenhanced/PRINTSETTINGS", { geometry: graphic.geometry });
+            this._eventService.postEvent("dn_printingenhanced/PRINTSETTINGS", {geometry: graphic.geometry});
         }
     }
 

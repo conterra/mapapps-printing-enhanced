@@ -87,6 +87,10 @@
                 ],
                 "scaleValues": [
                     {
+                        "value": -1,
+                        "text": "${currentScale}"
+                    },
+                    {
                         "value": 1000,
                         "text": "1:1.000"
                     },

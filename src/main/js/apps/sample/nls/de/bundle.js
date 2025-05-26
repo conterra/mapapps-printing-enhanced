@@ -91,6 +91,7 @@ module.exports = {
         zip: "PLZ",
         type: "Art"
     },
+    currentScale: "Aktueller Maßstab",
     dpi: {
         low: "Niedrig",
         medium: "Mittel",
