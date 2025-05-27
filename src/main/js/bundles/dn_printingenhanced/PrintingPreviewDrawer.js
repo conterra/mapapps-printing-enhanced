@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 import Polygon from "esri/geometry/Polygon";
+import Extent from "esri/geometry/Extent";
 import Graphic from "esri/Graphic";
 import * as geometryEngine from "esri/geometry/geometryEngine";
 import geometry from "ct/mapping/geometry";
@@ -23,8 +24,10 @@ import LayoutHelper from "./LayoutHelper";
 
 const _geometry = Symbol("_geometry");
 const _graphic = Symbol("_graphic");
+const _differenceGraphic = Symbol("_differenceGraphic");
 const _graphicsLayer = Symbol("_graphicsLayer");
 const _sketchViewModel = Symbol("_sketchViewModel");
+const _outsideGraphicsLayer = Symbol("_outsideGraphicsLayer");
 
 export default class PrintingPreviewDrawer {
 
@@ -46,7 +49,7 @@ export default class PrintingPreviewDrawer {
         this._removeGraphicsLayerFromMap(map);
     }
 
-    drawTemplateDimensions(printInfos, templateOptions, defaultPageUnit) {
+    async drawTemplateDimensions(printInfos, templateOptions, defaultPageUnit) {
         const mapWidgetModel = this._mapWidgetModel;
         if (!printInfos.templateInfos) {
             return;
@@ -64,8 +67,10 @@ export default class PrintingPreviewDrawer {
             rotation: mapWidgetModel.rotation
         };
         const geometry = this._getMainFrameGeometry(geometryParams);
+        const differenceGeometry = await this._getOutsideMainFrameGeometry(geometry);
         this.removeGraphicFromGraphicsLayer();
-        this._addGraphicToGraphicsLayer(geometry);
+        this._addMainGraphicToGraphicsLayer(geometry);
+        this._addOutsideMainGraphicToGraphicsLayer(differenceGeometry);
         return geometry;
     }
 
@@ -157,10 +162,31 @@ export default class PrintingPreviewDrawer {
         return geometryEngine.rotate(polygon, geometryParams.rotation);
     }
 
+    async _getOutsideMainFrameGeometry(geometry) {
+        const fullExtent = new Extent({
+            "xmin": -20037507.067161843,
+            "ymin": -19971868.880408604,
+            "xmax": 20037507.067161843,
+            "ymax": 19971868.8804085,
+            "spatialReference": {
+                "wkid": 102100,
+                "latestWkid": 3857
+            }
+        });
+        return await geometryEngine.difference(fullExtent, geometry);
+    }
+
     _addGraphicsLayerToMap(map) {
         const properties = this._printingEnhancedProperties;
         const mapWidgetModel = this._mapWidgetModel;
         const graphicsLayer = this[_graphicsLayer] = new GraphicsLayer({
+            id: properties.graphicsLayerId,
+            title: properties.graphicsLayerTitle,
+            listMode: "hide",
+            internal: true
+        });
+        map.add(graphicsLayer);
+        const outsideGraphicsLayer = this[_outsideGraphicsLayer] = new GraphicsLayer({
             id: properties.graphicsLayerId,
             title: properties.graphicsLayerTitle,
             listMode: "hide",
@@ -195,28 +221,45 @@ export default class PrintingPreviewDrawer {
                 multipleSelectionEnabled: false
             }
         });
-        sketchViewModel.on("update", (event) => {
+        sketchViewModel.on("update", async (event) => {
             const graphics = event.graphics;
             if (graphics.length) {
                 const graphic = graphics[0];
                 const geometry = graphic.geometry;
+                if (geometry.rings.length > 1) {
+                    sketchViewModel.complete();
+                }
                 this[_geometry] = geometry;
                 this._eventService.postEvent("dn_printingenhanced/PRINTSETTINGS", { geometry: geometry });
+
+                if (this[_differenceGraphic]) {
+                    this[_graphicsLayer].remove(this[_differenceGraphic]);
+                }
+                const differenceGeometry = await this._getOutsideMainFrameGeometry(geometry);
+                this._addOutsideMainGraphicToGraphicsLayer(differenceGeometry);
             }
         });
     }
 
-    _addGraphicToGraphicsLayer(geometry) {
+    _addMainGraphicToGraphicsLayer(geometry) {
         const properties = this._printingEnhancedProperties;
-        const symbol = properties.printingPreviewSymbol;
         const graphic = this[_graphic] = new Graphic({
             geometry: geometry,
-            symbol: symbol
+            symbol: properties.printingPreviewSymbol
         });
         this[_graphicsLayer].add(graphic);
         if (properties.enablePrintPreviewMovement) {
             this._eventService.postEvent("dn_printingenhanced/PRINTSETTINGS", { geometry: graphic.geometry });
         }
+    }
+
+    _addOutsideMainGraphicToGraphicsLayer(geometry) {
+        const properties = this._printingEnhancedProperties;
+        const differenceGraphic = this[_differenceGraphic] = new Graphic({
+            geometry: geometry,
+            symbol: properties.printingOutsidePreviewSymbol
+        });
+        this[_graphicsLayer].add(differenceGraphic);
     }
 
     _completeSketching() {
@@ -228,11 +271,17 @@ export default class PrintingPreviewDrawer {
         if (this[_graphic]) {
             this[_graphic] = null;
         }
+        if (this[_differenceGraphic]) {
+            this[_differenceGraphic] = null;
+        }
     }
 
     removeGraphicFromGraphicsLayer() {
         if (this[_graphic]) {
             this[_graphicsLayer].remove(this[_graphic]);
+        }
+        if (this[_differenceGraphic]) {
+            this[_graphicsLayer].remove(this[_differenceGraphic]);
         }
         this._completeSketching();
     }
