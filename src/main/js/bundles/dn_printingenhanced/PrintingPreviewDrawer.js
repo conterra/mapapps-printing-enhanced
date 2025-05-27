@@ -27,6 +27,7 @@ const _graphic = Symbol("_graphic");
 const _differenceGraphic = Symbol("_differenceGraphic");
 const _graphicsLayer = Symbol("_graphicsLayer");
 const _sketchViewModel = Symbol("_sketchViewModel");
+const _outsideGraphicsLayer = Symbol("_outsideGraphicsLayer");
 
 export default class PrintingPreviewDrawer {
 
