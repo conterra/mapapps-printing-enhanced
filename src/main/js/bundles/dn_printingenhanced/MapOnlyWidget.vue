@@ -90,14 +90,24 @@
                 v-if="visibleUiElements.widthAndHeight"
                 md2
             >
-                <v-btn
-                    flat
-                    icon
-                    color="primary"
-                    @click="rotate"
+                <v-tooltip
+                    top
+                    open-delay="800"
                 >
-                    <v-icon>rotate_90_degrees_ccw</v-icon>
-                </v-btn>
+                    <template #activator="{ on }">
+                        <v-btn
+                            flat
+                            icon
+                            color="primary"
+                            :aria-label="i18n.rotatePrintFrame"
+                            v-on="on"
+                            @click="rotate"
+                        >
+                            <v-icon>rotate_90_degrees_ccw</v-icon>
+                        </v-btn>
+                    </template>
+                    <span>{{ i18n.rotatePrintFrame }}</span>
+                </v-tooltip>
             </v-flex>
             <v-flex
                 v-if="visibleUiElements.printPreviewCheckbox"
