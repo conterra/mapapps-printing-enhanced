@@ -16,7 +16,12 @@
 
 -->
 <template>
+    <v-container v-if="error">
+        <!-- show error to user -->
+        {{ error }}
+    </v-container>
     <v-container
+        v-else
         grid-list-md
         fluid
         class="pa-0 fullHeight printing-enhanced-container"
@@ -178,7 +183,8 @@
                 width: 800,
                 enablePrintPreview: true,
                 printPreviewInitallyVisible: null,
-                activeTab: 0
+                activeTab: 0,
+                error: ""
             };
         },
         watch: {
