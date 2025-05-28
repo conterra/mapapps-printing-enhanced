@@ -64,6 +64,9 @@ export default class PrintingEnhancedWidgetFactory {
 
             // listen to view model methods
             vm.$on('print', () => {
+                if (esriPrintWidget.templateOptions.scale === - 1) { // -1 means that the current scale of the map on the screen should be used
+                    esriPrintWidget.templateOptions.scale = esriPrintWidget.viewModel.view.scale;
+                }
                 esriPrintWidget._handlePrintMap();
             });
             vm.$on('resetScale', () => {
