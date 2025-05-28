@@ -333,6 +333,10 @@
                 {
                     "name": "_printingEnhancedProperties",
                     "providing": "dn_printingenhanced.PrintingEnhancedProperties"
+                },
+                {
+                    "name": "_mapWidgetModel",
+                    "providing": "map-widget.MapWidgetModel"
                 }
             ]
         },

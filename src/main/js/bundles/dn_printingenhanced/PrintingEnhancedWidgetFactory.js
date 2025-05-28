@@ -18,6 +18,7 @@ import Vue from "apprt-vue/Vue";
 import VueDijit from "apprt-vue/VueDijit";
 import Binding from "apprt-binding/Binding";
 import apprt_request from "apprt-request";
+import ScaleCorrection from "./ScaleCorrection";
 
 export default class PrintingEnhancedWidgetFactory {
 
@@ -28,6 +29,7 @@ export default class PrintingEnhancedWidgetFactory {
     createInstance() {
         const vm = this.vm;
         const widget = new VueDijit(vm, { class: "printing-enhanced-widget" });
+        const mapWidgetModel = this._mapWidgetModel;
 
         const printingPreviewController = this._printingPreviewController;
         const printWidget = this._printingWidget;
@@ -65,7 +67,8 @@ export default class PrintingEnhancedWidgetFactory {
             // listen to view model methods
             vm.$on('print', () => {
                 if (esriPrintWidget.templateOptions.scale === - 1) { // -1 means that the current scale of the map on the screen should be used
-                    esriPrintWidget.templateOptions.scale = esriPrintWidget.viewModel.view.scale;
+                    const scale = new ScaleCorrection().computedScale(mapWidgetModel.view, mapWidgetModel.extent, mapWidgetModel.spatialReference)
+                    esriPrintWidget.templateOptions.scale = scale;
                 }
                 esriPrintWidget._handlePrintMap();
             });

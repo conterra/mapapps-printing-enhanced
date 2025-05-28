@@ -20,6 +20,7 @@ import geometry from "ct/mapping/geometry";
 import GraphicsLayer from "esri/layers/GraphicsLayer";
 import SketchViewModel from "esri/widgets/Sketch/SketchViewModel";
 import LayoutHelper from "./LayoutHelper";
+import ScaleCorrection from "./ScaleCorrection";
 
 const _geometry = Symbol("_geometry");
 const _graphic = Symbol("_graphic");
@@ -74,12 +75,13 @@ export default class PrintingPreviewDrawer {
         let templateWidth;
         let templateHeight;
         let printScale = templateOptions.scale;
+        const mapWidgetModel = this._mapWidgetModel;
 
         if (printScale === -1) {
-            printScale = this._mapWidgetModel.scale;
+            const correctedScale = new ScaleCorrection().computedScale(mapWidgetModel.view, mapWidgetModel.extent, mapWidgetModel.spatialReference);
+            printScale = correctedScale;
         }
         const dpi = templateOptions.dpi;
-        const mapWidgetModel = this._mapWidgetModel;
         const spatialReference = mapWidgetModel.spatialReference;
 
         // get templateinfo
