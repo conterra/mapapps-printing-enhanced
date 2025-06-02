@@ -31,7 +31,8 @@
             "printing",
             "toc",
             "authentication",
-            "dn_printingenhanced"
+            "dn_printingenhanced",
+            "coordinateviewer"
         ],
         "i18n": [
             "bundle"

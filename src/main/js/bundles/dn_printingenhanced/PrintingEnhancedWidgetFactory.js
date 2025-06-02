@@ -66,15 +66,13 @@ export default class PrintingEnhancedWidgetFactory {
 
             // listen to view model methods
             vm.$on('print', () => {
-                if (esriPrintWidget.templateOptions.scale === - 1) { // -1 means that the current scale of the map on the screen should be used
-                    const scale = new ScaleCorrection().computedScale(mapWidgetModel.view, mapWidgetModel.extent, mapWidgetModel.spatialReference)
-                    esriPrintWidget.templateOptions.scale = scale;
-                }
                 esriPrintWidget._handlePrintMap();
             });
             vm.$on('resetScale', () => {
                 esriPrintWidget._resetToCurrentScale();
             });
+
+            this.currentMapScaleWatchSignal = this._syncViewModelWithCurrentMapScale(vm, mapWidgetModel.view);
 
             this.printingPreviewControllerBinding.enable()
                 .syncToLeftNow();
@@ -91,6 +89,8 @@ export default class PrintingEnhancedWidgetFactory {
 
         widget.own({
             remove() {
+                this.currentMapScaleWatchSignal?.remove();
+                this.currentMapScaleWatchSignal = undefined;
                 this.printingPreviewControllerBinding.unbind();
                 this.printingPreviewControllerBinding = undefined;
                 this.templateOptionsBinding.unbind();
@@ -144,6 +144,14 @@ export default class PrintingEnhancedWidgetFactory {
         vm.dpiValues = properties.dpiValues;
         vm.scaleValues = properties.scaleValues;
         vm.enablePrintPreview = properties.enablePrintPreview;
+    }
+
+    _syncViewModelWithCurrentMapScale(vm, mapView) {
+        return mapView.watch("scale", () => {
+            const mapWidgetModel = this._mapWidgetModel;
+            const correctedScale = new ScaleCorrection().computedScale(mapWidgetModel.view, mapWidgetModel.extent, mapWidgetModel.spatialReference);
+            vm.currentMapScale = Math.round(correctedScale);
+        });
     }
 
     _createPrintingPreviewControllerBinding(vm, printingPreviewController) {
