@@ -37,15 +37,22 @@
                         indeterminate
                         size="22"
                         color="primary"
+                        role="alert"
+                        aria-busy="true"
+                        :aria-label="i18n.printResultLoading"
                     />
                     <v-icon
                         v-else-if="exportedLink.error"
                         color="red"
+                        role="alert"
+                        :aria-label="i18n.printError"
                     >
                         error
                     </v-icon>
                     <v-icon
                         v-else
+                        role="alert"
+                        :aria-label="`${exportedLink.name} ${i18n.printResultAvailable}`"
                     >
                         cloud_download
                     </v-icon>

@@ -221,15 +221,34 @@
                 "printingPreviewSymbol": {
                     "type": "simple-fill",
                     "color": [
-                        255,
                         0,
                         0,
-                        0.25
+                        0,
+                        0
                     ],
                     "style": "solid",
                     "outline": {
                         "color": [
-                            255,
+                            0,
+                            0,
+                            0,
+                            1
+                        ],
+                        "width": "2px"
+                    }
+                },
+                "printingOutsidePreviewSymbol": {
+                    "type": "simple-fill",
+                    "color": [
+                        0,
+                        0,
+                        0,
+                        0.5
+                    ],
+                    "style": "solid",
+                    "outline": {
+                        "color": [
+                            0,
                             0,
                             0,
                             1
@@ -354,8 +373,10 @@
                 "iconClass": "icon-print",
                 "toolRole": "toolset",
                 "togglable": true,
+                "noGroup": true,
                 "rules": {
-                    "noGroup": true
+                    "viewmode": "2D",
+                    "ruleSuccessProperty": "visibility"
                 },
                 "activateHandler": "activateTool",
                 "deactivateHandler": "deactivateTool"

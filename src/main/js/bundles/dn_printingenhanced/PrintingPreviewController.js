@@ -220,10 +220,10 @@ export default declare({
     _handleDrawTemplateDimensions(zoomTo) {
         this._printingPreviewDrawer.removeGraphicFromGraphicsLayer();
         const properties = this._printingEnhancedProperties._properties;
-        async(() => {
+        async(async () => {
             if (((this._printingToggleTool && this._printingToggleTool.active) ||
                 this._printingEnhancedToggleTool.active) && this.drawPrintPreview) {
-                const geometry = this._printingPreviewDrawer
+                const geometry = await this._printingPreviewDrawer
                     .drawTemplateDimensions(this[_printInfos], this[_templateOptions], properties.defaultPageUnit);
                 if (geometry && zoomTo && this[_templateOptions].scaleEnabled) {
                     this._zoomToTemplateExtent(geometry);
