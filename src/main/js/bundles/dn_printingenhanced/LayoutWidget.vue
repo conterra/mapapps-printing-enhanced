@@ -140,8 +140,8 @@
                 md12
             >
                 <v-select
-                    v-model.number="scaleValue"
-                    :items="scaleValues"
+                    v-model.number="selectedScaleValue"
+                    :items="scaleValuesIncludingCurrentScale"
                     :label="i18n.scale"
                     :disabled="!scaleEnabled"
                     hide-details
@@ -271,13 +271,19 @@
             },
             visibleUiElements: {
                 type: Object,
-                default: () => {}
+                default: () => {
+                }
+            },
+            currentMapScale: {
+                type: Number,
+                default: 0
             }
         },
         data() {
             return {
                 advancedOptions: [0],
-                showInfo: false
+                showInfo: false,
+                selectedScaleValue: 0
             };
         },
         computed: {
@@ -337,6 +343,23 @@
                     this.$emit('update:scale', scale);
                 }
             },
+            scaleValuesIncludingCurrentScale: {
+                get() {
+                    const predefinedScaleValues = this.scaleValues || [];
+                    return predefinedScaleValues.map(entry => {
+                        if (entry.value === -1) {
+                            const localizedScale = new Intl.NumberFormat().format(this.currentMapScale);
+                            return Object.assign({}, {
+                                text: `${entry.text} (1:${localizedScale})`,
+                                value: -1
+                            });
+                        } else {
+                            return Object.assign({}, entry);
+                        }
+                    });
+
+                }
+            },
             scaleEnabledValue: {
                 get: function () {
                     return this.scaleEnabled;
@@ -359,6 +382,20 @@
                 },
                 set: function (title) {
                     this.$emit('update:title', title);
+                }
+            }
+        },
+        watch: {
+            currentMapScale(currentMapScale) {
+                if (this.selectedScaleValue === -1) {
+                    this.scaleValue = currentMapScale;
+                }
+            },
+            selectedScaleValue() {
+                if (this.selectedScaleValue === -1) {
+                    this.scaleValue = this.currentMapScale;
+                } else {
+                    this.scaleValue = this.selectedScaleValue;
                 }
             }
         }

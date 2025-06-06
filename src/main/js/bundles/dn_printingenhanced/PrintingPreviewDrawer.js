@@ -21,6 +21,7 @@ import geometry from "ct/mapping/geometry";
 import GraphicsLayer from "esri/layers/GraphicsLayer";
 import SketchViewModel from "esri/widgets/Sketch/SketchViewModel";
 import LayoutHelper from "./LayoutHelper";
+import ScaleCorrection from "./ScaleCorrection";
 
 const _geometry = Symbol("_geometry");
 const _graphic = Symbol("_graphic");
@@ -36,7 +37,7 @@ export default class PrintingPreviewDrawer {
         if (mapWidgetModel.map) {
             this._addGraphicsLayerToMap(mapWidgetModel.map);
         } else {
-            mapWidgetModel.watch("map", ({ value: map }) => {
+            mapWidgetModel.watch("map", ({value: map}) => {
                 this._addGraphicsLayerToMap(map);
             });
         }
@@ -78,9 +79,14 @@ export default class PrintingPreviewDrawer {
         const printSize = {};
         let templateWidth;
         let templateHeight;
-        const printScale = templateOptions.scale;
-        const dpi = templateOptions.dpi;
+        let printScale = templateOptions.scale;
         const mapWidgetModel = this._mapWidgetModel;
+
+        if (printScale === -1) {
+            const correctedScale = new ScaleCorrection().computedScale(mapWidgetModel.view, mapWidgetModel.extent, mapWidgetModel.spatialReference);
+            printScale = correctedScale;
+        }
+        const dpi = templateOptions.dpi;
         const spatialReference = mapWidgetModel.spatialReference;
 
         // get templateinfo
@@ -199,7 +205,7 @@ export default class PrintingPreviewDrawer {
         if (mapWidgetModel.view) {
             this._createSketchViewModel(graphicsLayer, mapWidgetModel.view);
         } else {
-            mapWidgetModel.watch("view", ({ value: view }) => {
+            mapWidgetModel.watch("view", ({value: view}) => {
                 this._createSketchViewModel(graphicsLayer, view);
             });
         }
@@ -249,7 +255,7 @@ export default class PrintingPreviewDrawer {
         });
         this[_graphicsLayer].add(graphic);
         if (properties.enablePrintPreviewMovement) {
-            this._eventService.postEvent("dn_printingenhanced/PRINTSETTINGS", { geometry: graphic.geometry });
+            this._eventService.postEvent("dn_printingenhanced/PRINTSETTINGS", {geometry: graphic.geometry});
         }
     }
 

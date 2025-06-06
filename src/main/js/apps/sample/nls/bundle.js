@@ -91,6 +91,7 @@ module.exports = {
             zip: "Zip code",
             type: "Type"
         },
+        currentScale: "Current map scale",
         dpi: {
             low: "Low",
             medium: "Medium",

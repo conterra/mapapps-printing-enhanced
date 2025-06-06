@@ -31,7 +31,8 @@
             "printing",
             "toc",
             "authentication",
-            "dn_printingenhanced"
+            "dn_printingenhanced",
+            "coordinateviewer"
         ],
         "i18n": [
             "bundle"
@@ -86,6 +87,10 @@
                     }
                 ],
                 "scaleValues": [
+                    {
+                        "value": -1,
+                        "text": "${currentScale}"
+                    },
                     {
                         "value": 1000,
                         "text": "1:1.000"

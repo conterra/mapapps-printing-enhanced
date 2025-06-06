@@ -51,6 +51,7 @@ export default declare({
         if (!this[_observers]) {
             this[_observers] = new Observers();
         }
+
         // watch for changes
         this._watchForTemplateOptionsChanges(esriPrintWidget);
 
@@ -209,14 +210,11 @@ export default declare({
         if (!this[_observers]) {
             this[_observers] = new Observers();
         }
-        const properties = this._printingEnhancedProperties;
-        if (!properties.enablePrintPreviewMovement) {
-            this[_observers].add(view.watch("stationary", (response) => {
-                if (response) {
-                    this._handleDrawTemplateDimensions();
-                }
-            }));
-        }
+        this[_observers].add(view.watch("stationary", (response) => {
+            if (response) {
+                this._handleDrawTemplateDimensions();
+            }
+        }));
     },
 
     _handleDrawTemplateDimensions(zoomTo) {

@@ -18,6 +18,7 @@ import Vue from "apprt-vue/Vue";
 import VueDijit from "apprt-vue/VueDijit";
 import Binding from "apprt-binding/Binding";
 import apprt_request from "apprt-request";
+import ScaleCorrection from "./ScaleCorrection";
 
 export default class PrintingEnhancedWidgetFactory {
 
@@ -28,6 +29,7 @@ export default class PrintingEnhancedWidgetFactory {
     createInstance() {
         const vm = this.vm;
         const widget = new VueDijit(vm, { class: "printing-enhanced-widget" });
+        const mapWidgetModel = this._mapWidgetModel;
 
         const printingPreviewController = this._printingPreviewController;
         const printWidget = this._printingWidget;
@@ -70,6 +72,8 @@ export default class PrintingEnhancedWidgetFactory {
                 esriPrintWidget._resetToCurrentScale();
             });
 
+            this.currentMapScaleWatchSignal = this._syncViewModelWithCurrentMapScale(vm, mapWidgetModel.view);
+
             this.printingPreviewControllerBinding.enable()
                 .syncToLeftNow();
 
@@ -85,6 +89,8 @@ export default class PrintingEnhancedWidgetFactory {
 
         widget.own({
             remove() {
+                this.currentMapScaleWatchSignal?.remove();
+                this.currentMapScaleWatchSignal = undefined;
                 this.printingPreviewControllerBinding.unbind();
                 this.printingPreviewControllerBinding = undefined;
                 this.templateOptionsBinding.unbind();
@@ -150,6 +156,14 @@ export default class PrintingEnhancedWidgetFactory {
         vm.dpiValues = properties.dpiValues;
         vm.scaleValues = properties.scaleValues;
         vm.enablePrintPreview = properties.enablePrintPreview;
+    }
+
+    _syncViewModelWithCurrentMapScale(vm, mapView) {
+        return mapView.watch("scale", () => {
+            const mapWidgetModel = this._mapWidgetModel;
+            const correctedScale = new ScaleCorrection().computedScale(mapWidgetModel.view, mapWidgetModel.extent, mapWidgetModel.spatialReference);
+            vm.currentMapScale = Math.round(correctedScale);
+        });
     }
 
     _createPrintingPreviewControllerBinding(vm, printingPreviewController) {

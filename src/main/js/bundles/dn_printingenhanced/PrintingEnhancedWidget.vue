@@ -67,6 +67,7 @@
                     :layout-list="layoutList"
                     :enable-print-preview.sync="enablePrintPreview"
                     :visible-ui-elements="visibleUiElements"
+                    :current-map-scale="currentMapScale"
                     @resetScale="$emit('resetScale')"
                 />
             </v-tab-item>
@@ -184,6 +185,7 @@
                 enablePrintPreview: true,
                 printPreviewInitallyVisible: null,
                 activeTab: 0,
+                currentMapScale: 0,
                 error: ""
             };
         },
