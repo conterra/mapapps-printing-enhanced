@@ -34,6 +34,7 @@ export default class PrintingEnhancedWidgetFactory {
         const printingPreviewController = this._printingPreviewController;
         const printWidget = this._printingWidget;
         const esriPrintWidget = printWidget._esriWidget;
+
         const templateOptions = esriPrintWidget.templateOptions;
 
         this.printingPreviewControllerBinding =
@@ -131,6 +132,7 @@ export default class PrintingEnhancedWidgetFactory {
                 vm.error = "templatesInfo not available. Did you configure the property 'printtask.service.url` in map.apps' application.properties file? Still waiting for templatesInfo to get available...";
                 return;
             }
+            this._setTemplatesInfos(printViewModel.templatesInfo);
         });
 
         vm.i18n = this._i18n.get().ui;
