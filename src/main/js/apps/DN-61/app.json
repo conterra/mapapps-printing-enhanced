@@ -1,0 +1,667 @@
+{
+    "properties": {
+        "title": "${apptitle}"
+    },
+    "load": {
+        "bundleLocations": [
+            "localbundles",
+            "bundles"
+        ],
+        "preFetchBundles": false,
+        "allowedBundles": [
+            "system",
+            "console",
+            "notifier",
+            "splashscreen",
+            "templatelayout",
+            "template-seasons",
+            "theme-autumn",
+            "theme-everlasting",
+            "themes",
+            "map-init",
+            "map-preload-2D",
+            "toolset",
+            "toolrules",
+            "banner",
+            "mapnavigation",
+            "popups-default",
+            "scalebar",
+            "locateme",
+            "share-link",
+            "printing",
+            "toc",
+            "authentication",
+            "dn_printingenhanced",
+            "coordinateviewer"
+        ],
+        "i18n": [
+            "bundle"
+        ]
+    },
+    "bundles": {
+        "dn_printingenhanced": {
+            "Config": {
+                "templateOptions": {
+                    "format": "Portable Document Format (PDF)",
+                    "layout":  "printing-enhanced-layout",
+                    "dpi": 150,
+                    "scale": 100000,
+                    "scaleEnabled": true,
+                    "copyright": "",
+                    "width": 600,
+                    "height": 600
+                },
+                "visibleUiElements": {
+                    "layoutTab": true,
+                    "mapOnlyTab": true,
+                    "title": true,
+                    "fileName": true,
+                    "author": true,
+                    "format": true,
+                    "widthAndHeight": true,
+                    "dpi": true,
+                    "layout": true,
+                    "printPreviewCheckbox": false,
+                    "scaleEnabled": false,
+                    "scale": true,
+                    "copyright": false,
+                    "legendEnabled": false,
+                    "attributionEnabled": false
+                },
+                "enablePrintPreview": true,
+                "enablePrintPreviewMovement": true,
+                "layoutTemplatesInfoTaskName": "Get%20Layout%20Templates%20Info",
+                "defaultPageUnit": "CENTIMETER",
+                "dpiValues": [
+                    {
+                        "value": 96,
+                        "text": "${dpi.low}"
+                    },
+                    {
+                        "value": 150,
+                        "text": "${dpi.medium}"
+                    },
+                    {
+                        "value": 300,
+                        "text": "${dpi.high}"
+                    }
+                ],
+                "scaleValues": [
+                    {
+                        "value": -1,
+                        "text": "${currentScale}"
+                    },
+                    {
+                        "value": 1000,
+                        "text": "1:1.000"
+                    },
+                    {
+                        "value": 2500,
+                        "text": "1:2.500"
+                    },
+                    {
+                        "value": 5000,
+                        "text": "1:5.000"
+                    },
+                    {
+                        "value": 10000,
+                        "text": "1:10.000"
+                    },
+                    {
+                        "value": 25000,
+                        "text": "1:25.000"
+                    },
+                    {
+                        "value": 50000,
+                        "text": "1:50.000"
+                    },
+                    {
+                        "value": 100000,
+                        "text": "1:100.000"
+                    }
+                ],
+                "printingPreviewSymbol": {
+                    "type": "simple-fill",
+                    "color": [
+                        0,
+                        0,
+                        0,
+                        0
+                    ],
+                    "style": "solid",
+                    "outline": {
+                        "color": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ],
+                        "width": "2px"
+                    }
+                },
+                "printingOutsidePreviewSymbol": {
+                    "type": "simple-fill",
+                    "color": [
+                        0,
+                        0,
+                        0,
+                        0.5
+                    ],
+                    "style": "solid",
+                    "outline": {
+                        "color": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ],
+                        "width": "2px"
+                    }
+                },
+                "useUsernameAsAuthor": true,
+                "usernameAttributes": [
+                    "givenname",
+                    "sn"
+                ],
+                "customTextElements": [
+                    {
+                        "email": "${mail}"
+                    },
+                    {
+                        "city": "${city}"
+                    },
+                    {
+                        "country": "${country}"
+                    },
+                    {
+                        "phonenumber": "${phonenumber}"
+                    },
+                    {
+                        "sn": "${sn}"
+                    },
+                    {
+                        "street": "${street}"
+                    },
+                    {
+                        "testString": "testString"
+                    }
+                ]
+            }
+        },
+        "toc": {
+            "Config": {
+                "showBasemaps": true
+            }
+        },
+        "banner": {
+            "BannerWidget": {
+                "label": "Developer Network",
+                "image": "resource('${app}:/images/logo_conterra.png')",
+                "imageWidth": 200,
+                "imagePosition": "above",
+                "link": "http://developernetwork.conterra.de"
+            }
+        },
+        "map-init": {
+            "Config": {
+                "basemaps": [
+                    {
+                        "id": "esri_street",
+                        "title": "Straßenkarte (grau)",
+                        "thumbnailUrl": "resource('${app}:/images/streets.png')",
+                        "selected": true,
+                        "basemap": "gray"
+                    },
+                    {
+                        "id": "esri_hybrid",
+                        "title": "Luftbild (hybrid)",
+                        "thumbnailUrl": "resource('${app}:/images/hybrid.png')",
+                        "basemap": "hybrid"
+                    }
+                ],
+                "map": {
+                    "layers": [
+                        {
+                            "id": "koeln2",
+                            "title": "${map.koeln2.title}",
+                            "description": "${map.koeln2.description}",
+                            "type": "GROUP",
+                            "layers": [
+                                {
+                                    "title": "${map.koeln2.libraries.title}",
+                                    "url": "https://services.arcgis.com/ObdAEOfl1Z5LP2D0/arcgis/rest/services/Köln/FeatureServer/1",
+                                    "type": "AGS_FEATURE",
+                                    "visible": true,
+                                    "popupTemplate": {
+                                        "title": "{NAME_LANG}",
+                                        "content": [
+                                            {
+                                                "type": "fields",
+                                                "fieldInfos": [
+                                                    {
+                                                        "fieldName": "NAME_LANG",
+                                                        "label": "${common.name}"
+                                                    },
+                                                    {
+                                                        "fieldName": "ADRESSE",
+                                                        "label": "${common.address}"
+                                                    },
+                                                    {
+                                                        "fieldName": "PLZ",
+                                                        "label": "${common.zip}"
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "title": "${map.koeln2.museums.title}",
+                                    "url": "https://services.arcgis.com/ObdAEOfl1Z5LP2D0/arcgis/rest/services/Köln/FeatureServer/2",
+                                    "type": "AGS_FEATURE",
+                                    "visible": true,
+                                    "popupTemplate": {
+                                        "title": "Museum",
+                                        "content": [
+                                            {
+                                                "type": "text",
+                                                "text": "${map.koeln2.museums.text}"
+                                            },
+                                            {
+                                                "type": "fields",
+                                                "fieldInfos": [
+                                                    {
+                                                        "fieldName": "ADRESSE",
+                                                        "label": "${common.address}"
+                                                    },
+                                                    {
+                                                        "fieldName": "STADTBEZIR",
+                                                        "label": "${common.precint}"
+                                                    },
+                                                    {
+                                                        "fieldName": "HYPERLINK",
+                                                        "label": "${common.furtherinfo}"
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "id": "schools",
+                                    "title": "${map.koeln2.schools.title}",
+                                    "url": "https://services.arcgis.com/ObdAEOfl1Z5LP2D0/arcgis/rest/services/Köln/FeatureServer/3",
+                                    "type": "AGS_FEATURE",
+                                    "visible": false,
+                                    "popupTemplate": {
+                                        "title": "{NAME}",
+                                        "content": [
+                                            {
+                                                "type": "fields",
+                                                "fieldInfos": [
+                                                    {
+                                                        "fieldName": "SCHULNAME",
+                                                        "label": "${common.name}"
+                                                    },
+                                                    {
+                                                        "fieldName": "ADRESSE",
+                                                        "label": "${common.address}"
+                                                    },
+                                                    {
+                                                        "fieldName": "SCHULART",
+                                                        "label": "${common.type}"
+                                                    },
+                                                    {
+                                                        "fieldName": "TRAEGER",
+                                                        "label": "${common.provider}"
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "id": "koeln3",
+                            "title": "${map.koeln3.title}",
+                            "type": "GROUP",
+                            "visible": true,
+                            "layers": [
+                                {
+                                    "title": "${map.koeln3.sights.title}",
+                                    "url": "https://services.arcgis.com/ObdAEOfl1Z5LP2D0/arcgis/rest/services/Köln/FeatureServer/4",
+                                    "type": "AGS_FEATURE",
+                                    "popupTemplate": {
+                                        "title": "${map.koeln3.sights.titleSingle}",
+                                        "content": [
+                                            {
+                                                "type": "text",
+                                                "text": "${map.koeln3.sights.text}"
+                                            },
+                                            {
+                                                "type": "fields",
+                                                "fieldInfos": [
+                                                    {
+                                                        "fieldName": "ADRESSE",
+                                                        "label": "${common.address}"
+                                                    },
+                                                    {
+                                                        "fieldName": "STADTBEZIRK",
+                                                        "label": "${common.precint}"
+                                                    },
+                                                    {
+                                                        "fieldName": "HYPERLINK",
+                                                        "label": "${common.furtherinfo}"
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "title": "${map.koeln3.playgrounds.title}",
+                                    "url": "https://services.arcgis.com/ObdAEOfl1Z5LP2D0/arcgis/rest/services/Köln/FeatureServer/5",
+                                    "type": "AGS_FEATURE",
+                                    "visible": false,
+                                    "popupTemplate": {
+                                        "title": "{Typ}",
+                                        "content": [
+                                            {
+                                                "type": "text",
+                                                "text": "${map.koeln3.playgrounds.text}"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "title": "${map.koeln3.places.title}",
+                                    "url": "https://services.arcgis.com/ObdAEOfl1Z5LP2D0/arcgis/rest/services/Köln/FeatureServer/9",
+                                    "type": "AGS_FEATURE",
+                                    "popupTemplate": {
+                                        "title": "${map.koeln3.places.titleSingle}",
+                                        "content": [
+                                            {
+                                                "type": "text",
+                                                "text": "${map.koeln3.places.text}"
+                                            },
+                                            {
+                                                "type": "fields",
+                                                "fieldInfos": [
+                                                    {
+                                                        "fieldName": "ADRESSE",
+                                                        "label": "${common.address}"
+                                                    },
+                                                    {
+                                                        "fieldName": "STADTVIERT",
+                                                        "label": "${common.district}"
+                                                    },
+                                                    {
+                                                        "fieldName": "HYPERLINK",
+                                                        "label": "${common.furtherinfo}"
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "id": "koeln1",
+                            "title": "${map.koeln1.title}",
+                            "type": "GROUP",
+                            "visible": true,
+                            "layers": [
+                                {
+                                    "title": "${map.koeln1.districts.title}",
+                                    "url": "https://services.arcgis.com/ObdAEOfl1Z5LP2D0/arcgis/rest/services/Köln/FeatureServer/8",
+                                    "type": "AGS_FEATURE",
+                                    "visible": false,
+                                    "opacity": 0.5,
+                                    "popupTemplate": {
+                                        "title": "{STV_NAME}",
+                                        "content": [
+                                            {
+                                                "type": "text",
+                                                "text": "${map.koeln1.districts.text}"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "title": "${map.koeln1.boroughs.title}",
+                                    "url": "https://services.arcgis.com/ObdAEOfl1Z5LP2D0/arcgis/rest/services/Köln/FeatureServer/7",
+                                    "type": "AGS_FEATURE",
+                                    "opacity": 0.5,
+                                    "minScale": 80000,
+                                    "popupTemplate": {
+                                        "title": "{NAME}",
+                                        "content": [
+                                            {
+                                                "type": "text",
+                                                "text": "${map.koeln1.boroughs.text}"
+                                            },
+                                            {
+                                                "type": "fields",
+                                                "fieldInfos": [
+                                                    {
+                                                        "fieldName": "expression/area",
+                                                        "format": {
+                                                            "places": 2,
+                                                            "digitSeparator": true
+                                                        }
+                                                    },
+                                                    {
+                                                        "fieldName": "expression/area-rel",
+                                                        "format": {
+                                                            "places": 2,
+                                                            "digitSeparator": true
+                                                        }
+                                                    }
+                                                ]
+                                            }
+                                        ],
+                                        "expressionInfos": [
+                                            {
+                                                "name": "area",
+                                                "title": "${common.area}",
+                                                "expression": "$feature.FLAECHE / 10000"
+                                            },
+                                            {
+                                                "name": "area-rel",
+                                                "title": "${common.totalArea}",
+                                                "expression": "Round(($feature.FLAECHE / 405020000)*100,2)"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "title": "${map.koeln1.precints.title}",
+                                    "url": "https://services.arcgis.com/ObdAEOfl1Z5LP2D0/arcgis/rest/services/Köln/FeatureServer/6",
+                                    "type": "AGS_FEATURE",
+                                    "opacity": 0.5,
+                                    "maxScale": 80000,
+                                    "popupTemplate": {
+                                        "title": "{NAME}",
+                                        "content": [
+                                            {
+                                                "type": "text",
+                                                "text": "${map.koeln1.precints.text}"
+                                            },
+                                            {
+                                                "type": "fields",
+                                                "fieldInfos": [
+                                                    {
+                                                        "fieldName": "expression/area",
+                                                        "format": {
+                                                            "places": 2,
+                                                            "digitSeparator": true
+                                                        }
+                                                    },
+                                                    {
+                                                        "fieldName": "expression/area-rel",
+                                                        "format": {
+                                                            "places": 2,
+                                                            "digitSeparator": true
+                                                        }
+                                                    }
+                                                ]
+                                            }
+                                        ],
+                                        "expressionInfos": [
+                                            {
+                                                "name": "area",
+                                                "title": "${common.area}",
+                                                "expression": "$feature.FLAECHE / 10000"
+                                            },
+                                            {
+                                                "name": "area-rel",
+                                                "title": "${common.totalArea}",
+                                                "expression": "Round(($feature.FLAECHE / 405020000)*100,2)"
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                },
+                "view": {
+                    "viewmode": "2D",
+                    "center": {
+                        "x": 774853,
+                        "y": 6610677,
+                        "spatialReference": 3857
+                    },
+                    "scale": 140000
+                }
+            }
+        },
+        "templates": {
+            "TemplateModel": {
+                "_templates": [
+                    {
+                        "name": "seasons",
+                        "widgets": [
+                            {
+                                "widgetRole": "drawer_button",
+                                "attachTo": "map_topleft",
+                                "props": {
+                                    "layoutIndex": 0
+                                }
+                            },
+                            {
+                                "widgetRole": "sharelink",
+                                "window": {
+                                    "dockable": false,
+                                    "dockingBar": null
+                                }
+                            },
+                            {
+                                "widgetRole": "legend",
+                                "sublayout": [
+                                    "mobile_portrait",
+                                    "mobile_landscape"
+                                ],
+                                "window": {
+                                    "dockable": false,
+                                    "dockingBar": null
+                                }
+                            },
+                            {
+                                "widgetRole": "printing",
+                                "template": "seasons",
+                                "sublayouts": [
+                                    "desktop",
+                                    "tablet_landscape",
+                                    "tablet_portrait"
+                                ],
+                                "priority": 1,
+                                "noMerge": true,
+                                "window": {
+                                    "dockTool": "printingToggleTool",
+                                    "marginBox": {
+                                        "l": 20,
+                                        "t": 125,
+                                        "w": 435,
+                                        "h": 850
+                                    }
+                                }
+                            },
+                            {
+                                "widgetRole": "printing",
+                                "template": "seasons",
+                                "sublayout": [
+                                    "mobile_portrait"
+                                ],
+                                "attachTo": "full-screen-window",
+                                "nomerge": true,
+                                "priority": 1,
+                                "window": {
+                                    "dockable": true,
+                                    "dockTool": "printingToggleTool",
+                                    "dockingBar": "${id}-dockingBarBottomLeft"
+                                }
+                            },
+                            {
+                                "widgetRole": "banner",
+                                "sublayout": [
+                                    "mobile_portrait"
+                                ],
+                                "attachTo": "footer_right"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        "themes": {
+            "ThemeSelector": {
+                "componentEnabled": true
+            }
+        },
+        "toolset": {
+            "ToolsetManager": {
+                "toolsets": [
+                    {
+                        "id": "mapview_tools",
+                        "tools": [
+                            "locateMeTool",
+                            "zoomInTool",
+                            "zoomOutTool",
+                            "compassTool",
+                            "restoreInitialViewTool"
+                        ],
+                        "registerWidget": {
+                            "widgetRole": "mapview_tools"
+                        },
+                        "container": "ignore",
+                        "windowType": "container",
+                        "cssClass": "muted"
+                    },
+                    {
+                        "id": "drawer_left",
+                        "title": "Werkzeuge",
+                        "cssClass": "ct-main-app-menu",
+                        "tools": [
+                            "printingEnhancedToggleTool"
+                        ],
+                        "registerWidget": {
+                            "widgetRole": "drawer_button"
+                        },
+                        "container": "ignore",
+                        "windowType": "drawer_left"
+                    }
+                ]
+            }
+        },
+        "toolrules": {
+            "ToolActiveStateManager": {
+                "activateOnStartToolIds": [
+                    "printingEnhancedToggleTool"
+                ]
+            }
+        }
+    }
+}
