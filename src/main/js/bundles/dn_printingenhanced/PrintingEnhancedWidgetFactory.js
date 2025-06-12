@@ -122,6 +122,8 @@ export default class PrintingEnhancedWidgetFactory {
         const esriPrintWidget = printWidget._esriWidget;
         const printViewModel = esriPrintWidget.viewModel;
 
+        this.#getCustomTextElements(esriPrintWidget.printServiceUrl);
+
         this.#callAfterLoading(printViewModel, () => {
             if (printViewModel.error) {
                 vm.error = `${printViewModel.error.message}`;
@@ -206,5 +208,15 @@ export default class PrintingEnhancedWidgetFactory {
                 text: layoutStrings[layout] || layout
             };
         });
+    }
+
+    async #getCustomTextElements(url) {
+        const printInfos = await this._printingInfosAnalyzer.getPrintInfos(url);
+        const templateInfos = printInfos.templateInfos;
+        const customTextElementsPerTemplate = {};
+        templateInfos.forEach(infos => {
+            customTextElementsPerTemplate[infos.layoutTemplate] = infos.layoutOptions.customTextElements;
+        });
+        console.debug("print infos ", customTextElementsPerTemplate);
     }
 }
