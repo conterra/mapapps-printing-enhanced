@@ -18,78 +18,83 @@ module.exports = {
         apptitle: "Printing Enhanced Sample",
         map: {
             koeln1: {
-                title: "Basic Data",
+                title: "Basisdaten",
                 districts: {
-                    title: "City Districts",
-                    text: "Cologne's city district <b>{STV_NAME}</b>."
+                    title: "Stadtviertel",
+                    text: "Das K\xF6lner Stadtviertel <b>{STV_NAME}</b>."
                 },
                 boroughs: {
-                    title: "Boroughs",
-                    text: "Boroughs <b>{NAME}</b> is located in Cologne's precints {STADTBEZIR}."
+                    title: "Stadtteile",
+                    text: "Der Stadtteil <b>{NAME}</b> liegt im K\xF6lner Stadtbezirk {STADTBEZIR}."
                 },
                 precints: {
-                    title: "Precints",
-                    text: "Cologne's precint {NAME}."
+                    title: "Stadtbezirke",
+                    text: "Der K\xF6lner Stadtbezirk <b>{NAME}</b>."
                 }
             },
             koeln2: {
-                title: "Education and Culture",
-                description: "List of all libraries, museums and schools in Cologne.",
+                title: "Bildung und Kultur",
+                description: "Liste aller Bibliotheken, Museen und Schulen in Köln.",
                 libraries: {
-                    title: "Libraries"
+                    title: "Bibliotheken"
                 },
                 museums: {
-                    title: "Museums",
-                    text: "Museum <b>{NAME}</b> is located in Cologne's boroughs {STADTTEIL}."
+                    title: "Museen",
+                    text: "Das Museum <b>{NAME}</b> liegt im K\xF6lner Stadtteil {STADTTEIL}."
                 },
                 schools: {
-                    title: "Schools"
+                    title: "Schulen",
+                    text: ""
                 }
             },
             koeln3: {
-                title: "Recreation",
+                title: "Freizeit",
                 sights: {
-                    title: "Tourist Attractions",
-                    titleSingle: "Tourist Attraction",
-                    text: "Tourist attraction <b>{NAME}</b> is located in Cologne's borough {STADTTEIL}."
+                    title: "Sehensw\xFCrdigkeiten",
+                    titleSingle: "Sehensw\xFCrdigkeit",
+                    text: "Die Sehensw\xFCrdigkeit <b>{NAME}</b> liegt im K\xF6lner Stadtteil {STADTTEIL}."
                 },
                 playgrounds: {
-                    title: "Playgrounds- and Sports Areas",
-                    text: "<b>{Spielplatzname}</b> is located in Cologne's borough {Stadtteil}.",
-                    baskets: "Basketball Baskets",
-                    goals: "Soccer Goals",
-                    tables: "Ping-Pong Tables",
-                    walls: "Goal Wall",
-                    skate: "Skating",
-                    misc: "Miscellaneous"
+                    title: "Spiel- und Sportpl\xE4tze",
+                    text: "<b>{Spielplatzname}</b> liegt im K\xF6lner Stadtteil {Stadtteil}.",
+                    baskets: "Basketballk\xF6rbe",
+                    goals: "Fussballtore",
+                    tables: "Tischtennis Tische",
+                    walls: "Torwand",
+                    skate: "Skaten",
+                    misc: "Sonstiges"
                 },
                 places: {
-                    title: "Places of Event",
-                    titleSingle: "Place of Event",
-                    text: "<b>{NAME}</b> is a {expression/carrier} place of event."
+                    title: "Veranstaltungsorte",
+                    titleSingle: "Veranstaltungsort",
+                    text: "<b>{NAME}</b> ist ein {expression/carrier} Veranstaltungsort."
                 }
             },
             basemaps: {
-                street: "Street Map (gray)",
-                street2: "Street Map",
-                topo: "Topographical Map",
-                hybrid: "Aerial (hybrid)"
+                gray: "Stra\xDFenkarte (grau)",
+                streets: "Stra\xDFenkarte",
+                topo: "Topographische Karte",
+                hybrid: "Luftbild (hybrid)"
             }
         },
+        tools: {
+            drawerLeft: "Werkzeuge",
+            measuring: "Messwerkzeuge"
+        },
         common: {
-            number: "Number",
-            area: "Area [ha]",
-            totalArea: "Percentage of the total area [%]",
+            number: "Nummer",
+            area: "Fl\xE4che [ha]",
+            totalArea: "Anteil an Gesamtfl\xE4che [%]",
             name: "Name",
-            provider: "Provider",
-            address: "Address",
-            furtherinfo: "Further Information",
-            precint: "Precint",
-            district: "District",
-            private: "privater",
-            municipal: "municipal",
-            zip: "Zip code",
-            type: "Type"
+            provider: "Tr\xE4ger",
+            address: "Adresse",
+            furtherinfo: "Weitere Informationen",
+            precint: "Stadtbezirk",
+            district: "Stadtviertel",
+            private: "private",
+            municipal: "st\xE4dtischer",
+            zip: "PLZ",
+            type: "Art"
         },
         currentScale: "Current map scale",
         dpi: {
