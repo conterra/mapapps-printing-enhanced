@@ -103,17 +103,6 @@ export default class PrintingEnhancedWidgetFactory {
         return widget;
     }
 
-    /**
-     * @param {__esri.PrintViewModel} viewmodel
-     * @param {() => void} callback}
-     */
-    #callAfterLoading(viewmodel, callback) {
-        if (viewmodel.state !== "initializing") {
-            return callback();
-        }
-        return viewmodel.load().then(() => callback());
-    }
-
     _initComponent() {
         const properties = this._printingEnhancedProperties;
         const vm = this.vm = new Vue(PrintingEnhancedWidget);
@@ -121,17 +110,16 @@ export default class PrintingEnhancedWidgetFactory {
         const esriPrintWidget = printWidget._esriWidget;
         const printViewModel = esriPrintWidget.viewModel;
 
-        this.#callAfterLoading(printViewModel, () => {
-            if (printViewModel.error) {
-                vm.error = `${printViewModel.error.message}`;
-                return;
-            }
-
-            if (!printViewModel.templatesInfo) {
-                vm.error = "templatesInfo not available. Did you configure the property 'printtask.service.url` in map.apps' application.properties file? Still waiting for templatesInfo to get available...";
-                return;
-            }
-        });
+        if (printViewModel.templatesInfo) {
+            this._setTemplatesInfos(printViewModel.templatesInfo);
+        } else {
+            console.info("templatesInfo not yet available. Did you configure the property 'printtask.service.url` in map.apps' application.properties file? Still waiting for templatesInfo to get available...");
+            const watcher = printViewModel.watch("templatesInfo", (templatesInfo) => {
+                console.info("templatesInfo now available.");
+                this._setTemplatesInfos(templatesInfo);
+                watcher.remove();
+            });
+        }
 
         vm.i18n = this._i18n.get().ui;
         vm.exportedItems = [];
