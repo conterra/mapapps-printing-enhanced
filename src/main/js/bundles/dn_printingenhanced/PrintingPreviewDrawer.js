@@ -198,7 +198,7 @@ export default class PrintingPreviewDrawer {
             listMode: "hide",
             internal: true
         });
-        map.add(graphicsLayer);
+        map.add(outsideGraphicsLayer);
         if (!properties.enablePrintPreviewMovement) {
             return;
         }
@@ -238,8 +238,13 @@ export default class PrintingPreviewDrawer {
                 this[_geometry] = geometry;
                 this._eventService.postEvent("dn_printingenhanced/PRINTSETTINGS", { geometry: geometry });
 
+                // Update the geometry of the main graphic instead of removing/adding
+                if (this[_graphic]) {
+                    this[_graphic].geometry = geometry;
+                }
+                // Remove and update the difference graphic as before
                 if (this[_differenceGraphic]) {
-                    this[_graphicsLayer].remove(this[_differenceGraphic]);
+                    this[_outsideGraphicsLayer].remove(this[_differenceGraphic]);
                 }
                 const differenceGeometry = await this._getOutsideMainFrameGeometry(geometry);
                 this._addOutsideMainGraphicToGraphicsLayer(differenceGeometry);
@@ -249,13 +254,18 @@ export default class PrintingPreviewDrawer {
 
     _addMainGraphicToGraphicsLayer(geometry) {
         const properties = this._printingEnhancedProperties;
-        const graphic = this[_graphic] = new Graphic({
-            geometry: geometry,
-            symbol: properties.printingPreviewSymbol
-        });
-        this[_graphicsLayer].add(graphic);
+        // Only add if not already present
+        if (!this[_graphic]) {
+            const graphic = this[_graphic] = new Graphic({
+                geometry: geometry,
+                symbol: properties.printingPreviewSymbol
+            });
+            this[_graphicsLayer].add(graphic);
+        } else {
+            this[_graphic].geometry = geometry;
+        }
         if (properties.enablePrintPreviewMovement) {
-            this._eventService.postEvent("dn_printingenhanced/PRINTSETTINGS", {geometry: graphic.geometry});
+            this._eventService.postEvent("dn_printingenhanced/PRINTSETTINGS", {geometry: geometry});
         }
     }
 
@@ -265,7 +275,7 @@ export default class PrintingPreviewDrawer {
             geometry: geometry,
             symbol: properties.printingOutsidePreviewSymbol
         });
-        this[_graphicsLayer].add(differenceGraphic);
+        this[_outsideGraphicsLayer].add(differenceGraphic);
     }
 
     _completeSketching() {
@@ -287,7 +297,7 @@ export default class PrintingPreviewDrawer {
             this[_graphicsLayer].remove(this[_graphic]);
         }
         if (this[_differenceGraphic]) {
-            this[_graphicsLayer].remove(this[_differenceGraphic]);
+            this[_outsideGraphicsLayer].remove(this[_differenceGraphic]);
         }
         this._completeSketching();
     }
