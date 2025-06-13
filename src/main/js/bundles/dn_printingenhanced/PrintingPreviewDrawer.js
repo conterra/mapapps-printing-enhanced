@@ -82,7 +82,11 @@ export default class PrintingPreviewDrawer {
         const mapWidgetModel = this._mapWidgetModel;
 
         if (printScale === -1) {
-            const correctedScale = new ScaleCorrection().computedScale(mapWidgetModel.view, mapWidgetModel.extent, mapWidgetModel.spatialReference);
+            const correctedScale = new ScaleCorrection().computedScale(
+                mapWidgetModel.view,
+                mapWidgetModel.extent,
+                mapWidgetModel.spatialReference
+            );
             printScale = correctedScale;
         }
         const dpi = templateOptions.dpi;
@@ -224,8 +228,11 @@ export default class PrintingPreviewDrawer {
             if (graphics.length) {
                 const graphic = graphics[0];
                 const geometry = graphic.geometry;
+                // Only handle update if geometry is the main frame (single ring)
                 if (geometry.rings.length > 1) {
+                    // If user clicked outside, just complete the sketch, do not update main geometry or difference
                     sketchViewModel.complete();
+                    return;
                 }
                 this[_geometry] = geometry;
                 this._eventService.postEvent("dn_printingenhanced/PRINTSETTINGS", { geometry: geometry });
