@@ -108,7 +108,7 @@ export default class PrintingEnhancedWidgetFactory {
      * @param {__esri.PrintViewModel} viewmodel
      * @param {() => void} callback}
      */
-    #callAfterLoading(viewmodel, callback) {
+    #waitForPrintViewModel(viewmodel, callback) {
         if (viewmodel.state !== "initializing") {
             return callback();
         }
@@ -124,7 +124,7 @@ export default class PrintingEnhancedWidgetFactory {
 
         this.#getCustomTextElements(esriPrintWidget.printServiceUrl);
 
-        this.#callAfterLoading(printViewModel, () => {
+        this.#waitForPrintViewModel(printViewModel, () => {
             if (printViewModel.error) {
                 vm.error = `${printViewModel.error.message}`;
                 return;
