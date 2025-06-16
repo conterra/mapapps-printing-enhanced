@@ -107,6 +107,8 @@ mapappsBrowserSync.registerTask({
         npmModules: [
             "mocha",
             "chai",
+            "vue-template-compiler",
+            "@vue/test-utils",
             "@conterra/mapapps-mocha-runner"
         ]
     },
