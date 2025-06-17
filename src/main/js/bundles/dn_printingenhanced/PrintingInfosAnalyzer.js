@@ -38,6 +38,9 @@ export default class PrintingInfosAnalyzer {
                 printInfos.templateInfos = templateInfos;
                 return printInfos;
             }, function () {
+                const properties = this._printingEnhancedProperties._properties;
+                const layoutTemplatesInfo = url.substring(0, url.lastIndexOf("/") + 1) + properties.layoutTemplatesInfoTaskName;
+                console.warn("Could not fetch print template infos from server. Is the following URL correct?", layoutTemplatesInfo);
                 // ignore missing template info
                 return printInfos;
             }, this);

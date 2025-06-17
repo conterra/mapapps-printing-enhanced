@@ -108,6 +108,10 @@ export default class PrintingPreviewDrawer {
                 return null;
             }
             const frameSize = templateInfo.activeDataFrameSize || templateInfo.webMapFrameSize;
+            if (!frameSize) {
+                console.error("Neither 'activeDataFrameSize' nor 'webMapFrameSize' are available on the selected layout template. Did you run the 'Get Layout Templates Info' script when publishing this template?");
+                return;
+            }
             templateWidth = frameSize[0];
             templateHeight = frameSize[1];
 
