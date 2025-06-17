@@ -47,6 +47,16 @@ export default class PrintingInfosAnalyzer {
         }, this);
     }
 
+    async getCustomTextElements(url) {
+        const printInfos = await this.getPrintInfos(url);
+        const templateInfos = printInfos.templateInfos;
+        const customTextElementsPerTemplate = {};
+        templateInfos.forEach(infos => {
+            customTextElementsPerTemplate[infos.layoutTemplate] = infos.layoutOptions.customTextElements;
+        });
+        return customTextElementsPerTemplate;
+    }
+
     _fetchTemplateInfos(url) {
         const properties = this._printingEnhancedProperties._properties;
         const printUrl = url;

@@ -68,6 +68,7 @@
                     :enable-print-preview.sync="enablePrintPreview"
                     :visible-ui-elements="visibleUiElements"
                     :current-map-scale="currentMapScale"
+                    @customTextElementsChanged="$emit('customTextElementsChanged', $event)"
                     @resetScale="$emit('resetScale')"
                 />
             </v-tab-item>
@@ -131,6 +132,12 @@
             "printing-results-widget": PrintingResultsWidget
         },
         mixins: [Bindable],
+        provide() {
+            // Provide for the CustomParametersForm.vue component
+            return {
+                getCustomTextElements: () => this.customTextElements
+            };
+        },
         props: {
             i18n: {
                 type: Object,
@@ -186,7 +193,8 @@
                 printPreviewInitallyVisible: null,
                 activeTab: 0,
                 currentMapScale: 0,
-                error: ""
+                error: "",
+                customTextElements: []
             };
         },
         watch: {

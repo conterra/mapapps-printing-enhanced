@@ -33,7 +33,7 @@ export default class PrintingEnhancedWidgetFactory {
 
         const printingPreviewController = this._printingPreviewController;
         const printWidget = this._printingWidget;
-        const esriPrintWidget = printWidget._esriWidget;
+        const esriPrintWidget = printWidget.getWrappedWidget();
 
         const templateOptions = esriPrintWidget.templateOptions;
 
@@ -115,14 +115,25 @@ export default class PrintingEnhancedWidgetFactory {
         return viewmodel.load().then(() => callback());
     }
 
-    _initComponent() {
+    async _initComponent() {
         const properties = this._printingEnhancedProperties;
         const vm = this.vm = new Vue(PrintingEnhancedWidget);
         const printWidget = this._printingWidget;
         const esriPrintWidget = printWidget._esriWidget;
         const printViewModel = esriPrintWidget.viewModel;
 
-        this.#getCustomTextElements(esriPrintWidget.printServiceUrl);
+        const customTextElements = await this._printingInfosAnalyzer.getCustomTextElements(esriPrintWidget.printServiceUrl);
+        vm.customTextElements = customTextElements;
+        vm.$on("customTextElementsChanged", (customTextElements) => {
+            // Here we set the customTextElements on the templateOptions object.
+            // According to the documentation, we should do this by setting the templateCustomTextElements property.
+            // (https://developers.arcgis.com/javascript/latest/api-reference/esri-widgets-Print.html#templateCustomTextElements)
+            // However, this property would have to be set in the Print widget's constructor because the content
+            // of this property is merged into the widget's "templateOptions" directly after instantiation.
+            // Since we don't know the customTextElements until the user entered them in the UI,
+            // we set the values directly in the Print widget's "templateOptions" here.
+            esriPrintWidget.templateOptions.customTextElements = customTextElements[vm.layout];
+        });
 
         this.#waitForPrintViewModel(printViewModel, () => {
             if (printViewModel.error) {
@@ -208,15 +219,5 @@ export default class PrintingEnhancedWidgetFactory {
                 text: layoutStrings[layout] || layout
             };
         });
-    }
-
-    async #getCustomTextElements(url) {
-        const printInfos = await this._printingInfosAnalyzer.getPrintInfos(url);
-        const templateInfos = printInfos.templateInfos;
-        const customTextElementsPerTemplate = {};
-        templateInfos.forEach(infos => {
-            customTextElementsPerTemplate[infos.layoutTemplate] = infos.layoutOptions.customTextElements;
-        });
-        console.debug("print infos ", customTextElementsPerTemplate);
     }
 }

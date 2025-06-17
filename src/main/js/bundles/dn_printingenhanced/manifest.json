@@ -44,7 +44,7 @@
                 "windowClass": "noPadding",
                 "marginBox": {
                     "w": 340,
-                    "h": 425
+                    "h": 625
                 }
             }
         },
@@ -57,7 +57,7 @@
                 "resizable": true,
                 "marginBox": {
                     "w": 340,
-                    "h": 425,
+                    "h": 625,
                     "t": 125,
                     "l": 25
                 },

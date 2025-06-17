@@ -197,14 +197,23 @@
                     class="pa-0 ma-0"
                 />
             </v-flex>
+            <v-flex
+                md12
+            >
+                <custom-parameters-form
+                    :layout-template-name="layout"
+                    @change="$emit('customTextElementsChanged', $event)"
+                />
+            </v-flex>
         </v-layout>
     </v-container>
 </template>
 <script>
     import Bindable from "apprt-vue/mixins/Bindable";
+    import CustomParametersForm from "./CustomParametersForm.vue";
 
     export default {
-        components: {},
+        components: {CustomParametersForm},
         mixins: [Bindable],
         props: {
             i18n: {
