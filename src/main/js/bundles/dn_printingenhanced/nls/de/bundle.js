@@ -68,6 +68,9 @@ module.exports = {
         medium: "Mittel",
         high: "Hoch",
         graphicsLayerTitle: "Druckvorschau",
-        helperTextScaleEnabled: "Der Druckrahmen kann nur angezeigt werden, wenn ein Maßstab festgelegt ist."
+        helperTextScaleEnabled: "Der Druckrahmen kann nur angezeigt werden, wenn ein Maßstab festgelegt ist.",
+        customParametersForm: {
+            heading: "Benutzerdefinierte Textelemente"
+        }
     }
 };

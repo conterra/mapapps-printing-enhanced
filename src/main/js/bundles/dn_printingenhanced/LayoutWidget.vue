@@ -201,6 +201,7 @@
                 md12
             >
                 <custom-parameters-form
+                    :i18n="i18n.customParametersForm"
                     :layout-template-name="layout"
                     @change="$emit('customTextElementsChanged', $event)"
                 />

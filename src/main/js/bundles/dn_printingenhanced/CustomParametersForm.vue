@@ -17,7 +17,7 @@
 -->
 <template>
     <div>
-        <h3>Custom text elements</h3>
+        <h3>{{ i18n.heading }}</h3>
         <div
             v-for="(parameter, index) in parameters"
             :key="index"
@@ -38,7 +38,9 @@
             i18n: {
                 type: Object,
                 default: function () {
-                    return {};
+                    return {
+                        heading: "Custom text elements"
+                    };
                 }
             },
             layoutTemplateName: {
