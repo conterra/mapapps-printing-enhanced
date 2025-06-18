@@ -39,6 +39,11 @@
         ]
     },
     "bundles": {
+        "printing": {
+            "Config": {
+                "url": "https://dev0461w.conterra.de/server/rest/services/support/PrintMap/GPServer/Export%20Web%20Map"
+            }
+        },
         "dn_printingenhanced": {
             "Config": {
                 "templateOptions": {
