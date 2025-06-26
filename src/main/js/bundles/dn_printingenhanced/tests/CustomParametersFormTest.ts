@@ -23,8 +23,7 @@ import CustomParametersForm from "../CustomParametersForm.vue";
 import { mount } from "@vue/test-utils";
 
 describe(module.id, function () {
-    it("change-Event should include new custom text elements configuration", async function () {
-
+    it("change event should include new custom text elements configuration", async function () {
         const wrapper = mount(CustomParametersForm as any, {
             stubs: ['v-text-field'],
             provide: {
@@ -57,5 +56,23 @@ describe(module.id, function () {
 
         assert.isTrue(wrapper.html().includes('map-title'));
         assert.isTrue(wrapper.html().includes('map-subtitle'));
+    });
+
+    it("Component should be empty if no custom text elements available for the template", async function () {
+        const wrapper = mount(CustomParametersForm as any, {
+            stubs: ['v-text-field'],
+            provide: {
+                getCustomTextElements() {
+                    return {};
+                }
+            },
+            propsData: {
+                layoutTemplateName: "printing-enhanced-layout"
+            }
+        });
+
+        await wrapper.vm.$nextTick();
+
+        assert.equal(wrapper.html(), "");
     });
 });
