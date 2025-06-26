@@ -16,8 +16,10 @@
 
 -->
 <template>
-    <div>
-        <h3>{{ i18n.heading }}</h3>
+    <div v-if="parameters.length > 0">
+        <h3>
+            {{ i18n.heading }}
+        </h3>
         <div
             v-for="(parameter, index) in parameters"
             :key="index"
@@ -56,6 +58,10 @@
         computed: {
             parameters() {
                 const parametersForTemplate = this.getCustomTextElements()[this.layoutTemplateName];
+                if (!parametersForTemplate) {
+                    console.debug(`No custom text elements for template "${this.layoutTemplateName}" available.`);
+                    return [];
+                }
                 return parametersForTemplate.map((param) => {
                     return {
                         name: Object.keys(param)[0],
