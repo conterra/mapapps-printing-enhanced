@@ -33,10 +33,10 @@
             centered
             grow
         >
-            <v-tab v-show="visibleUiElements.layoutTab">
+            <v-tab v-show="layoutTabVisible">
                 {{ i18n.layoutTab }}
             </v-tab>
-            <v-tab v-show="visibleUiElements.mapOnlyTab">
+            <v-tab v-show="mapOnlyTabVisible">
                 {{ i18n.mapOnlyTab }}
             </v-tab>
             <v-tab
@@ -49,7 +49,7 @@
             >
                 {{ i18n.printResults }} ({{ exportedLinks.length }})
             </v-tab>
-            <v-tab-item v-show="visibleUiElements.layoutTab">
+            <v-tab-item v-show="layoutTabVisible">
                 <layout-widget
                     :i18n="i18n"
                     :author.sync="author"
@@ -72,7 +72,7 @@
                     @resetScale="$emit('resetScale')"
                 />
             </v-tab-item>
-            <v-tab-item v-show="visibleUiElements.mapOnlyTab">
+            <v-tab-item v-show="mapOnlyTabVisible">
                 <map-only-widget
                     :i18n="i18n"
                     :attribution-enabled.sync="attributionEnabled"
@@ -196,6 +196,14 @@
                 error: "",
                 customTextElements: []
             };
+        },
+        computed: {
+            layoutTabVisible() {
+                return this.visibleUiElements && this.visibleUiElements.layoutTab;
+            },
+            mapOnlyTabVisible() {
+                return this.visibleUiElements && this.visibleUiElements.mapOnlyTab;
+            }
         },
         watch: {
             activeTab: function(tab) {

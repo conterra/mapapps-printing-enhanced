@@ -26,7 +26,7 @@
             wrap
         >
             <v-flex
-                v-if="visibleUiElements.title"
+                v-if="titleVisible"
                 md12
             >
                 <v-text-field
@@ -37,7 +37,7 @@
                 />
             </v-flex>
             <v-flex
-                v-if="visibleUiElements.author"
+                v-if="authorVisible"
                 md12
             >
                 <v-text-field
@@ -48,9 +48,9 @@
                 />
             </v-flex>
             <v-flex
-                v-if="visibleUiElements.format"
+                v-if="formatVisible"
                 md6
-                :class="{ md12: !visibleUiElements.dpi }"
+                :class="{ md12: !dpiVisible }"
             >
                 <v-select
                     v-model="formatValue"
@@ -60,9 +60,9 @@
                 />
             </v-flex>
             <v-flex
-                v-if="visibleUiElements.dpi"
+                v-if="dpiVisible"
                 md6
-                :class="{ md12: !visibleUiElements.format }"
+                :class="{ md12: !formatVisible }"
             >
                 <v-select
                     v-model="dpiValue"
@@ -72,7 +72,7 @@
                 />
             </v-flex>
             <v-flex
-                v-if="visibleUiElements.layout"
+                v-if="layoutVisible"
                 md12
             >
                 <v-select
@@ -83,7 +83,7 @@
                 />
             </v-flex>
             <v-flex
-                v-if="visibleUiElements.printPreviewCheckbox"
+                v-if="printPreviewCheckboxVisible"
                 md12
             >
                 <div class="pa-0 ma-0 infoContainer">
@@ -117,11 +117,11 @@
                 </div>
             </v-flex>
             <v-flex
-                v-if="visibleUiElements.scaleEnabled"
+                v-if="scaleEnabledVisible"
                 md12
             >
                 <div
-                    v-if="!scaleEnabled && !visibleUiElements.printPreviewCheckbox"
+                    v-if="!scaleEnabled && !printPreviewCheckboxVisible"
                     aria-live="polite"
                     class="ct-message ct-message--info mt-2"
                 >
@@ -136,7 +136,7 @@
                 />
             </v-flex>
             <v-flex
-                v-if="scaleValues.length && visibleUiElements.scale"
+                v-if="scaleValues.length && scaleVisible"
                 md12
             >
                 <v-select
@@ -148,7 +148,7 @@
                 />
             </v-flex>
             <v-flex
-                v-if="!scaleValues.length && visibleUiElements.scale"
+                v-if="!scaleValues.length && scaleVisible"
                 md10
             >
                 <v-text-field
@@ -161,7 +161,7 @@
                 />
             </v-flex>
             <v-flex
-                v-if="!scaleValues.length && visibleUiElements.scale"
+                v-if="!scaleValues.length && scaleVisible"
                 md2
             >
                 <v-btn
@@ -175,7 +175,7 @@
                 </v-btn>
             </v-flex>
             <v-flex
-                v-if="visibleUiElements.copyright"
+                v-if="copyrightVisible"
                 md12
             >
                 <v-text-field
@@ -186,7 +186,7 @@
                 />
             </v-flex>
             <v-flex
-                v-if="visibleUiElements.legendEnabled"
+                v-if="legendEnabledVisible"
                 md12
             >
                 <v-checkbox
@@ -393,6 +393,36 @@
                 set: function (title) {
                     this.$emit('update:title', title);
                 }
+            },
+            titleVisible() {
+                return this.visibleUiElements && this.visibleUiElements.title;
+            },
+            authorVisible() {
+                return this.visibleUiElements && this.visibleUiElements.author;
+            },
+            formatVisible() {
+                return this.visibleUiElements && this.visibleUiElements.format;
+            },
+            dpiVisible() {
+                return this.visibleUiElements && this.visibleUiElements.dpi;
+            },
+            layoutVisible() {
+                return this.visibleUiElements && this.visibleUiElements.layout;
+            },
+            printPreviewCheckboxVisible() {
+                return this.visibleUiElements && this.visibleUiElements.printPreviewCheckbox;
+            },
+            scaleEnabledVisible() {
+                return this.visibleUiElements && this.visibleUiElements.scaleEnabled;
+            },
+            copyrightVisible() {
+                return this.visibleUiElements && this.visibleUiElements.copyright;
+            },
+            legendEnabledVisible() {
+                return this.visibleUiElements && this.visibleUiElements.legendEnabled;
+            },
+            scaleVisible() {
+                return this.visibleUiElements && this.visibleUiElements.scale;
             }
         },
         watch: {

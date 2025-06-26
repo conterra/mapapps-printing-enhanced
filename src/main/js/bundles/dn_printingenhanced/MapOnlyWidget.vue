@@ -26,7 +26,7 @@
             wrap
         >
             <v-flex
-                v-if="visibleUiElements.fileName"
+                v-if="fileNameVisible"
                 md12
             >
                 <v-text-field
@@ -37,9 +37,9 @@
                 />
             </v-flex>
             <v-flex
-                v-if="visibleUiElements.format"
+                v-if="formatVisible"
                 md6
-                :class="{ md12: !visibleUiElements.dpi }"
+                :class="{ md12: !dpiVisible }"
             >
                 <v-select
                     v-model="formatValue"
@@ -49,9 +49,9 @@
                 />
             </v-flex>
             <v-flex
-                v-if="visibleUiElements.dpi"
+                v-if="dpiVisible"
                 md6
-                :class="{ md12: !visibleUiElements.format }"
+                :class="{ md12: !formatVisible }"
             >
                 <v-select
                     v-model="dpiValue"
@@ -61,7 +61,7 @@
                 />
             </v-flex>
             <v-flex
-                v-if="visibleUiElements.widthAndHeight"
+                v-if="widthAndHeightVisible"
                 md5
             >
                 <v-text-field
@@ -74,7 +74,7 @@
                 />
             </v-flex>
             <v-flex
-                v-if="visibleUiElements.widthAndHeight"
+                v-if="widthAndHeightVisible"
                 md5
             >
                 <v-text-field
@@ -87,7 +87,7 @@
                 />
             </v-flex>
             <v-flex
-                v-if="visibleUiElements.widthAndHeight"
+                v-if="widthAndHeightVisible"
                 md2
             >
                 <v-tooltip
@@ -110,7 +110,7 @@
                 </v-tooltip>
             </v-flex>
             <v-flex
-                v-if="visibleUiElements.printPreviewCheckbox"
+                v-if="printPreviewCheckboxVisible"
                 md12
             >
                 <div class="pa-0 ma-0 infoContainer">
@@ -144,11 +144,11 @@
                 </div>
             </v-flex>
             <v-flex
-                v-if="visibleUiElements.scaleEnabled"
+                v-if="scaleEnabledVisible"
                 md12
             >
                 <div
-                    v-if="!scaleEnabled && !visibleUiElements.printPreviewCheckbox"
+                    v-if="!scaleEnabled && !printPreviewCheckboxVisible"
                     aria-live="polite"
                     class="ct-message ct-message--info mt-2"
                 >
@@ -163,7 +163,7 @@
                 />
             </v-flex>
             <v-flex
-                v-if="scaleValues.length && visibleUiElements.scale"
+                v-if="scaleValues.length && scaleVisible"
                 md12
             >
                 <v-select
@@ -175,7 +175,7 @@
                 />
             </v-flex>
             <v-flex
-                v-if="!scaleValues.length && visibleUiElements.scale"
+                v-if="!scaleValues.length && scaleVisible"
                 md10
             >
                 <v-text-field
@@ -188,7 +188,7 @@
                 />
             </v-flex>
             <v-flex
-                v-if="!scaleValues.length && visibleUiElements.scale"
+                v-if="!scaleValues.length && scaleVisible"
                 md2
             >
                 <v-btn
@@ -202,7 +202,7 @@
                 </v-btn>
             </v-flex>
             <v-flex
-                v-if="visibleUiElements.attributionEnabled"
+                v-if="attributionEnabledVisible"
                 md12
             >
                 <v-checkbox
@@ -360,6 +360,30 @@
                 set: function (fileName) {
                     this.$emit('update:file-name', fileName);
                 }
+            },
+            fileNameVisible() {
+                return this.visibleUiElements && this.visibleUiElements.fileName;
+            },
+            formatVisible() {
+                return this.visibleUiElements && this.visibleUiElements.format;
+            },
+            dpiVisible() {
+                return this.visibleUiElements && this.visibleUiElements.dpi;
+            },
+            widthAndHeightVisible() {
+                return this.visibleUiElements && this.visibleUiElements.widthAndHeight;
+            },
+            printPreviewCheckboxVisible() {
+                return this.visibleUiElements && this.visibleUiElements.printPreviewCheckbox;
+            },
+            scaleEnabledVisible() {
+                return this.visibleUiElements && this.visibleUiElements.scaleEnabled;
+            },
+            scaleVisible() {
+                return this.visibleUiElements && this.visibleUiElements.scale;
+            },
+            attributionEnabledVisible() {
+                return this.visibleUiElements && this.visibleUiElements.attributionEnabled;
             }
         },
         methods: {
