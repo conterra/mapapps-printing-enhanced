@@ -33,10 +33,10 @@
             centered
             grow
         >
-            <v-tab v-show="layoutTabVisible">
+            <v-tab v-if="layoutTabVisible">
                 {{ i18n.layoutTab }}
             </v-tab>
-            <v-tab v-show="mapOnlyTabVisible">
+            <v-tab v-if="mapOnlyTabVisible">
                 {{ i18n.mapOnlyTab }}
             </v-tab>
             <v-tab
@@ -49,7 +49,7 @@
             >
                 {{ i18n.printResults }} ({{ exportedLinks.length }})
             </v-tab>
-            <v-tab-item v-show="layoutTabVisible">
+            <v-tab-item v-if="layoutTabVisible">
                 <layout-widget
                     :i18n="i18n"
                     :author.sync="author"
@@ -72,7 +72,7 @@
                     @resetScale="$emit('resetScale')"
                 />
             </v-tab-item>
-            <v-tab-item v-show="mapOnlyTabVisible">
+            <v-tab-item v-if="mapOnlyTabVisible">
                 <map-only-widget
                     :i18n="i18n"
                     :attribution-enabled.sync="attributionEnabled"
@@ -202,6 +202,7 @@
                 return this.visibleUiElements && this.visibleUiElements.layoutTab;
             },
             mapOnlyTabVisible() {
+                console.debug("mapOnlyTabVisible", this.visibleUiElements.mapOnlyTab);
                 return this.visibleUiElements && this.visibleUiElements.mapOnlyTab;
             }
         },
