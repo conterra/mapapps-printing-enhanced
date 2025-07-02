@@ -33,7 +33,6 @@
             "templatelayout",
             "theme-autumn",
             "toc",
-            "toolrules",
             "toolset",
             "dn_imprintprivacy",
             "dn_printingenhanced"
@@ -580,20 +579,12 @@
                 "showLayerLegend": true
             }
         },
-        "toolrules": {
-            "ToolActiveStateManager": {
-                "activateOnStartToolIds": [
-                    "printingEnhancedToggleTool"
-                ]
-            }
-        },
         "toolset": {
             "ToolsetManager": {
                 "toolsets": [
                     {
                         "id": "mapview_tools",
                         "tools": [
-                            "printingEnhancedToggleTool",
                             "locateMeTool",
                             "zoomInTool",
                             "zoomOutTool",
@@ -689,6 +680,13 @@
                     "windowType": "container",
                     "cssClass": "showToolLabels"
                 }
+            }
+        },
+        "toolrules": {
+            "ToolActiveStateManager": {
+                "activateOnStartToolIds": [
+                    "printingEnhancedToggleTool"
+                ]
             }
         }
     }
