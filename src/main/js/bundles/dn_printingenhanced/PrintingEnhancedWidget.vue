@@ -202,7 +202,6 @@
                 return this.visibleUiElements && this.visibleUiElements.layoutTab;
             },
             mapOnlyTabVisible() {
-                console.debug("mapOnlyTabVisible", this.visibleUiElements.mapOnlyTab);
                 return this.visibleUiElements && this.visibleUiElements.mapOnlyTab;
             }
         },

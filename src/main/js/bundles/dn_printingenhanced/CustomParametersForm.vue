@@ -59,7 +59,6 @@
             parameters() {
                 const parametersForTemplate = this.getCustomTextElements()[this.layoutTemplateName];
                 if (!parametersForTemplate) {
-                    console.debug(`No custom text elements for template "${this.layoutTemplateName}" available.`);
                     return [];
                 }
                 return parametersForTemplate.map((param) => {
