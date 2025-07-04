@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 module.exports = {
-    apptitle: "Printing Enhanced Sample",
+    apptitle: "DevNet Bundle Blueprint",
     map: {
         koeln1: {
             title: "Basisdaten",
@@ -70,11 +70,15 @@ module.exports = {
             }
         },
         basemaps: {
-            street: "Stra\xDFenkarte (grau)",
-            street2: "Stra\xDFenkarte",
+            gray: "Stra\xDFenkarte (grau)",
+            streets: "Stra\xDFenkarte",
             topo: "Topographische Karte",
             hybrid: "Luftbild (hybrid)"
         }
+    },
+    tools: {
+        drawerLeft: "Werkzeuge",
+        measuring: "Messwerkzeuge"
     },
     common: {
         number: "Nummer",
@@ -86,7 +90,7 @@ module.exports = {
         furtherinfo: "Weitere Informationen",
         precint: "Stadtbezirk",
         district: "Stadtviertel",
-        "private": "private",
+        private: "private",
         municipal: "st\xE4dtischer",
         zip: "PLZ",
         type: "Art"
