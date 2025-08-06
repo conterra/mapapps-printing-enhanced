@@ -28,7 +28,6 @@ const _graphic = Symbol("_graphic");
 const _differenceGraphic = Symbol("_differenceGraphic");
 const _graphicsLayer = Symbol("_graphicsLayer");
 const _sketchViewModel = Symbol("_sketchViewModel");
-const _outsideGraphicsLayer = Symbol("_outsideGraphicsLayer");
 
 export default class PrintingPreviewDrawer {
 
@@ -37,7 +36,7 @@ export default class PrintingPreviewDrawer {
         if (mapWidgetModel.map) {
             this._addGraphicsLayerToMap(mapWidgetModel.map);
         } else {
-            mapWidgetModel.watch("map", ({value: map}) => {
+            mapWidgetModel.watch("map", ({ value: map }) => {
                 this._addGraphicsLayerToMap(map);
             });
         }
@@ -83,7 +82,11 @@ export default class PrintingPreviewDrawer {
         const mapWidgetModel = this._mapWidgetModel;
 
         if (printScale === -1) {
-            const correctedScale = new ScaleCorrection().computedScale(mapWidgetModel.view, mapWidgetModel.extent, mapWidgetModel.spatialReference);
+            const correctedScale = new ScaleCorrection().computedScale(
+                mapWidgetModel.view,
+                mapWidgetModel.extent,
+                mapWidgetModel.spatialReference
+            );
             printScale = correctedScale;
         }
         const dpi = templateOptions.dpi;
@@ -192,20 +195,13 @@ export default class PrintingPreviewDrawer {
             internal: true
         });
         map.add(graphicsLayer);
-        const outsideGraphicsLayer = this[_outsideGraphicsLayer] = new GraphicsLayer({
-            id: properties.graphicsLayerId,
-            title: properties.graphicsLayerTitle,
-            listMode: "hide",
-            internal: true
-        });
-        map.add(graphicsLayer);
         if (!properties.enablePrintPreviewMovement) {
             return;
         }
         if (mapWidgetModel.view) {
             this._createSketchViewModel(graphicsLayer, mapWidgetModel.view);
         } else {
-            mapWidgetModel.watch("view", ({value: view}) => {
+            mapWidgetModel.watch("view", ({ value: view }) => {
                 this._createSketchViewModel(graphicsLayer, view);
             });
         }
@@ -232,8 +228,11 @@ export default class PrintingPreviewDrawer {
             if (graphics.length) {
                 const graphic = graphics[0];
                 const geometry = graphic.geometry;
+                // Only handle update if geometry is the main frame (single ring)
                 if (geometry.rings.length > 1) {
+                    // If user clicked outside, just complete the sketch, do not update main geometry or difference
                     sketchViewModel.complete();
+                    return;
                 }
                 this[_geometry] = geometry;
                 this._eventService.postEvent("dn_printingenhanced/PRINTSETTINGS", { geometry: geometry });
@@ -255,7 +254,7 @@ export default class PrintingPreviewDrawer {
         });
         this[_graphicsLayer].add(graphic);
         if (properties.enablePrintPreviewMovement) {
-            this._eventService.postEvent("dn_printingenhanced/PRINTSETTINGS", {geometry: graphic.geometry});
+            this._eventService.postEvent("dn_printingenhanced/PRINTSETTINGS", { geometry: graphic.geometry });
         }
     }
 
