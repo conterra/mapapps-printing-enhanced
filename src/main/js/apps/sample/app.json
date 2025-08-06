@@ -123,16 +123,8 @@
                         "text": "1:100.000"
                     }
                 ],
-                "allowedFormats": [
-                    "pdf",
-                    "png32"
-                ],
-                "allowedLayouts": [
-                    "a3-landscape",
-                    "a3-portrait",
-                    "a4-landscape",
-                    "a4-portrait"
-                ],
+                "allowedFormats": "all",
+                "allowedLayouts": "all",
                 "printingPreviewSymbol": {
                     "type": "simple-fill",
                     "color": [

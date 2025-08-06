@@ -162,22 +162,22 @@ To make the functions of this bundle available to the user, the following tool c
 }
 ```
 
-| Property                    | Type               | Possible Values                    | Default                              | Description                                                                                                                                                                                                                                                                  |
-|-----------------------------|--------------------|------------------------------------|--------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| templateOptions             | Object             |                                    |                                      | Esri Print Widget TemplateOptions:https://developers.arcgis.com/javascript/latest/api-reference/esri-widgets-Print-TemplateOptions.html                                                                                                                                      |
-| visibleUiElements           | Object             |                                    |                                      | Controls visibility of UI elements.                                                                                                                                                                                                                                          |
-| enablePrintPreview          | Boolean            | ```true``` &#124; ```false```      | ```true```                           | Default value for the print preview.                                                                                                                                                                                                                                         |
-| enablePrintPreviewMovement  | Boolean            | ```true``` &#124; ```false```      | ```true```                           | Allows the user to edit the print preview in map.                                                                                                                                                                                                                            |
-| layoutTemplatesInfoTaskName | String             |                                    | ```Get Layout Templates Info Task``` | Layout templates task name.                                                                                                                                                                                                                                                  |
-| defaultPageUnit             | String             | ```MILLIMETER, CENTIMETER, INCH``` | ```CENTIMETER```                     | Default template unit (ArcGIS Server < 10.6).                                                                                                                                                                                                                                |
-| dpiValues                   | Array              |                                    | ```[]```                             | Available dpi values.                                                                                                                                                                                                                                                        |
+| Property                    | Type               | Possible Values                    | Default                              | Description                                                                                                                                                                                                                                                                     |
+|-----------------------------|--------------------|------------------------------------|--------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| templateOptions             | Object             |                                    |                                      | Esri Print Widget TemplateOptions:https://developers.arcgis.com/javascript/latest/api-reference/esri-widgets-Print-TemplateOptions.html                                                                                                                                         |
+| visibleUiElements           | Object             |                                    |                                      | Controls visibility of UI elements.                                                                                                                                                                                                                                             |
+| enablePrintPreview          | Boolean            | ```true``` &#124; ```false```      | ```true```                           | Default value for the print preview.                                                                                                                                                                                                                                            |
+| enablePrintPreviewMovement  | Boolean            | ```true``` &#124; ```false```      | ```true```                           | Allows the user to edit the print preview in map.                                                                                                                                                                                                                               |
+| layoutTemplatesInfoTaskName | String             |                                    | ```Get Layout Templates Info Task``` | Layout templates task name.                                                                                                                                                                                                                                                     |
+| defaultPageUnit             | String             | ```MILLIMETER, CENTIMETER, INCH``` | ```CENTIMETER```                     | Default template unit (ArcGIS Server < 10.6).                                                                                                                                                                                                                                   |
+| dpiValues                   | Array              |                                    | ```[]```                             | Available dpi values.                                                                                                                                                                                                                                                           |
 | scaleValues                 | Array              |                                    | ```[]```                             | Available scale values. If the array is filled, a select box will be available in the UI instead of a text field. Each entry in the array is of the type `{"value": <scaleValue>,"text": <Label in the select box>}`. If `scale` is `-1`, the current scale of the map is used. |
-| allowedFormats              | String or String[] |                                    | ```all```                            | Specify the print output file format(s) that the user can select based on the options available from the print service. See: https://developers.arcgis.com/javascript/latest/api-reference/esri-widgets-Print.html#allowedFormats                                            |
-| allowedLayouts              | String or String[] |                                    | ```all```                            | Specify the print output layout(s) that the user can select based on the options available from the print service. See: https://developers.arcgis.com/javascript/latest/api-reference/esri-widgets-Print.html#allowedLayouts                                                 |
-| printingPreviewSymbol       | Object             |                                    |                                      | Print preview symbol.                                                                                                                                                                                                                                                        |
-| useUsernameAsAuthor         | Boolean            | ```true``` &#124; ```false```      | ```true```                           | Use the currently logged in user to pre-enter the author.                                                                                                                                                                                                                    |
-| usernameAttributes          | Array              |                                    | ```["givenname","sn"]```             | Attributes of the user for determining the user name. https://demos.conterra.de/mapapps/resources/jsregistry/root/authentication/latest/README.md                                                                                                                            |
-| customTextElements          | Array              |                                    | ```[]```                             | Define custom text elements that are available in the print template. You can use strings or replacer for values of the user object.                                                                                                                                         |
+| allowedFormats              | String or String[] |                                    | ```all```                            | Specify the print output file format(s) that the user can select based on the options available from the print service. See: https://developers.arcgis.com/javascript/latest/api-reference/esri-widgets-Print.html#allowedFormats                                               |
+| allowedLayouts              | String or String[] |                                    | ```all```                            | Specify the print output layout(s) that the user can select based on the options available from the print service. See: https://developers.arcgis.com/javascript/latest/api-reference/esri-widgets-Print.html#allowedLayouts                                                    |
+| printingPreviewSymbol       | Object             |                                    |                                      | Print preview symbol.                                                                                                                                                                                                                                                           |
+| useUsernameAsAuthor         | Boolean            | ```true``` &#124; ```false```      | ```true```                           | Use the currently logged in user to pre-enter the author.                                                                                                                                                                                                                       |
+| usernameAttributes          | Array              |                                    | ```["givenname","sn"]```             | Attributes of the user for determining the user name. https://demos.conterra.de/mapapps/resources/jsregistry/root/authentication/latest/README.md                                                                                                                               |
+| customTextElements          | Array              |                                    | ```[]```                             | Define custom text elements that are available in the print template. You can use strings or replacer for values of the user object.                                                                                                                                            |
 
 ### Change the print service url
 
@@ -197,3 +197,41 @@ This means that the print URL must be configured on this bundle.
 To customize the appearance of the widget, use the widgetRole _printingEnhancedWidget_.
 
 More information about customizing a widget can be found here: https://docs.conterra.de/en/mapapps/latest/apps/configuring-apps/layout.html#customize-widgets
+
+
+> ⚠️ **Note:**
+Due to changes in the API currently the formats and layouts have to be definied differtnly than before. This change is expected to be reverted with a future API update.
+To filter your formats and layouts please use their entire ids as follows:
+
+```json
+"dn_printingenhanced": {
+    "Config": {
+        "allowedFormats": [
+            "Portable Document Format (PDF)",
+            "32-Bit Portable Network Graphics (PNG32)",
+            "8-Bit Portable Network Graphics (PNG8)",
+            "Joint Photographic Experts Group (JPG)",
+            "GIF (Graphics Interchange Format)",
+            "Encapsulated PostScript (EPS)",
+            "Scalable Vector Graphics (SVG)",
+            "Compressed Scalable Vector Graphics (SVGZ)",
+            "Adobe Illustrator Exchange (AIX)",
+            "Tag Image File Format (TIFF)"
+        ],
+        "allowedLayouts": [
+            "A0 Hoch",
+            "A0 Quer",
+            "A1 Hoch",
+            "A1 Quer",
+            "A2 Hoch",
+            "A2 Quer",
+            "A3 Hoch",
+            "A3 Quer",
+            "A4 Hoch Kataster",
+            "A4 Hoch",
+            "A4_Quer"
+        ]
+        ...
+    }
+}
+```
