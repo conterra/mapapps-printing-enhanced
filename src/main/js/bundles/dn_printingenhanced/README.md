@@ -199,8 +199,8 @@ To customize the appearance of the widget, use the widgetRole _printingEnhancedW
 More information about customizing a widget can be found here: https://docs.conterra.de/en/mapapps/latest/apps/configuring-apps/layout.html#customize-widgets
 
 
-> ⚠️ **Note:**
-Due to changes in the API currently the formats and layouts have to be definied differtnly than before. This change is expected to be reverted with a future API update.
+⚠️ Warnings ⚠️
+Due to changes in the API currently the formats and layouts have to be defined differently than before. Furthermore only english print services are supported. This change is expected to be reverted with a future API update.
 To filter your formats and layouts please use their entire ids as follows:
 
 ```json
