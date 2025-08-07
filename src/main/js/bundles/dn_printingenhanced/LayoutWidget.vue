@@ -277,13 +277,16 @@
             currentMapScale: {
                 type: Number,
                 default: 0
+            },
+            selectedScaleValue: {
+                type: Number,
+                default: 0
             }
         },
         data() {
             return {
                 advancedOptions: [0],
-                showInfo: false,
-                selectedScaleValue: 0
+                showInfo: false
             };
         },
         computed: {

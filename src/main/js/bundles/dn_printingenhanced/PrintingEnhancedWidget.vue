@@ -62,6 +62,7 @@
                     :scale.sync="scale"
                     :scale-values="scaleValues"
                     :scale-enabled.sync="scaleEnabled"
+                    :selected-scale-value.sync="scale"
                     :title.sync="title"
                     :format-list="formatList"
                     :layout-list="layoutList"
