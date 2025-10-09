@@ -45,7 +45,9 @@ export default class PrintingEnhancedWidgetFactory {
                 const item = event.item;
                 const exportedItem = {
                     id: item.count,
-                    name: item.formattedName,
+                    name: item.count <= 0 ?
+                        `${vm.title}.${item.extension}` :
+                        `${vm.title} (${item.count}).${item.extension}`,
                     loading: true,
                     error: false,
                     url: ""
