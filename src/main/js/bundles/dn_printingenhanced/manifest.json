@@ -15,7 +15,7 @@
     "license": {},
     "productName": "devnet-mapapps-printing-enhanced",
     "dependencies": {
-        "esri": "^4.19.0",
+        "@arcgis/core": "^4.19.0",
         "apprt-vue": "^4.12.0",
         "apprt-vuetify": "^4.12.0",
         "apprt-binding": "^4.12.0",
