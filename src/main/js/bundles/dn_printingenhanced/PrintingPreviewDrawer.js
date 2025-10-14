@@ -29,15 +29,25 @@ const _differenceGraphic = Symbol("_differenceGraphic");
 const _graphicsLayer = Symbol("_graphicsLayer");
 const _sketchViewModel = Symbol("_sketchViewModel");
 
+let _graphicsLayerWatcher;
 export default class PrintingPreviewDrawer {
 
     activate() {
+        const properties = this._printingEnhancedProperties;
         const mapWidgetModel = this._mapWidgetModel;
+        const graphicsLayer = this[_graphicsLayer] = new GraphicsLayer({
+            id: properties.graphicsLayerId,
+            title: properties.graphicsLayerTitle,
+            listMode: "hide",
+            internal: true
+        });
         if (mapWidgetModel.map) {
-            this._addGraphicsLayerToMap(mapWidgetModel.map);
+            this._createGraphicsLayerWatcher(mapWidgetModel.map, graphicsLayer);
+            this._addGraphicsLayerToMap(mapWidgetModel.map, graphicsLayer);
         } else {
             mapWidgetModel.watch("map", ({ value: map }) => {
-                this._addGraphicsLayerToMap(map);
+                this._createGraphicsLayerWatcher(map, graphicsLayer);
+                this._addGraphicsLayerToMap(map, graphicsLayer);
             });
         }
         this[_geometry] = null;
@@ -47,6 +57,7 @@ export default class PrintingPreviewDrawer {
         const mapWidgetModel = this._mapWidgetModel;
         const map = mapWidgetModel.map;
         this._removeGraphicsLayerFromMap(map);
+        this._graphicsLayerWatcher.remove();
     }
 
     async drawTemplateDimensions(printInfos, templateOptions, defaultPageUnit) {
@@ -185,16 +196,12 @@ export default class PrintingPreviewDrawer {
         return await geometryEngine.difference(fullExtent, geometry);
     }
 
-    _addGraphicsLayerToMap(map) {
+    _addGraphicsLayerToMap(map, graphicsLayer) {
         const properties = this._printingEnhancedProperties;
         const mapWidgetModel = this._mapWidgetModel;
-        const graphicsLayer = this[_graphicsLayer] = new GraphicsLayer({
-            id: properties.graphicsLayerId,
-            title: properties.graphicsLayerTitle,
-            listMode: "hide",
-            internal: true
-        });
+
         map.add(graphicsLayer);
+
         if (!properties.enablePrintPreviewMovement) {
             return;
         }
@@ -294,5 +301,11 @@ export default class PrintingPreviewDrawer {
     showGraphicsLayer(value) {
         this[_graphicsLayer].visible = value;
         this._completeSketching();
+    }
+
+    _createGraphicsLayerWatcher(map, graphicsLayer) {
+        this._graphicsLayerWatcher = map.layers.on("after-add", () => {
+            map.reorder(graphicsLayer, map.layers.length - 1);
+        });
     }
 }
