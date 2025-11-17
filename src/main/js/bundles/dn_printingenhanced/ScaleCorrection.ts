@@ -14,11 +14,11 @@
 /// limitations under the License.
 ///
 
-import {Extent, SpatialReference} from "esri/geometry";
-import {webMercatorToGeographic} from "esri/geometry/support/webMercatorUtils";
-import Polyline from "esri/geometry/Polyline";
+import {Extent, SpatialReference} from "@arcgis/core/geometry";
+import {webMercatorToGeographic} from "@arcgis/core/geometry/support/webMercatorUtils";
+import Polyline from "@arcgis/core/geometry/Polyline";
 import { type View } from "map-widget/api";
-import {geodesicLength} from "esri/geometry/geometryEngine";
+import {geodesicLength} from "@arcgis/core/geometry/geometryEngine";
 
 // Taken from map.apps (MAPAPPS-5677: Correct scale when using web mercator)
 export default class ScaleCorrection {

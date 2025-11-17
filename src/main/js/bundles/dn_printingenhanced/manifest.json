@@ -12,19 +12,18 @@
     "i18n": [
         "bundle"
     ],
-    "license": {},
     "productName": "devnet-mapapps-printing-enhanced",
     "dependencies": {
-        "esri": "^4.19.0",
-        "apprt-vue": "^4.12.0",
-        "apprt-vuetify": "^4.12.0",
-        "apprt-binding": "^4.12.0",
-        "apprt-core": "^4.12.0",
-        "printing": "^4.12.0",
-        "map-widget": "^4.12.0",
-        "coordinatetransformer": "^4.12.0"
+        "@arcgis/core": "^4.33.0",
+        "apprt-vue": "^4.20.0",
+        "apprt-vuetify": "^4.20.0",
+        "apprt-binding": "^4.20.0",
+        "apprt-core": "^4.20.0",
+        "printing": "^4.20.0",
+        "map-widget": "^4.20.0",
+        "coordinatetransformer": "^4.20.0"
     },
-    "CSS-Themes-Extension": [
+    "cssThemesExtension": [
         {
             "name": "*",
             "files": [

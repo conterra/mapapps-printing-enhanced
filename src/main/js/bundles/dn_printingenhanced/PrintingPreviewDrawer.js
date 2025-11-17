@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import Polygon from "esri/geometry/Polygon";
-import Extent from "esri/geometry/Extent";
-import Graphic from "esri/Graphic";
-import * as geometryEngine from "esri/geometry/geometryEngine";
+import Polygon from "@arcgis/core/geometry/Polygon";
+import Extent from "@arcgis/core/geometry/Extent";
+import Graphic from "@arcgis/core/Graphic";
+import * as geometryEngine from "@arcgis/core/geometry/geometryEngine";
 import geometry from "ct/mapping/geometry";
-import GraphicsLayer from "esri/layers/GraphicsLayer";
-import SketchViewModel from "esri/widgets/Sketch/SketchViewModel";
+import GraphicsLayer from "@arcgis/core/layers/GraphicsLayer";
+import SketchViewModel from "@arcgis/core/widgets/Sketch/SketchViewModel";
 import LayoutHelper from "./LayoutHelper";
 import ScaleCorrection from "./ScaleCorrection";
 

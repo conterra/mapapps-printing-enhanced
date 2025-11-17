@@ -17,7 +17,7 @@ import PrintingEnhancedWidget from "./PrintingEnhancedWidget.vue";
 import Vue from "apprt-vue/Vue";
 import VueDijit from "apprt-vue/VueDijit";
 import Binding from "apprt-binding/Binding";
-import apprt_request from "apprt-request";
+import { getProxiedUrl } from "apprt-fetch";
 import ScaleCorrection from "./ScaleCorrection";
 
 export default class PrintingEnhancedWidgetFactory {
@@ -57,7 +57,7 @@ export default class PrintingEnhancedWidgetFactory {
                     stateWatcher.remove();
                     if (state === "ready") {
                         exportedItem.loading = false;
-                        exportedItem.url = apprt_request.getProxiedUrl(item.url);
+                        exportedItem.url = getProxiedUrl(item.url);
                     } else if (state === "error") {
                         exportedItem.loading = false;
                         exportedItem.url = null;
