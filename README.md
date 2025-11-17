@@ -13,7 +13,7 @@ https://demos.conterra.de/mapapps/resources/apps/public_demo_printingenhanced/in
 
 ## Installation Guide
 **Requirements:**
-- map.apps 4.12.0 or later
+- map.apps 4.20.0 or later
 - A print service that supports the _Get Layout Templates Info Task_ (https://developers.arcgis.com/rest/services-reference/get-layout-templates-info-task.htm)
 - ArcGIS Server 10.4 or later (pageUnits property is supported since 10.6)
 
