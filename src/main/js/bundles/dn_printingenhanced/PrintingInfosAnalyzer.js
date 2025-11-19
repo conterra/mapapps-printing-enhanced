@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import apprt_when from "apprt-core/when";
-import { apprtFetch } from "apprt-fetch";
+import { apprtFetchJson } from "apprt-fetch";
 import * as geoprocessor from "@arcgis/core/rest/geoprocessor";
 
 const _printInfos = Symbol("_printInfos");
@@ -27,7 +27,7 @@ export default class PrintingInfosAnalyzer {
             return this[_printInfos];
         }
         // otherwise request them from server
-        return apprt_when(apprtFetch(url, {
+        return apprt_when(apprtFetchJson(url, {
             "query": {
                 "f": "json"
             }
