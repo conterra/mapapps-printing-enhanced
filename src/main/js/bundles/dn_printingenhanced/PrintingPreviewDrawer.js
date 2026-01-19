@@ -170,20 +170,17 @@ export default class PrintingPreviewDrawer {
 
     async _getOutsideMainFrameGeometry(geometry) {
         let fullExtent = new Extent({
-            "xmin": -20037507.067161843,
-            "ymin": -19971868.880408604,
-            "xmax": 20037507.067161843,
-            "ymax": 19971868.8804085,
+            "xmin": -180,
+            "ymin": -90,
+            "xmax": 180,
+            "ymax": 90,
             "spatialReference": {
-                "wkid": 102100,
-                "latestWkid": 3857
+                "wkid": 4326
             }
         });
-        if (geometry.spatialReference.wkid !== 102100) {
-            const coordinateTransformer = this._coordinateTransformer;
-            fullExtent =
-                await coordinateTransformer.transform(fullExtent, geometry.spatialReference.wkid);
-        }
+        const coordinateTransformer = this._coordinateTransformer;
+        fullExtent =
+            await coordinateTransformer.transform(fullExtent, geometry.spatialReference.wkid);
         return await geometryEngine.difference(fullExtent, geometry);
     }
 
