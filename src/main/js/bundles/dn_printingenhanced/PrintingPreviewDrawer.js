@@ -124,9 +124,6 @@ export default class PrintingPreviewDrawer {
     }
 
     _convertTemplateSizeTo(value, scale, unit) {
-        const coordinateTransformer = this._coordinateTransformer;
-        //let spatialRederence = this._mapWidgetModel && this._mapWidgetModel.spatialReference;
-        //let wkid = spatialRederence && spatialRederence.wkid || spatialRederence.latestWkid;
         let factor;
         switch (unit) {
             case "MILLIMETER":
@@ -172,7 +169,7 @@ export default class PrintingPreviewDrawer {
     }
 
     async _getOutsideMainFrameGeometry(geometry) {
-        const fullExtent = new Extent({
+        let fullExtent = new Extent({
             "xmin": -20037507.067161843,
             "ymin": -19971868.880408604,
             "xmax": 20037507.067161843,
@@ -182,6 +179,11 @@ export default class PrintingPreviewDrawer {
                 "latestWkid": 3857
             }
         });
+        if (geometry.spatialReference.wkid !== 102100) {
+            const coordinateTransformer = this._coordinateTransformer;
+            fullExtent =
+                await coordinateTransformer.transform(fullExtent, geometry.spatialReference.wkid);
+        }
         return await geometryEngine.difference(fullExtent, geometry);
     }
 
