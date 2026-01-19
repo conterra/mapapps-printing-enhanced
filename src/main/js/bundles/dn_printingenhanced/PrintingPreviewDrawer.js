@@ -169,19 +169,8 @@ export default class PrintingPreviewDrawer {
     }
 
     async _getOutsideMainFrameGeometry(geometry) {
-        let fullExtent = new Extent({
-            "xmin": -180,
-            "ymin": -90,
-            "xmax": 180,
-            "ymax": 90,
-            "spatialReference": {
-                "wkid": 4326
-            }
-        });
-        const coordinateTransformer = this._coordinateTransformer;
-        fullExtent =
-            await coordinateTransformer.transform(fullExtent, geometry.spatialReference.wkid);
-        return await geometryEngine.difference(fullExtent, geometry);
+        const mapWidgetModel = this._mapWidgetModel;
+        return await geometryEngine.difference(mapWidgetModel.extent, geometry);
     }
 
     _addGraphicsLayerToMap(map) {
