@@ -197,15 +197,15 @@
                         this.layout = this.lastLayout;
                     }
                 } else if (tab === 1) {
-                    if (this.layout !== "MAP_ONLY") {
+                    if (this.layout !== "map-only") {
                         this.lastLayout = this.layout;
                     }
-                    this.layout = "MAP_ONLY";
+                    this.layout = "map-only";
                 }
             }
         },
         mounted: function () {
-            if (this.layout === "MAP_ONLY") {
+            if (this.layout === "map-only") {
                 this.activeTab = 1;
             } else {
                 this.activeTab = 0;
