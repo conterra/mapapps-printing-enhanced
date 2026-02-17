@@ -241,7 +241,9 @@ export default declare({
     },
 
     _computeAngle(pointA, pointB) {
-        return Math.atan2(pointB[1] - pointA[1], pointB[0] - pointA[0]) * 180 / Math.PI;
+        const angle = Math.atan2(pointB[1] - pointA[1], pointB[0] - pointA[0]) * 180 / Math.PI;
+        this._printingPreviewDrawer.setRotation(angle);
+        return angle;
     },
 
     _enablePopups() {
