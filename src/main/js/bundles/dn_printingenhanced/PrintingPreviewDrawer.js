@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 import Polygon from "@arcgis/core/geometry/Polygon";
-import Extent from "@arcgis/core/geometry/Extent";
 import Graphic from "@arcgis/core/Graphic";
 import * as geometryEngine from "@arcgis/core/geometry/geometryEngine";
 import geometry from "ct/mapping/geometry";
