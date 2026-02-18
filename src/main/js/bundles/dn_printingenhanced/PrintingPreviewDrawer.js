@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 import Polygon from "@arcgis/core/geometry/Polygon";
-import Extent from "@arcgis/core/geometry/Extent";
 import Graphic from "@arcgis/core/Graphic";
 import * as geometryEngine from "@arcgis/core/geometry/geometryEngine";
 import geometry from "ct/mapping/geometry";
@@ -29,8 +28,11 @@ const _differenceGraphic = Symbol("_differenceGraphic");
 const _graphicsLayer = Symbol("_graphicsLayer");
 const _sketchViewModel = Symbol("_sketchViewModel");
 
+
 let _graphicsLayerWatcher;
+let _rotation;
 export default class PrintingPreviewDrawer {
+
 
     activate() {
         const properties = this._printingEnhancedProperties;
@@ -51,6 +53,9 @@ export default class PrintingPreviewDrawer {
             });
         }
         this[_geometry] = null;
+    }
+    setRotation(rotation) {
+        this._rotation = rotation;
     }
 
     deactivate() {
@@ -75,7 +80,7 @@ export default class PrintingPreviewDrawer {
         const geometryParams = {
             width: width,
             height: height,
-            rotation: mapWidgetModel.rotation
+            rotation: this._rotation ? this._rotation : mapWidgetModel.rotation
         };
         const geometry = this._getMainFrameGeometry(geometryParams);
         const differenceGeometry = await this._getOutsideMainFrameGeometry(geometry);
