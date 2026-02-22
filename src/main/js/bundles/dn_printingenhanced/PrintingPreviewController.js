@@ -55,8 +55,10 @@ export default declare({
         // watch for changes
         this._watchForTemplateOptionsChanges(esriPrintWidget);
 
+        let currentPrintTemplate = null;
         // handle print preview before and after printing
         d_aspect.before(printViewModel, "print", (printTemplate) => {
+            currentPrintTemplate = printTemplate;
             // show print preview
             this._printingPreviewDrawer.showGraphicsLayer(false);
 
@@ -101,13 +103,16 @@ export default declare({
 
         d_aspect.after(printViewModel, "print", (promise) => {
             async(() => {
-                const view = printViewModel.view;
+                // reset view properties only when scale is preserved
+                if (currentPrintTemplate && currentPrintTemplate.scalePreserved) {
+                    const view = printViewModel.view;
 
-                // reset view properties
-                view.scale = this._oldScale;
-                if (this._oldRotation !== null) {
-                    view.rotation = this._oldRotation;
-                    this._oldRotation = null;
+                    // reset view properties
+                    view.scale = this._oldScale;
+                    if (this._oldRotation !== null) {
+                        view.rotation = this._oldRotation;
+                        this._oldRotation = null;
+                    }
                 }
                 this._printingPreviewDrawer.showGraphicsLayer(true);
             }, 2000);
