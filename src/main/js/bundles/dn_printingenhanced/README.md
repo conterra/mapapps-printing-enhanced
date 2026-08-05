@@ -61,6 +61,13 @@ To make the functions of this bundle available to the user, the following tool c
         "showDpiSelect": true,
         "layoutTemplatesInfoTaskName": "Get Layout Templates Info Task",
         "defaultPageUnit": "CENTIMETER",
+        "legend": {
+          "defaultLegendEnabled": true,
+          "defaultLegendValue": "noLegend",
+          "legendTitleAppendText": "${ui.legendTitleAppendText}",
+          "legendPrintRequestDelayInMs": 1000,
+          "legendTemplateOptionsRestoreDelayInMs": 300
+        },
         "printSizes": [
             {
                 "value": "a4",
@@ -90,7 +97,12 @@ To make the functions of this bundle available to the user, the following tool c
             "a4_landscape": "A4_quer",
             "a3_portrait": "A3_hoch",
             "a3_landscape": "A3_quer",
-            "mapOnly": "MAP_ONLY"
+            "legend": "A4_hoch_legende",
+            "mapOnly": "MAP_ONLY",
+            "a4_portrait_integratedLegend": "A4_hoch_integratedLegend",
+            "a4_landscape_integratedLegend": "A4_quer_integratedLegend",
+            "a3_portrait_integratedLegend": "A3_hoch_integratedLegend",
+            "a3_landscape_integratedLegend": "A3_quer_integratedLegend"
         },
         "dpiValues": [
             {
@@ -206,6 +218,7 @@ To make the functions of this bundle available to the user, the following tool c
 | deriveLayoutFromPageSize    | Boolean            | `true` &#124; `false`          | `false`                          | If `true`, the layout dropdown is replaced by page-size and orientation radio buttons (see `printSizes`, `printOrientations`, `layoutNames`), and the matching layout template is selected automatically. If `false`, the original layout dropdown is used.                    |
 | layoutTemplatesInfoTaskName | String             |                                | `Get Layout Templates Info Task` | Layout templates task name.                                                                                                                                                                                                                                                     |
 | defaultPageUnit             | String             | `MILLIMETER, CENTIMETER, INCH` | `CENTIMETER`                     | Default template unit (ArcGIS Server < 10.6).                                                                                                                                                                                                                                   |
+| legend                      | Object             |                                |                                  | Configures the legend print mode: `defaultLegendEnabled`/`defaultLegendValue` set the initial choice among `noLegend`, `integratedLegend` (adds the legend to the map layout) and `legendOwnPage` (sends a second print request against the dedicated legend layout, see `layoutNames.legend` and the `*_integratedLegend` entries). `legendTitleAppendText` is appended to the legend print's title/file name so it doesn't collide with the map print in the results list. `legendPrintRequestDelayInMs`/`legendTemplateOptionsRestoreDelayInMs` tune the delay before sending the second request and before restoring the original template options afterwards; both are environment-dependent. |
 | printSizes                  | Array              |                                | `[]`                             | Page sizes offered when `deriveLayoutFromPageSize` is `true`. Each entry has the form `{"value": <id>, "text": <GUI label>, "isDefault": <boolean>}`; the entry with `isDefault: true` is selected at startup.                                                                  |
 | printOrientations           | Array              |                                | `[]`                             | Page orientations offered when `deriveLayoutFromPageSize` is `true`, in the same form as `printSizes`.                                                                                                                                                                          |
 | layoutNames                 | Object             |                                | `{}`                             | Maps a page-size/orientation combination to the name of the matching print layout template. The key is `<printSizes value>_<printOrientations value>`; one entry is required for every combination of `printSizes` and `printOrientations`.                                   |

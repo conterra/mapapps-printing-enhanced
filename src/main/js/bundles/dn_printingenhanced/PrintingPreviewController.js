@@ -40,6 +40,7 @@ export default declare({
         const properties = this._printingEnhancedProperties._properties;
         this.drawPrintPreview = properties.enablePrintPreview && properties.scaleEnabled;
         this.esriPrintWidget = esriPrintWidget;
+        this._isDisabled = false;
 
         // get print infos
         const url = this[_printServiceUrl] = esriPrintWidget.printServiceUrl;
@@ -58,6 +59,8 @@ export default declare({
 
         // handle print preview before and after printing
         d_aspect.before(printViewModel, "print", (printTemplate) => {
+            if (this._isDisabled === true) return;
+
             // show print preview
             this._printingPreviewDrawer.showGraphicsLayer(false);
 
@@ -101,6 +104,7 @@ export default declare({
         });
 
         d_aspect.after(printViewModel, "print", (promise) => {
+            if (this._isDisabled === true) return promise;
             async(() => {
                 const view = printViewModel.view;
 
@@ -150,6 +154,7 @@ export default declare({
         this._printingToggleTool = tool;
         const connect = this[_connect] = new Connect();
         connect.connect(tool, "onActivate", () => {
+            if (this._isDisabled === true) return;
             this._handleDrawTemplateDimensions();
             this[_lastPopupState] = this._disablePopups();
         });
@@ -164,6 +169,7 @@ export default declare({
         this._printingEnhancedToggleTool = tool;
         const connect = this[_connect] = new Connect();
         connect.connect(tool, "onActivate", () => {
+            if (this._isDisabled === true) return;
             this._handleDrawTemplateDimensions();
             this[_lastPopupState] = this._disablePopups();
         });
@@ -172,6 +178,18 @@ export default declare({
             this._printingPreviewDrawer.resetGraphic();
             this[_lastPopupState]?.reset();
         });
+    },
+
+    setDisabled(disabled) {
+        this._isDisabled = disabled;
+    },
+
+    removePreviewGraphic() {
+        this._printingPreviewDrawer.removeGraphicFromGraphicsLayer();
+    },
+
+    isDisabled() {
+        return this._isDisabled;
     },
 
     setUserService(userService) {
@@ -206,7 +224,11 @@ export default declare({
         this[_templateOptions] = templateOptions;
         this[_templateOptionsWatchHandles] = [
             templateOptions.watch("layout", () => {
-                this._handleDrawTemplateDimensions(true);
+                if (
+                    templateOptions.layout !== this._printingEnhancedProperties.layoutNames?.legend
+                ) {
+                    this._handleDrawTemplateDimensions(true);
+                }
             }),
             templateOptions.watch("scale", () => {
                 this._handleDrawTemplateDimensions();
@@ -239,6 +261,7 @@ export default declare({
     },
 
     _handleDrawTemplateDimensions(zoomTo) {
+        if (this._isDisabled === true) return;
         const templateOptions = this.refreshTemplateOptionsReference();
         if (!templateOptions) {
             return;

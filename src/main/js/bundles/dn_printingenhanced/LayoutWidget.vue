@@ -224,16 +224,26 @@
                 />
             </v-flex>
             <v-flex
-                v-if="visibleUiElements.legendEnabled"
+                v-if="visibleUiElements.legendValue"
                 md12
             >
-                <v-checkbox
-                    v-model="legendEnabledValue"
-                    :label="i18n.legendEnabled"
-                    color="primary"
-                    hide-details
-                    class="pa-0 ma-0"
-                />
+                <v-radio-group v-model="legendValueComp">
+                    <v-radio
+                        key="integratedLegend"
+                        value="integratedLegend"
+                        :label="i18n.integratedLegend"
+                    ></v-radio>
+                    <v-radio
+                        key="legendOwnPage"
+                        value="legendOwnPage"
+                        :label="i18n.legendOwnPage"
+                    ></v-radio>
+                    <v-radio
+                        key="noLegend"
+                        value="noLegend"
+                        :label="i18n.noLegend"
+                    ></v-radio>
+                </v-radio-group>
             </v-flex>
         </v-layout>
     </v-container>
@@ -278,10 +288,6 @@
             layout: {
                 type: String,
                 default: "a3-portrait"
-            },
-            legendEnabled: {
-                type: Boolean,
-                default: true
             },
             scale: {
                 type: Number,
@@ -338,6 +344,10 @@
             mapOnlyLayoutName: {
                 type: String,
                 default: () => ""
+            },
+            legendValue: {
+                type: String,
+                default: "noLegend"
             }
         },
         data() {
@@ -385,14 +395,6 @@
                 },
                 set: function (layout) {
                     this.$emit("update:layout", layout);
-                }
-            },
-            legendEnabledValue: {
-                get: function () {
-                    return this.legendEnabled;
-                },
-                set: function (legendEnabled) {
-                    this.$emit("update:legend-enabled", legendEnabled);
                 }
             },
             scaleValue: {
@@ -462,6 +464,21 @@
                 },
                 set: function (pagePrintOrientationValue) {
                     this.$emit("update:page-print-orientation", pagePrintOrientationValue);
+                }
+            },
+            legendValueComp: {
+                get: function () {
+                    if (
+                        this.legendValue === "integratedLegend" ||
+                        this.legendValue === "legendOwnPage" ||
+                        this.legendValue === "noLegend"
+                    ) {
+                        return this.legendValue;
+                    }
+                    return "noLegend";
+                },
+                set: function (legendValue) {
+                    this.$emit("update:legend-value", legendValue);
                 }
             }
         },

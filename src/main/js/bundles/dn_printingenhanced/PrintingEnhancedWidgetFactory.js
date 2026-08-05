@@ -114,6 +114,7 @@ export default class PrintingEnhancedWidgetFactory {
             if (templateOptions) {
                 this.templateOptionsBinding.enable().syncToLeftNow();
             }
+            vm.legendValue = this._normalizeLegendValue(vm.legendValue);
         };
         widget.deactivateTool = () => {
             this.currentMapScaleWatchSignal?.remove();
@@ -218,6 +219,14 @@ export default class PrintingEnhancedWidgetFactory {
             this._lastActiveTabId = activeTabId;
         });
 
+        vm.$watch("legendValue", () => {
+            const templateOptions = this._getTemplateOptions();
+            if (!templateOptions) {
+                return;
+            }
+            this._setLayoutName(vm, templateOptions, properties);
+        });
+
         // listen to view model methods
         vm.$on("print", () => {
             const templateOptions = this._getTemplateOptions();
@@ -226,7 +235,38 @@ export default class PrintingEnhancedWidgetFactory {
             }
             // Ensure layout is always set before printing
             this._setLayoutName(vm, templateOptions, properties);
-            esriPrintWidget._handlePrintMap();
+            const legendValue = this._normalizeLegendValue(vm.legendValue);
+            const printContext = {
+                activeTabId: vm.activeTabId,
+                legendValue,
+                layoutBeforePrint: templateOptions.layout,
+                pagePrintSize: vm.pagePrintSize,
+                pagePrintOrientation: vm.pagePrintOrientation,
+                titleBeforePrint: templateOptions.title,
+                fileNameBeforePrint: templateOptions.fileName
+            };
+            if (
+                legendValue === "noLegend" ||
+                legendValue === "legendOwnPage" ||
+                vm.activeTabId === 1
+            ) {
+                esriPrintWidget._handlePrintMap();
+            }
+            if (
+                legendValue === "legendOwnPage" ||
+                legendValue === "integratedLegend" ||
+                vm.activeTabId === 1
+            ) {
+                setTimeout(() => {
+                    this._printLegend(
+                        esriPrintWidget,
+                        vm,
+                        templateOptions,
+                        properties,
+                        printContext
+                    );
+                }, properties.legend.legendPrintRequestDelayInMs);
+            }
         });
 
         vm.$on("resetScale", () => {
@@ -236,7 +276,19 @@ export default class PrintingEnhancedWidgetFactory {
         this._initDefaultValues(vm, this._getTemplateOptions(), properties);
     }
 
+    _normalizeLegendValue(legendValue) {
+        if (
+            legendValue === "integratedLegend" ||
+            legendValue === "legendOwnPage" ||
+            legendValue === "noLegend"
+        ) {
+            return legendValue;
+        }
+        return "noLegend";
+    }
+
     _setLayoutName(vm, templateOptions, enhancedProperties) {
+        const legendValue = this._normalizeLegendValue(vm.legendValue);
         if (vm.activeTabId === 1) {
             templateOptions.layout = enhancedProperties.layoutNames.mapOnly;
             return;
@@ -245,6 +297,12 @@ export default class PrintingEnhancedWidgetFactory {
         if (enhancedProperties.deriveLayoutFromPageSize) {
             const layoutNames = enhancedProperties.layoutNames;
             let layoutName = layoutNames[vm.pagePrintSize + "_" + vm.pagePrintOrientation];
+            if (legendValue === "integratedLegend") {
+                layoutName =
+                    layoutNames[
+                        vm.pagePrintSize + "_" + vm.pagePrintOrientation + "_integratedLegend"
+                    ];
+            }
             if (!layoutName) {
                 console.error(
                     "could not find layoutName for " +
@@ -256,6 +314,68 @@ export default class PrintingEnhancedWidgetFactory {
             }
             templateOptions.layout = layoutName;
         }
+    }
+
+    _printLegend(esriPrintWidget, vm, templateOptions, properties, printContext = {}) {
+        this._printingPreviewController.setDisabled(true);
+        const legendValue = this._normalizeLegendValue(printContext.legendValue ?? vm.legendValue);
+        const activeTabIdForLegend = printContext.activeTabId ?? vm.activeTabId;
+        const layoutBeforePrint = printContext.layoutBeforePrint ?? templateOptions.layout;
+        const isMapOnlyMode =
+            activeTabIdForLegend === 1 || layoutBeforePrint === properties.layoutNames.mapOnly;
+        const originalFileName =
+            templateOptions.fileName ||
+            printContext.fileNameBeforePrint ||
+            properties.legend.legendNameIfNoneIsGiven;
+        const originalTitle =
+            templateOptions.title ||
+            printContext.titleBeforePrint ||
+            properties.legend.legendNameIfNoneIsGiven;
+        const sizeOrientation =
+            (printContext.pagePrintSize ?? vm.pagePrintSize) +
+            "_" +
+            (printContext.pagePrintOrientation ?? vm.pagePrintOrientation);
+        let originalLayoutName;
+        templateOptions.legendEnabled = true;
+
+        if (isMapOnlyMode) {
+            // Title will be available also in MAP_ONLY Mode for the Legend page and must be saved/set/restored
+            const newFileName = originalFileName + properties.legend.legendTitleAppendText;
+            templateOptions.fileName = templateOptions.title = newFileName;
+        } else if (legendValue === "legendOwnPage") {
+            templateOptions.title = originalTitle + properties.legend.legendTitleAppendText;
+        }
+        if (legendValue === "legendOwnPage" && !isMapOnlyMode) {
+            templateOptions.layout = properties.layoutNames.legend;
+            originalLayoutName = properties.layoutNames[sizeOrientation];
+        } else if (legendValue === "integratedLegend" && !isMapOnlyMode) {
+            this._printingPreviewController.setDisabled(false); // Needed to set editText and contentText
+            templateOptions.title = vm.title;
+            originalLayoutName = templateOptions.layout =
+                properties.layoutNames[sizeOrientation + "_integratedLegend"];
+        }
+        if (isMapOnlyMode) {
+            originalLayoutName = layoutBeforePrint || properties.layoutNames.mapOnly;
+            templateOptions.layout = properties.layoutNames.legend;
+            this._fallbackLayoutOverride = properties.layoutNames.legend;
+            this._forceFallbackTemplate = true;
+        }
+        esriPrintWidget._handlePrintMap();
+        const that = this;
+        // Print Legend: Timeout needed, because of multiple us of "_handlePrintMap" and changing the template
+        setTimeout(() => {
+            templateOptions.layout = originalLayoutName;
+            if (isMapOnlyMode && !templateOptions.layout) {
+                templateOptions.layout = properties.layoutNames.mapOnly;
+            }
+            this._fallbackLayoutOverride = undefined;
+            this._forceFallbackTemplate = false;
+            if (isMapOnlyMode) {
+                templateOptions.fileName = originalFileName;
+            }
+            templateOptions.title = originalTitle;
+            that._printingPreviewController.setDisabled(false);
+        }, properties.legend.legendTemplateOptionsRestoreDelayInMs);
     }
 
     _initDefaultValues(vm, templateOptions, enhancedProperties) {
@@ -271,6 +391,7 @@ export default class PrintingEnhancedWidgetFactory {
         if (defaultPagePrintOrientation && defaultPagePrintOrientation.length > 0) {
             vm.pagePrintOrientation = defaultPagePrintOrientation[0].value;
         }
+        vm.legendValue = "noLegend";
         if (templateOptions) {
             this._setLayoutName(vm, templateOptions, enhancedProperties);
         }

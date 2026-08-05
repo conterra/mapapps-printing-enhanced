@@ -58,7 +58,6 @@
                     :dpi-values="dpiValues"
                     :format.sync="format"
                     :layout.sync="layout"
-                    :legend-enabled.sync="legendEnabled"
                     :scale.sync="scale"
                     :scale-values="scaleValues"
                     :scale-enabled.sync="scaleEnabled"
@@ -74,6 +73,7 @@
                     :page-print-orientation.sync="pagePrintOrientation"
                     :page-print-orientation-values="pagePrintOrientationValues"
                     :map-only-layout-name="mapOnlyLayoutName"
+                    :legend-value.sync="legendValue"
                     @resetScale="$emit('resetScale')"
                 />
             </v-tab-item>
@@ -206,6 +206,7 @@
                 width: 800,
                 enablePrintPreview: true,
                 activeTabId: 0,
+                legendValue: "noLegend",
                 currentMapScale: 0,
                 exportedLinks: [],
                 error: ""
