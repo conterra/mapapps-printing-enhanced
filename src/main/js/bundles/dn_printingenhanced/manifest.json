@@ -354,8 +354,9 @@
                     "providing": "dn_printingenhanced.PrintingEnhancedProperties"
                 },
                 {
-                    "name": "_mapWidgetModel",
-                    "providing": "map-widget.MapWidgetModel"
+                    "name": "mapWidgetModel",
+                    "providing": "map-widget.MapWidgetModel",
+                    "cardinality": "0..1"
                 }
             ]
         },
