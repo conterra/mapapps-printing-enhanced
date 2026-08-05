@@ -101,11 +101,9 @@
                         small
                         top
                         class="infoButton"
-                        @click="showInfo=!showInfo"
+                        @click="showInfo = !showInfo"
                     >
-                        <v-icon color="primary">
-                            info
-                        </v-icon>
+                        <v-icon color="primary"> info </v-icon>
                     </v-btn>
                 </div>
                 <div
@@ -271,8 +269,7 @@
             },
             visibleUiElements: {
                 type: Object,
-                default: () => {
-                }
+                default: () => {}
             },
             currentMapScale: {
                 type: Number,
@@ -295,7 +292,7 @@
                     return this.author;
                 },
                 set: function (author) {
-                    this.$emit('update:author', author);
+                    this.$emit("update:author", author);
                 }
             },
             copyrightValue: {
@@ -303,7 +300,7 @@
                     return this.copyright;
                 },
                 set: function (copyright) {
-                    this.$emit('update:copyright', copyright);
+                    this.$emit("update:copyright", copyright);
                 }
             },
             dpiValue: {
@@ -311,7 +308,7 @@
                     return this.dpi;
                 },
                 set: function (dpi) {
-                    this.$emit('update:dpi', dpi);
+                    this.$emit("update:dpi", dpi);
                 }
             },
             formatValue: {
@@ -319,7 +316,7 @@
                     return this.format;
                 },
                 set: function (format) {
-                    this.$emit('update:format', format);
+                    this.$emit("update:format", format);
                 }
             },
             layoutValue: {
@@ -327,7 +324,7 @@
                     return this.layout;
                 },
                 set: function (layout) {
-                    this.$emit('update:layout', layout);
+                    this.$emit("update:layout", layout);
                 }
             },
             legendEnabledValue: {
@@ -335,7 +332,7 @@
                     return this.legendEnabled;
                 },
                 set: function (legendEnabled) {
-                    this.$emit('update:legend-enabled', legendEnabled);
+                    this.$emit("update:legend-enabled", legendEnabled);
                 }
             },
             scaleValue: {
@@ -343,24 +340,28 @@
                     return this.scale;
                 },
                 set: function (scale) {
-                    this.$emit('update:scale', scale);
+                    this.$emit("update:scale", scale);
                 }
             },
             scaleValuesIncludingCurrentScale: {
                 get() {
                     const predefinedScaleValues = this.scaleValues || [];
-                    return predefinedScaleValues.map(entry => {
+                    return predefinedScaleValues.map((entry) => {
                         if (entry.value === -1) {
-                            const localizedScale = new Intl.NumberFormat().format(this.currentMapScale);
-                            return Object.assign({}, {
-                                text: `${entry.text} (1:${localizedScale})`,
-                                value: -1
-                            });
+                            const localizedScale = new Intl.NumberFormat().format(
+                                this.currentMapScale
+                            );
+                            return Object.assign(
+                                {},
+                                {
+                                    text: `${entry.text} (1:${localizedScale})`,
+                                    value: -1
+                                }
+                            );
                         } else {
                             return Object.assign({}, entry);
                         }
                     });
-
                 }
             },
             scaleEnabledValue: {
@@ -368,7 +369,7 @@
                     return this.scaleEnabled;
                 },
                 set: function (scaleEnabled) {
-                    this.$emit('update:scale-enabled', scaleEnabled);
+                    this.$emit("update:scale-enabled", scaleEnabled);
                 }
             },
             enablePrintPreviewValue: {
@@ -376,7 +377,7 @@
                     return this.enablePrintPreview;
                 },
                 set: function (enablePrintPreview) {
-                    this.$emit('update:enable-print-preview', enablePrintPreview);
+                    this.$emit("update:enable-print-preview", enablePrintPreview);
                 }
             },
             titleValue: {
@@ -384,7 +385,7 @@
                     return this.title;
                 },
                 set: function (title) {
-                    this.$emit('update:title', title);
+                    this.$emit("update:title", title);
                 }
             }
         },
