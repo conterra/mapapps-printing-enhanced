@@ -25,6 +25,12 @@ export default class PrintingEnhancedWidgetFactory {
 
     activate() {
         this._initComponent();
+        // Print mode tracking
+        this._PRINT_MODE_SINGLE = "SINGLE";
+        this._PRINT_MODE_SERIES = "SERIES";
+        this._printMode = this._PRINT_MODE_SINGLE;
+        this._oldMapSeriesExtent = undefined;
+        this._oldMapSeriesExtentType = undefined;
         this._scaleCorrection = new ScaleCorrection();
     }
 
@@ -36,14 +42,21 @@ export default class PrintingEnhancedWidgetFactory {
         const printWidget = this._printingWidget;
         const esriPrintWidget = printWidget._esriWidget;
         this._ensureTemplateOptionsBinding(vm);
+        const mapSeriesModel = this._printingMapSeriesPrintJobsModel;
+        // Event-Topic handler methods (invoked by framework based on manifest Event-Topics)
+        widget.onMapSeriesExtentSet = (evt) => this.onMapSeriesExtentSet(evt);
 
         this.printingPreviewControllerBinding = Binding.for(vm, printingPreviewController)
             .syncToRight("enablePrintPreview", "drawPrintPreview", (enablePrintPreview) => !!(enablePrintPreview && vm.scaleEnabled))
             .syncToRight("scaleEnabled", "drawPrintPreview", (scaleEnabled) => !!(scaleEnabled && vm.enablePrintPreview));
 
+        this.mapSeriesJobsBinding = Binding.for(vm, mapSeriesModel).syncAll("mapSeriesJobs");
+
         widget.activateTool = () => {
             const templateOptions = this._ensureTemplateOptionsBinding(vm);
             this.exportedLinksWatcher = esriPrintWidget.exportedLinks.on("after-add", (event) => {
+                // Skip blueprint prints that belong to series mode
+                if (this._printMode !== this._PRINT_MODE_SINGLE) return;
                 const item = event.item;
                 const liveTemplateOptions = this._getTemplateOptions() || templateOptions;
                 const format = liveTemplateOptions?.format || vm.format || "pdf";
@@ -114,12 +127,42 @@ export default class PrintingEnhancedWidgetFactory {
             if (templateOptions) {
                 this.templateOptionsBinding.enable().syncToLeftNow();
             }
+            this._refreshTemplateOptionsControllers();
+            this.mapSeriesJobsBinding.enable().syncToLeftNow();
+
+            // Restore tool states based on active tab
+            const activeTabId = vm.activeTabId;
+            if (activeTabId === 2) {
+                this._printMode = this._PRINT_MODE_SERIES;
+                this._printingPreviewController.setDisabled(true);
+                this._printingMapSeriesPreviewController.setDisabled(false);
+                if (this._oldMapSeriesExtent && this._oldMapSeriesExtentType) {
+                    this._printingMapSeriesPreviewController.setMapSeriesExtent(
+                        this._oldMapSeriesExtent,
+                        this._oldMapSeriesExtentType
+                    );
+                    this._oldMapSeriesExtent = undefined;
+                    this._oldMapSeriesExtentType = undefined;
+                }
+            } else {
+                this._printMode = this._PRINT_MODE_SINGLE;
+                this._printingMapSeriesPreviewController.setDisabled(true);
+                this._printingPreviewController.setDisabled(false);
+            }
         };
         widget.deactivateTool = () => {
+            if (vm.activeTabId === 2) {
+                this._oldMapSeriesExtent =
+                    this._printingMapSeriesPreviewController.getMapSeriesExtent();
+                this._oldMapSeriesExtentType =
+                    this._printingMapSeriesPreviewController.getMapSeriesExtentType();
+            }
+            vm?.$refs?.mapSeriesWidget?.deactivateAllTools();
             this.currentMapScaleWatchSignal?.remove();
             this.currentMapScaleWatchSignal = undefined;
             this.printingPreviewControllerBinding?.disable();
             this.templateOptionsBinding?.disable();
+            this.mapSeriesJobsBinding?.disable();
             this.exportedLinksWatcher?.remove();
         };
 
@@ -128,6 +171,7 @@ export default class PrintingEnhancedWidgetFactory {
                 this.currentMapScaleWatchSignal?.remove();
                 this.printingPreviewControllerBinding?.unbind();
                 this.templateOptionsBinding?.unbind();
+                this.mapSeriesJobsBinding?.unbind();
                 vm.$off();
             }
         });
@@ -183,6 +227,7 @@ export default class PrintingEnhancedWidgetFactory {
         vm.dpiValues = properties.dpiValues;
         vm.scaleValues = properties.scaleValues;
         vm.enablePrintPreview = properties.enablePrintPreview;
+        vm.minScaleForSeries = this._printingMapSeriesPreviewController.minScaleForSeries;
         vm.pagePrintOrientationValues = properties.printOrientations;
         vm.pagePrintSizeValues = properties.printSizes;
         vm.mapOnlyLayoutName = properties.layoutNames.mapOnly;
@@ -194,7 +239,13 @@ export default class PrintingEnhancedWidgetFactory {
                 return;
             }
             this._setLayoutName(vm, templateOptions, properties);
-            this._printingPreviewController._handleDrawTemplateDimensions(true);
+            this._invalidateMapSeriesBlueprint("Page print orientation changed");
+            this._refreshTemplateOptionsControllers();
+            if (vm.activeTabId === 2) {
+                this._printingMapSeriesPreviewController.handleDrawMapSeriesFrames();
+            } else {
+                this._printingPreviewController._handleDrawTemplateDimensions(true);
+            }
         });
         vm.$watch("pagePrintSize", () => {
             const templateOptions = this._getTemplateOptions();
@@ -202,7 +253,13 @@ export default class PrintingEnhancedWidgetFactory {
                 return;
             }
             this._setLayoutName(vm, templateOptions, properties);
-            this._printingPreviewController._handleDrawTemplateDimensions(true);
+            this._invalidateMapSeriesBlueprint("Page print size changed");
+            this._refreshTemplateOptionsControllers();
+            if (vm.activeTabId === 2) {
+                this._printingMapSeriesPreviewController.handleDrawMapSeriesFrames();
+            } else {
+                this._printingPreviewController._handleDrawTemplateDimensions(true);
+            }
         });
 
         // Tab change handler
@@ -212,10 +269,44 @@ export default class PrintingEnhancedWidgetFactory {
                 this._lastActiveTabId = activeTabId;
                 return;
             }
-            if (activeTabId === 0 || activeTabId === 1) {
+            if (activeTabId === 2 && this._oldMapSeriesExtent && this._oldMapSeriesExtentType) {
+                this._printingMapSeriesPreviewController.setMapSeriesExtent(
+                    this._oldMapSeriesExtent,
+                    this._oldMapSeriesExtentType
+                );
+                this._oldMapSeriesExtent = undefined;
+                this._oldMapSeriesExtentType = undefined;
+            } else if (
+                activeTabId === 2 &&
+                !this._oldMapSeriesExtent &&
+                !this._oldMapSeriesExtentType
+            ) {
+                this._printingMapSeriesPreviewController.removePreviewGraphic();
+            } else if (activeTabId === 0 || activeTabId === 1) {
                 this._setLayoutName(vm, templateOptions, properties);
             }
+            if (activeTabId === 2) {
+                this._setLayoutName(vm, templateOptions, properties);
+            }
+            this._refreshTemplateOptionsControllers();
             this._lastActiveTabId = activeTabId;
+        });
+
+        vm.$watch("dpi", () => {
+            this._invalidateMapSeriesBlueprint("DPI changed");
+        });
+
+        vm.$watch("scale", () => {
+            this._invalidateMapSeriesBlueprint("Scale changed");
+        });
+
+        vm.$watch("mapSeriesLegendEnabled", () => {
+            this._invalidateMapSeriesBlueprint("Map series legend setting changed");
+        });
+
+        vm.$watch("format", () => {
+            this._invalidateMapSeriesBlueprint("Print format changed");
+            this._refreshTemplateOptionsControllers();
         });
 
         // listen to view model methods
@@ -229,33 +320,135 @@ export default class PrintingEnhancedWidgetFactory {
             esriPrintWidget._handlePrintMap();
         });
 
+        vm.$on("printMapSeries", async () => {
+            try {
+                const templateOptions = this._getTemplateOptions();
+                if (!templateOptions) {
+                    return;
+                }
+                this._refreshTemplateOptionsControllers();
+                const mapSeriesTitle =
+                    templateOptions.title || properties.legend.legendNameIfNoneIsGiven;
+                await this._printingMapSeriesPreviewController.handlePrintMapSeries(
+                    mapSeriesTitle,
+                    esriPrintWidget,
+                    vm,
+                    templateOptions,
+                    properties
+                );
+            } catch (e) {
+                console.error(e);
+                this._logService.error(this._i18n.get().unexpectedError);
+                vm.activeTabId = 2;
+            }
+        });
+
+        vm.$on("activate-single-print-mode", () => {
+            this.activateSinglePrintMode();
+        });
+
+        vm.$on("activate-series-print-mode", () => {
+            this.activateSeriesPrintMode();
+        });
+
+        vm.$on("use-map-view-extent", () => {
+            this._printingMapSeriesPreviewController.useCurrentMapExtent();
+        });
+
+        vm.$on("use-geometry-selection", () => {
+            this._printingMapSeriesPreviewController.useGeometrySelection();
+        });
+
+        vm.$on("cancel-geometry-selection", () => {
+            this._printingMapSeriesPreviewController.cancelGeometrySelection();
+        });
+
+        vm.$on("use-rectangle-draw", () => {
+            this._printingMapSeriesPreviewController.useRectangleDraw();
+        });
+
+        vm.$on("cancel-rectangle-draw", () => {
+            this._printingMapSeriesPreviewController.cancelRectangleDraw();
+        });
+
+        vm.$on("save-job-again", (mapSeriesJob) => {
+            this._printMode = this._PRINT_MODE_SERIES;
+            this._printingMapSeriesPreviewController.saveJobAsZip(mapSeriesJob, vm);
+        });
+
         vm.$on("resetScale", () => {
             esriPrintWidget._resetToCurrentScale();
+        });
+
+        vm.$on("do-not-print-empty-tiles-changed", (value) => {
+            this._printingMapSeriesPreviewController.onDoNotPrintEmptyTilesValueChanged(value);
         });
 
         this._initDefaultValues(vm, this._getTemplateOptions(), properties);
     }
 
+    activateSinglePrintMode(doNotDrawPreviewGraphic) {
+        this._printMode = this._PRINT_MODE_SINGLE;
+        this._printingMapSeriesPreviewController.setDisabled(true);
+        this._printingMapSeriesPreviewController.removePreviewGraphic();
+        if (!doNotDrawPreviewGraphic) {
+            this._printingPreviewController.setDisabled(false);
+            this._printingPreviewController._handleDrawTemplateDimensions(true);
+        }
+    }
+
+    activateSeriesPrintMode() {
+        this._printMode = this._PRINT_MODE_SERIES;
+        this._printingPreviewController.setDisabled(true);
+        this._printingPreviewController.removePreviewGraphic();
+        this._printingMapSeriesPreviewController.setDisabled(false);
+        this._printingMapSeriesPreviewController.handleDrawMapSeriesFrames();
+        this._primeMapSeriesBlueprintIfPossible("Series print mode activated");
+    }
+
+    onMapSeriesExtentSet(evt) {
+        this.vm.mapSeriesExtentSet = true;
+        this.vm.mapSeriesExtentType = evt.getProperty("type");
+    }
+
     _setLayoutName(vm, templateOptions, enhancedProperties) {
         if (vm.activeTabId === 1) {
             templateOptions.layout = enhancedProperties.layoutNames.mapOnly;
+            templateOptions.layoutNameSinglePage = null;
+            templateOptions.layoutSinglePage = null;
             return;
         }
-
-        if (enhancedProperties.deriveLayoutFromPageSize) {
-            const layoutNames = enhancedProperties.layoutNames;
-            let layoutName = layoutNames[vm.pagePrintSize + "_" + vm.pagePrintOrientation];
-            if (!layoutName) {
-                console.error(
-                    "could not find layoutName for " +
-                        vm.pagePrintSize +
-                        "_" +
-                        vm.pagePrintOrientation
-                );
-                layoutName = "";
-            }
-            templateOptions.layout = layoutName;
+        if (!enhancedProperties.deriveLayoutFromPageSize) {
+            // Opt-in feature disabled: leave templateOptions.layout untouched so the
+            // manual layout dropdown (visibleUiElements.layout) stays authoritative.
+            return;
         }
+        const layoutNames = enhancedProperties.layoutNames;
+        let layoutName = layoutNames[vm.pagePrintSize + "_" + vm.pagePrintOrientation];
+        let layoutNameSinglePage =
+            layoutNames[vm.pagePrintSize + "_" + vm.pagePrintOrientation + "_singlepage"];
+        if (!layoutName) {
+            console.error(
+                "could not find layoutName for " +
+                    vm.pagePrintSize +
+                    "_" +
+                    vm.pagePrintOrientation
+            );
+            layoutName = "";
+        }
+        if (!layoutNameSinglePage) {
+            console.error(
+                "could not find layoutNameSinglePage for " +
+                    vm.pagePrintSize +
+                    "_" +
+                    vm.pagePrintOrientation +
+                    "_singlepage"
+            );
+            layoutNameSinglePage = layoutName;
+        }
+        templateOptions.layout = layoutName;
+        templateOptions.layoutNameSinglePage = layoutNameSinglePage;
+        templateOptions.layoutSinglePage = layoutNameSinglePage;
     }
 
     _initDefaultValues(vm, templateOptions, enhancedProperties) {
@@ -271,6 +464,10 @@ export default class PrintingEnhancedWidgetFactory {
         if (defaultPagePrintOrientation && defaultPagePrintOrientation.length > 0) {
             vm.pagePrintOrientation = defaultPagePrintOrientation[0].value;
         }
+        vm.mapSeriesLegendEnabled =
+            enhancedProperties?.legend?.defaultLegendEnabled !== undefined
+                ? enhancedProperties.legend.defaultLegendEnabled
+                : true;
         if (templateOptions) {
             this._setLayoutName(vm, templateOptions, enhancedProperties);
         }
@@ -290,6 +487,37 @@ export default class PrintingEnhancedWidgetFactory {
 
     _getTemplateOptions() {
         return this._printingWidget?._esriWidget?.templateOptions;
+    }
+
+    _refreshTemplateOptionsControllers() {
+        this._printingPreviewController.refreshTemplateOptionsReference?.(
+            this._printingWidget?._esriWidget
+        );
+        this._printingMapSeriesPreviewController.refreshTemplateOptionsReference?.(
+            this._printingWidget?._esriWidget
+        );
+    }
+
+    _invalidateMapSeriesBlueprint(reason) {
+        this._printingMapSeriesPreviewController.invalidatePrintingRequestBlueprint?.(reason);
+    }
+
+    _primeMapSeriesBlueprintIfPossible(reason) {
+        const templateOptions = this._getTemplateOptions();
+        if (!templateOptions) {
+            return;
+        }
+        return this._printingMapSeriesPreviewController
+            .primePrintingRequestBlueprint(
+                this._printingWidget?._esriWidget,
+                this.vm,
+                templateOptions,
+                this._printingEnhancedProperties,
+                { reason }
+            )
+            ?.catch((error) => {
+                console.warn("Could not prime map series print blueprint cache", error);
+            });
     }
 
     _createTemplateOptionsBinding(vm, templateOptions) {

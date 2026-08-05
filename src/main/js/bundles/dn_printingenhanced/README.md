@@ -4,6 +4,8 @@ The Printing Enhanced Bundle extends the Printing bundle by further capabilities
 
 Instead of letting the user pick a layout template directly, the widget can optionally let the user choose a page size (e.g. A4, A3) and orientation (Portrait/Landscape) with radio buttons, and derive the matching layout template automatically (see `deriveLayoutFromPageSize` below).
 
+In addition to single-page printing, the bundle adds a map series tab that prints the selected area across multiple pages instead of a single one (see "Configuration for map series print" below).
+
 ## Usage
 
 1. First you need to add the bundle dn_printingenhanced to your app.
@@ -270,6 +272,72 @@ To filter your formats and layouts please use their entire ids as follows:
             "A4_Quer"
         ]
         ...
+    }
+}
+```
+
+### Configuration for map series print
+
+The following Configs have been added for **map series**:
+
+- every layoutname has a additional layout for printing an overview page and its single pages.
+  The layoutname for the overview page is the normal layoutname.
+  The layoutname for the single page is the normal layoutname plus "\_singlepage".
+  E.g.
+    - "a4_portrait": "A4_hoch_overview",
+    - "a4_portrait_singlepage": "A4_hoch_singlepage"
+- mapSeriesTileOverlap: overlap of the tiles in percent. Default is 0.05 (5%).
+- askToPrintManyFramesThreshold: threshold for number of frames that the user can print without confirming: if the user wants to print more map series frames than allowed by this threshold, they will be asked to confirm that they actually want to print that many frames
+- minScaleForSeries: minimum print scale for map series print. if below, the frames of the map-series won't update to it and the print cant start.
+- scaleModifications: modifications of the suggested scale for the map-series-frames when selecting a geometry
+    - toScale: if the calculated scale is equal or below this, the config entry with the lowest value of toScale is used here.
+    - roundUpTo: the finally suggested scale is rounded up to this value
+    - extentFactor: the calculated scale is multiplied by this factor, to create a "buffer" around the geometry.
+- selectionLayers: layers that are allowed for the geometry selection tool
+- printingURLtoIntercept: print url that will be intercepted when printing map series (usually should be the normal print url)
+- cancelRequestOnIntercept: cancel normal print request on intercept
+- numberOfConcurrentDownloads: number of request to the print service that will be done concurrently
+- legendFileNamePrefix: Prefix for legend file
+- fileNameSuffixOverviewPage: suffix for the overview page file name in map series mode
+- printingRequestTimeout: timeout for waiting for a print job to execute
+- geometryServerURL: URL of the ArcGIS Server GeometryServer that is used to filter empty tiles (tiles not covered by selected print geometry), e.g. "https://dev0221w.conterra.de/server/rest/services/Utilities/Geometry/GeometryServer"
+- maxNumberOfDrawnFrames: maximum number of frames that will be drawn in the map; this implicitly also restricts the number of max frames printed
+
+```json
+"dn_printingenhanced": {
+    "PrintingMapSeriesPreviewController": {
+        "askToPrintManyFramesThreshold": 100,
+        "minScaleForSeries": 1000,
+        "scaleModifications": [
+            {
+                "toScale": 2000,
+                "roundUpTo": 0,
+                "extentFactor": 1.1
+            },
+            {
+                "toScale": 10000,
+                "roundUpTo": 500,
+                "extentFactor": 1.1
+            }
+        ],
+        "selectionLayers": {
+            "layerIds": [1,2,3],
+            "externalServicesIds": []
+        }
+    },
+    "PrintingRequestBlueprintProvider": {
+        "printingURLtoIntercept": "@@gisbox.ags.baseurl@@/@@gisbox.ags.printService@@/execute",
+        "cancelRequestOnIntercept": true
+    },
+    "PrintingMapSeriesDownloader": {
+        "numberOfConcurrentDownloads": 4,
+        "printingRequestTimeout": 600000,
+        "legendFileNamePrefix": "Legende",
+        "fileNameSuffixOverviewPage": "Übersichtsseite"
+    },
+    "PrintingMapSeriesPreviewDrawer": {
+        "geometryServerURL": "define in app.json",
+        "maxNumberOfDrawnFrames": 1000
     }
 }
 ```

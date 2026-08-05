@@ -14,9 +14,18 @@
  * limitations under the License.
  */
 import "ct/tools/Tool";
+import "./DownloadAndZipHelper";
 import "./PrintingPreviewController";
 import "./PrintingInfosAnalyzer";
 import "./PrintingPropertiesOverWriter";
 import "./PrintingPreviewDrawer";
 import "./PrintingEnhancedWidgetFactory";
 import "./PrintingToggleToolHandler";
+import "./PrintingMapSeriesPreviewController";
+import "./PrintingMapSeriesPreviewDrawer";
+import "./PrintingMapSeriesPrintJobsModel";
+import "./PrintingMapSeriesDownloader";
+import "./PrintingRequestBlueprintProvider";
+import "./QueryablePromiseHelper";
+import "./RectangleDrawer";
+import "./PrintingMapSeriesRequestsProvider";

@@ -21,10 +21,14 @@ module.exports = {
         title: "Drucken",
         tooltip: "Drucken"
     },
+    unexpectedError: "Ein Fehler ist aufgetreten.",
     ui: {
         print: "Drucken",
-        layoutTab: "Einstellungen",
+        layoutTab: "Einzelkarten",
         mapOnlyTab: "Nur Karte",
+        cancelPrint: "Druck abbrechen",
+        mapSeriesTab: "Serie",
+        doNotPrintEmptyTilesLabel: "Nicht genutzte Kacheln auslassen",
         layout: "Layout",
         format: "Dateiformat",
         title: "Titel",
@@ -50,6 +54,10 @@ module.exports = {
         printResultAvailable: ": Druckergebnis ist verfügbar",
         noPrintResults: "Keine Druckergebnisse vorhanden",
         errors: {
+            scaleTooSmall: "Der Druck-Maßstab ist zu klein",
+            mapSeriesScaleToLow: "Der aktuelle Maßstab ist zu groß. Minimum ist 1:",
+            filterEmptyTilesError: "Beim Ermitteln der nicht genutzten Kacheln ist ein Fehler aufgetreten.",
+            tooManyFrames: "Es werden zu viele Kacheln erzeugt. Es können maximal 1000 Kacheln erzeugt werden.",
             error: "Ein Fehler beim Drucken ist aufgetreten: ",
             unknown: "Drucken: Ein unbekannter Fehler ist aufgetreten!",
             code403: "Drucken: Die konfigurierte Print-Service URL muss in ihrem Proxy als erlaubt deklariert sein!",
@@ -71,6 +79,24 @@ module.exports = {
         graphicsLayerTitle: "Druckvorschau",
         helperTextScaleEnabled: "Der Druckrahmen kann nur angezeigt werden, wenn ein Maßstab festgelegt ist.",
         portraitLabel: "Hochformat",
-        landscapeLabel: "Querformat"
+        landscapeLabel: "Querformat",
+        legendNameIfNoneIsGiven: "Ohne Titel",
+        notReadyForMapSeriesPrint: "Es sind nicht alle Voraussetzungen für den Kartenseriendruck gegeben.",
+        askToPrintMessage: "Der Serien-Druck wurde so konfiguriert, dass sehr viele Kacheln gedruckt werden sollen. Dadurch kann der Vorgang sehr lange dauern. Sind Sie sich sicher, dass so viele Kacheln gedruckt werden sollen? <br><br> Anzahl der Kacheln, die gedruckt werden: ",
+        askToPrintTitle: "Druck vieler Karten bestätigen",
+        couldNotDetermineMapSeriesRequests: "Problem bei der Ermittlung der Kartenserienanfragen aufgetreten.",
+        mapSeriesRequestsInvalid: "Kartenserien-Anfragen ungültig oder nicht vorhanden.",
+        mapSeriesSubHeader: "Kartenserien",
+        singlePrintSubHeader: "Einzelkarten",
+        selectGeometryToolToolTip: "Druck-Rahmen auf Basis der Geometrie eines Objektes erstellen",
+        drawRectangleToolToolTip: "Druck-Rahmen als Rechteck erstellen",
+        extentToolToolTip: "Kartenausschnitt als Druck-Rahmen verwenden",
+        label_selectGeometry1: "Geometrie",
+        label_selectGeometry2: "auswählen",
+        label_drawRectangle1: "Rechteck",
+        label_drawRectangle2: "einzeichnen",
+        label_currentExtent1: "Aktueller",
+        label_currentExtent2: "Kartenausschnitt",
+        tileCalculationOngoing: "Nicht genutzte Kacheln werden berechnet."
     }
 };

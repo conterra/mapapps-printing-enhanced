@@ -22,7 +22,9 @@
         "apprt-fetch": "^4.20.0",
         "printing": "^4.20.0",
         "map-widget": "^4.20.0",
-        "coordinatetransformer": "^4.20.0"
+        "coordinatetransformer": "^4.20.0",
+        "bluebird": "2.5.0-SNAPSHOT",
+        "jszip": "2.5.0-SNAPSHOT"
     },
     "cssThemesExtension": [
         {
@@ -193,14 +195,20 @@
                     "scaleEnabled": false,
                     "scale": true,
                     "copyright": false,
-                    "legendEnabled": false,
-                    "attributionEnabled": false
+                    "attributionEnabled": false,
+                    "mapSeriesTab": true,
+                    "doNotPrintEmptyTiles": true,
+                    "legendEnabled": false
                 },
                 "deriveLayoutFromPageSize": false,
                 "enablePrintPreview": true,
                 "enablePrintPreviewMovement": true,
                 "layoutTemplatesInfoTaskName": "Get%20Layout%20Templates%20Info%20Task",
                 "defaultPageUnit": "CENTIMETER",
+                "legend": {
+                    "defaultLegendEnabled": true,
+                    "legendNameIfNoneIsGiven": "${ui.legendNameIfNoneIsGiven}"
+                },
                 "printSizes": [
                     {
                         "value": "a4",
@@ -226,10 +234,14 @@
                     }
                 ],
                 "layoutNames": {
-                    "a4_portrait": "A4 Portrait",
-                    "a4_landscape": "A4 Landscape",
-                    "a3_portrait": "A3 Portrait",
-                    "a3_landscape": "A3 Landscape",
+                    "a4_portrait": "A4 Portrait Overview",
+                    "a4_portrait_singlepage": "A4 Portrait Singlepage",
+                    "a4_landscape": "A4 Landscape Overview",
+                    "a4_landscape_singlepage": "A4 Landscape Singlepage",
+                    "a3_portrait": "A3 Portrait Overview",
+                    "a3_portrait_singlepage": "A3 Portrait Singlepage",
+                    "a3_landscape": "A3 Landscape Overview",
+                    "a3_landscape_singlepage": "A3 Landscape Singlepage",
                     "legend": "A4_hoch_legende",
                     "mapOnly": "MAP_ONLY"
                 },
@@ -269,6 +281,61 @@
                         "width": "2px"
                     }
                 },
+                "printingOverviewSymbol": {
+                    "type": "esriSFS",
+                    "style": "esriSFSSolid",
+                    "color": [
+                        255,
+                        0,
+                        0,
+                        64
+                    ],
+                    "outline": {
+                        "type": "esriSLS",
+                        "style": "esriSLSSolid",
+                        "color": [
+                            255,
+                            0,
+                            0,
+                            255
+                        ],
+                        "width": 2
+                    }
+                },
+                "printingOverviewLabelSymbol": {
+                    "type": "esriTS",
+                    "color": [
+                        0,
+                        0,
+                        0,
+                        255
+                    ],
+                    "font": {
+                        "family": "Arial",
+                        "size": 18,
+                        "style": "normal",
+                        "weight": "bold"
+                    }
+                },
+                "printingPreviewOmittedTilesSymbol": {
+                    "type": "simple-fill",
+                    "color": [
+                        102,
+                        102,
+                        102,
+                        0.15
+                    ],
+                    "style": "solid",
+                    "outline": {
+                        "color": [
+                            102,
+                            102,
+                            102,
+                            0.7
+                        ],
+                        "width": "2px"
+                    }
+                },
                 "printingOutsidePreviewSymbol": {
                     "type": "simple-fill",
                     "color": [
@@ -295,7 +362,8 @@
                 ],
                 "customTextElements": [],
                 "graphicsLayerId": "printing-enhanced-graphics",
-                "graphicsLayerTitle": "${ui.graphicsLayerTitle}"
+                "graphicsLayerTitle": "${ui.graphicsLayerTitle}",
+                "mapSeriesTileOverlap": 0.05
             }
         },
         {
@@ -361,11 +429,18 @@
             "name": "PrintingEnhancedWidgetFactory",
             "provides": [
                 "dijit.Widget",
+                "ct.framework.api.EventHandler",
                 "dn_printingenhanced.Widget"
             ],
             "instanceFactory": true,
             "properties": {
-                "widgetRole": "printingEnhancedWidget"
+                "widgetRole": "printingEnhancedWidget",
+                "Event-Topics": [
+                    {
+                        "topic": "dn_printingenhanced/MAP_SERIES_EXTENT_SET",
+                        "method": "onMapSeriesExtentSet"
+                    }
+                ]
             },
             "references": [
                 {
@@ -386,8 +461,292 @@
                     "providing": "dn_printingenhanced.PrintingEnhancedProperties"
                 },
                 {
+                    "name": "_printingMapSeriesPreviewController",
+                    "providing": "dn_printingenhanced.PrintingMapSeriesPreviewController"
+                },
+                {
+                    "name": "_printingMapSeriesPrintJobsModel",
+                    "providing": "dn_printingenhanced.PrintingMapSeriesPrintJobsModel"
+                },
+                {
+                    "name": "printingEnhancedToggleTool",
+                    "providing": "ct.tools.Tool",
+                    "filter": "(id=printingEnhancedToggleTool)",
+                    "cardinality": "0..1"
+                },
+                {
+                    "name": "_logService",
+                    "providing": "ct.framework.api.LogService"
+                },
+                {
                     "name": "mapWidgetModel",
                     "providing": "map-widget.MapWidgetModel"
+                }
+            ]
+        },
+        {
+            "name": "PrintingMapSeriesPreviewController",
+            "immediate": true,
+            "provides": [
+                "ct.framework.api.EventHandler",
+                "dn_printingenhanced.PrintingMapSeriesPreviewController"
+            ],
+            "properties": {
+                "Event-Topics": [
+                    {
+                        "topic": "dn_printingenhanced/CUSTOM_TEXTELEMENTS",
+                        "method": "setCustomTextElements"
+                    },
+                    {
+                        "topic": "dn_printingenhanced/DRAW_MAP_SERIES_FRAMES",
+                        "method": "handleDrawMapSeriesFrames"
+                    },
+                    {
+                        "topic": "hzd_gisbox_geometry_helpers/GEOMETRY_SELECTED",
+                        "method": "onGeometrySelected"
+                    }
+                ],
+                "askToPrintManyFramesThreshold": 100,
+                "minScaleForSeries": 1000,
+                "scaleModifications": [
+                    {
+                        "toScale": 2000,
+                        "roundUpTo": 0,
+                        "extentFactor": 1.1
+                    },
+                    {
+                        "toScale": 10000,
+                        "roundUpTo": 500,
+                        "extentFactor": 1.1
+                    },
+                    {
+                        "toScale": 100000,
+                        "roundUpTo": 1000,
+                        "extentFactor": 1.1
+                    },
+                    {
+                        "toScale": 5000000,
+                        "roundUpTo": 10000,
+                        "extentFactor": 1.1
+                    }
+                ],
+                "selectionLayers": {
+                    "layerIds": "define in app.json",
+                    "externalServicesIds": "define in app.json"
+                }
+            },
+            "references": [
+                {
+                    "name": "_printingWidget",
+                    "providing": "dijit.Widget",
+                    "filter": "(widgetRole=printing)"
+                },
+                {
+                    "name": "_printingEnhancedProperties",
+                    "providing": "dn_printingenhanced.PrintingEnhancedProperties"
+                },
+                {
+                    "name": "_printingInfosAnalyzer",
+                    "providing": "dn_printingenhanced.PrintingInfosAnalyzer"
+                },
+                {
+                    "name": "_printingMapSeriesPreviewDrawer",
+                    "providing": "dn_printingenhanced.PrintingMapSeriesPreviewDrawer"
+                },
+                {
+                    "name": "_printingMapSeriesRequestsProvider",
+                    "providing": "dn_printingenhanced.PrintingMapSeriesRequestsProvider"
+                },
+                {
+                    "name": "_printingMapSeriesDownloader",
+                    "providing": "dn_printingenhanced.PrintingMapSeriesDownloader"
+                },
+                {
+                    "name": "_downloadAndZipHelper",
+                    "providing": "dn_printingenhanced.DownloadAndZipHelper"
+                },
+                {
+                    "name": "printingMapSeriesPrintJobsModel",
+                    "providing": "dn_printingenhanced.PrintingMapSeriesPrintJobsModel"
+                },
+                {
+                    "name": "_rectangleDrawer",
+                    "providing": "dn_printingenhanced.RectangleDrawer"
+                },
+                {
+                    "name": "printingToggleTool",
+                    "providing": "ct.tools.Tool",
+                    "filter": "(id=printingToggleTool)",
+                    "cardinality": "0..1"
+                },
+                {
+                    "name": "printingEnhancedToggleTool",
+                    "providing": "ct.tools.Tool",
+                    "filter": "(id=printingEnhancedToggleTool)",
+                    "cardinality": "0..1"
+                },
+                {
+                    "name": "userService",
+                    "providing": "ct.framework.api.UserAdmin",
+                    "cardinality": "0..1"
+                },
+                {
+                    "name": "_mapWidgetModel",
+                    "providing": "map-widget.MapWidgetModel"
+                },
+                {
+                    "name": "_layerConfigurationProvider",
+                    "providing": "hzd_gisbox_config_providers.LayerConfigurationProvider"
+                },
+                {
+                    "name": "_logService",
+                    "providing": "ct.framework.api.LogService"
+                },
+                {
+                    "name": "_geometrySelectionHandler",
+                    "providing": "hzd_gisbox_geometry_helpers.GeometrySelectionHandler"
+                },
+                {
+                    "name": "_eventService",
+                    "providing": "ct.framework.api.EventService"
+                },
+                {
+                    "name": "_windowManager",
+                    "providing": "ct.framework.api.WindowManager"
+                }
+            ]
+        },
+        {
+            "name": "PrintingMapSeriesPreviewDrawer",
+            "immediate": true,
+            "provides": [
+                "dn_printingenhanced.PrintingMapSeriesPreviewDrawer"
+            ],
+            "properties": {
+                "geometryServerURL": "define in app.json",
+                "maxNumberOfDrawnFrames": 1000
+            },
+            "references": [
+                {
+                    "name": "_mapWidgetModel",
+                    "providing": "map-widget.MapWidgetModel"
+                },
+                {
+                    "name": "_printingEnhancedProperties",
+                    "providing": "dn_printingenhanced.PrintingEnhancedProperties"
+                },
+                {
+                    "name": "_printingPreviewDrawer",
+                    "providing": "dn_printingenhanced.PrintingPreviewDrawer"
+                },
+                {
+                    "name": "_eventService",
+                    "providing": "ct.framework.api.EventService"
+                },
+                {
+                    "name": "_logService",
+                    "providing": "ct.framework.api.LogService"
+                }
+            ]
+        },
+        {
+            "name": "PrintingMapSeriesRequestsProvider",
+            "immediate": true,
+            "provides": [
+                "dn_printingenhanced.PrintingMapSeriesRequestsProvider"
+            ],
+            "references": [
+                {
+                    "name": "_printingWidget",
+                    "providing": "dijit.Widget",
+                    "filter": "(widgetRole=printing)"
+                },
+                {
+                    "name": "_printingRequestBlueprintProvider",
+                    "providing": "dn_printingenhanced.PrintingRequestBlueprintProvider"
+                }
+            ]
+        },
+        {
+            "name": "PrintingRequestBlueprintProvider",
+            "impl": "./PrintingRequestBlueprintProvider",
+            "provides": "dn_printingenhanced.PrintingRequestBlueprintProvider",
+            "immediate": true,
+            "properties": {
+                "printingURLtoIntercept": "define in app.json",
+                "cancelRequestOnIntercept": true
+            },
+            "references": []
+        },
+        {
+            "name": "PrintingMapSeriesDownloader",
+            "immediate": true,
+            "provides": [
+                "dn_printingenhanced.PrintingMapSeriesDownloader"
+            ],
+            "properties": {
+                "numberOfConcurrentDownloads": 4,
+                "printingRequestTimeout": 600000,
+                "legendFileNamePrefix": "Legende",
+                "fileNameSuffixOverviewPage": "Übersichtsseite"
+            },
+            "references": [
+                {
+                    "name": "_downloadAndZipHelper",
+                    "providing": "dn_printingenhanced.DownloadAndZipHelper"
+                },
+                {
+                    "name": "_eventService",
+                    "providing": "ct.framework.api.EventService"
+                },
+                {
+                    "name": "_printingRequestBlueprintProvider",
+                    "providing": "dn_printingenhanced.PrintingRequestBlueprintProvider"
+                },
+                {
+                    "name": "mapWidgetModel",
+                    "providing": "map-widget.MapWidgetModel",
+                    "cardinality": "0..1"
+                },
+                {
+                    "name": "_dynamicLegendToggleTool",
+                    "providing": "ct.tools.Tool",
+                    "filter": "(id=dynamiclegendToggleTool)",
+                    "cardinality": "0..1"
+                },
+                {
+                    "name": "_logService",
+                    "providing": "ct.framework.api.LogService"
+                }
+            ]
+        },
+        {
+            "name": "PrintingMapSeriesPrintJobsModel",
+            "impl": "./PrintingMapSeriesPrintJobsModel",
+            "provides": "dn_printingenhanced.PrintingMapSeriesPrintJobsModel",
+            "immediate": true
+        },
+        {
+            "name": "RectangleDrawer",
+            "impl": "./RectangleDrawer",
+            "provides": "dn_printingenhanced.RectangleDrawer",
+            "immediate": true,
+            "references": [
+                {
+                    "name": "_drawing",
+                    "providing": "mapdraw-api.DefaultMapDrawing"
+                }
+            ]
+        },
+        {
+            "name": "DownloadAndZipHelper",
+            "impl": "./DownloadAndZipHelper",
+            "provides": "dn_printingenhanced.DownloadAndZipHelper",
+            "immediate": true,
+            "references": [
+                {
+                    "name": "_fileSaver",
+                    "providing": "filesaver.FileSaver"
                 }
             ]
         },
