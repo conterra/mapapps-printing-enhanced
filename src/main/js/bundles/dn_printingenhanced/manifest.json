@@ -115,6 +115,10 @@
                     {
                         "topic": "dn_printingenhanced/PRINTSETTINGS",
                         "method": "setPrintSettings"
+                    },
+                    {
+                        "topic": "dn_printingenhanced/CUSTOM_TEXTELEMENTS",
+                        "method": "setCustomTextElements"
                     }
                 ]
             },
@@ -384,6 +388,10 @@
                 {
                     "name": "_printingEnhancedProperties",
                     "providing": "dn_printingenhanced.PrintingEnhancedProperties"
+                },
+                {
+                    "name": "_eventService",
+                    "providing": "ct.framework.api.EventService"
                 },
                 {
                     "name": "mapWidgetModel",

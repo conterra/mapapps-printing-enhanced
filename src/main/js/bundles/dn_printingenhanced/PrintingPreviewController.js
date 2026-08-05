@@ -73,11 +73,19 @@ export default declare({
                         Object.getOwnPropertyNames(element).forEach(propName => {
                             element[propName] = replace(element[propName], this._user);
                         });
-                        customTextElements.push(element);
+                        this._customTextElements?.forEach(elementWithValue => {
+                            if (Object.prototype.hasOwnProperty.call(elementWithValue, element.elementFieldName)) {
+                                customTextElements.push(elementWithValue);
+                            }
+                        });
                     });
                 } else {
                     properties.customTextElements.forEach((element) => {
-                        customTextElements.push(element);
+                        this._customTextElements?.forEach(elementWithValue => {
+                            if (Object.prototype.hasOwnProperty.call(elementWithValue, element.elementFieldName)) {
+                                customTextElements.push(elementWithValue);
+                            }
+                        });
                     });
                 }
             }
@@ -172,6 +180,10 @@ export default declare({
             this._printingPreviewDrawer.resetGraphic();
             this[_lastPopupState]?.reset();
         });
+    },
+
+    setCustomTextElements(event) {
+        this._customTextElements = event.getProperty("customTextElements");
     },
 
     setUserService(userService) {

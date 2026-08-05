@@ -235,6 +235,20 @@
                     class="pa-0 ma-0"
                 />
             </v-flex>
+            <v-flex
+                v-for="(customTextElement, index) in customTextElementsArray"
+                :key="index"
+                md12
+            >
+                <v-text-field
+                    :error="!customTextElement.value || customTextElement.value.length === 0"
+                    :label="customTextElement.title"
+                    :placeholder="customTextElement.title"
+                    v-model="customTextElement.value"
+                    @change="triggerCustomTextElementsUpdate()"
+                    hide-details
+                ></v-text-field>
+            </v-flex>
         </v-layout>
     </v-container>
 </template>
@@ -335,6 +349,10 @@
                 type: Array,
                 default: () => []
             },
+            customTextElements: {
+                type: Array,
+                default: () => []
+            },
             mapOnlyLayoutName: {
                 type: String,
                 default: () => ""
@@ -343,8 +361,14 @@
         data() {
             return {
                 advancedOptions: [0],
-                showInfo: false
+                showInfo: false,
+                customTextElementsArray: this.customTextElements
             };
+        },
+        methods: {
+            triggerCustomTextElementsUpdate() {
+                this.$emit("trigger-custom-text-elements-update", this.customTextElementsArray);
+            }
         },
         computed: {
             authorValue: {

@@ -71,6 +71,8 @@ module.exports = {
         graphicsLayerTitle: "Druckvorschau",
         helperTextScaleEnabled: "Der Druckrahmen kann nur angezeigt werden, wenn ein Maßstab festgelegt ist.",
         portraitLabel: "Hochformat",
-        landscapeLabel: "Querformat"
+        landscapeLabel: "Querformat",
+        contentLabel: "Text unter 'Inhalt'",
+        editLabel: "Text unter 'Bearbeitung'"
     }
 };
