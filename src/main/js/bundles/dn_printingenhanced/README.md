@@ -1,3 +1,29 @@
+# dn_printingenhanced (GISBOX fork)
+
+This Bundle extends the Printing-Enhanced-Bundle at version 2.3.3 to match the needs for GISBOX.
+
+In specific ArcGIS deployment constellations, `PrintViewModel.templatesInfo` can be unavailable, delayed, or incomplete during runtime.
+To keep the print pipeline deterministic, this bundle activates a fallback path that reads print service capabilities (`Format`, `Layout_Template`) directly and builds `PrintTemplate` payloads from `templateOptions`.
+
+## Migration Notes
+
+This fork no longer relies on the legacy direct printing workflow that was previously built around older `PrintViewModel` behavior.
+With the newer upstream/API behavior, parts of the print state must be derived explicitly inside this bundle.
+
+In particular, this bundle now:
+
+- derives layout names from page size and orientation instead of exposing direct layout selection,
+- reads print service metadata directly and patches `toPrintTemplate()` when `PrintViewModel.templatesInfo` is not reliably available at runtime.
+
+These parts are intentional fork-specific migration logic and should be reviewed carefully during upstream updates.
+
+The following things have been changed:
+
+- The user can choose the page-size (A4, A3) and the page-layout (Portrait or Landscape) directly with radio-buttons.
+- The layout-template does not need to be chosen by the user anymore. The correct layout-name is automatically determined by the chosen parameters:
+  Page-Size, Page-Layout. It has the following Pattern: `<PageSize>_<PageOrientation>`
+- Default Values can be configured for Page-Size and Page-Layout.
+
 # dn_printingenhanced
 
 The Printing Enhanced Bundle extends the Printing bundle by further capabilities.
@@ -232,6 +258,60 @@ To filter your formats and layouts please use their entire ids as follows:
             "A4_Quer"
         ]
         ...
+    }
+}
+```
+
+### dn_printingenhanced GISBOX Configuration
+
+The _url_ of the print service can be configured on the "printing" bundle. This bundle injects the configuration of the esri printing widget.
+
+The configuration of the original dn_printingenhanced-bundle (see above) apply, except "defaultTemplate" which has been removed.
+The following configuration options have been added:
+
+- printSizes ("text" refers to the GUI-Label)
+- printOrientations
+    - "isDefault = true" to be chosen at startup.
+
+- layoutNames are the names of the printing-templates. For each combination of the values of the printSizes-entries and the values of the printOrientations there must be an entry in the layoutNames. The key is the printSizes-value plus a dash plus the printOrientations-value, followed by the value which is the name of the printing-template.
+
+```json
+"dn_printingenhanced": {
+    "Config": {
+
+        ...
+
+        "printSizes": [
+            {
+                "value": "a4",
+                "text": "A4",
+                "isDefault": false
+            },
+            {
+                "value": "a3",
+                "text": "A3",
+                "isDefault": true
+            }
+        ],
+        "printOrientations": [
+            {
+                "value": "portrait",
+                "text": "${ui.portraitLabel}",
+                "isDefault": true
+            },
+            {
+                "value": "landscape",
+                "text": "${ui.landscapeLabel}",
+                "isDefault": false
+            }
+        ],
+        "layoutNames": {
+            "a4_portrait": "A4_hoch",
+            "a4_landscape": "A4_quer",
+            "a3_portrait": "A3_hoch",
+            "a3_landscape": "A3_quer",
+            "mapOnly": "MAP_ONLY"
+        }
     }
 }
 ```

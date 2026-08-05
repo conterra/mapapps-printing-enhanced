@@ -189,7 +189,7 @@
                     "format": true,
                     "widthAndHeight": true,
                     "dpi": true,
-                    "layout": true,
+                    "layout": false,
                     "printPreviewCheckbox": false,
                     "scaleEnabled": false,
                     "scale": true,
@@ -201,6 +201,43 @@
                 "enablePrintPreviewMovement": true,
                 "layoutTemplatesInfoTaskName": "Get%20Layout%20Templates%20Info%20Task",
                 "defaultPageUnit": "CENTIMETER",
+                "legend": {
+                    "defaultLegendEnabled": true,
+                    "legendTitleAppendText": "${ui.legendTitleAppendText}",
+                    "legendNameIfNoneIsGiven": "${ui.legendNameIfNoneIsGiven}"
+                },
+                "printSizes": [
+                    {
+                        "value": "a4",
+                        "text": "A4",
+                        "isDefault": true
+                    },
+                    {
+                        "value": "a3",
+                        "text": "A3",
+                        "isDefault": false
+                    }
+                ],
+                "printOrientations": [
+                    {
+                        "value": "portrait",
+                        "text": "${ui.portraitLabel}",
+                        "isDefault": true
+                    },
+                    {
+                        "value": "landscape",
+                        "text": "${ui.landscapeLabel}",
+                        "isDefault": false
+                    }
+                ],
+                "layoutNames": {
+                    "a4_portrait": "A4_hoch",
+                    "a4_landscape": "A4_quer",
+                    "a3_portrait": "A3_hoch",
+                    "a3_landscape": "A3_quer",
+                    "legend": "A4_hoch_legende",
+                    "mapOnly": "MAP_ONLY"
+                },
                 "dpiValues": [
                     {
                         "value": 96,

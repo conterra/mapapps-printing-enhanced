@@ -41,6 +41,8 @@ module.exports = {
         scale: "Maßstab",
         scaleEnabled: "Maßstab festlegen",
         legendEnabled: "Legende einbeziehen",
+        legendTitleAppendText: " (Legende)",
+        legendNameIfNoneIsGiven: "Ohne Titel",
         attributionEnabled: "Quellennachweis einfügen",
         dpi: "Qualität",
         showPrintPreview: "Druckrahmen anzeigen",
@@ -69,6 +71,8 @@ module.exports = {
         medium: "Mittel",
         high: "Hoch",
         graphicsLayerTitle: "Druckvorschau",
-        helperTextScaleEnabled: "Der Druckrahmen kann nur angezeigt werden, wenn ein Maßstab festgelegt ist."
+        helperTextScaleEnabled: "Der Druckrahmen kann nur angezeigt werden, wenn ein Maßstab festgelegt ist.",
+        portraitLabel: "Hochformat",
+        landscapeLabel: "Querformat"
     }
 };

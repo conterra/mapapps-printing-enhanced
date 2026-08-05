@@ -71,6 +71,39 @@
                     hide-details
                 />
             </v-flex>
+            <v-flex md12>
+                <v-radio-group
+                    class="printSizeRadionGroup"
+                    v-model="pagePrintSizeValue"
+                    row
+                    hide-details
+                >
+                    <v-radio
+                        v-for="printSize in pagePrintSizeValues"
+                        :key="printSize.value"
+                        :name="printSize.value"
+                        :label="printSize.text"
+                        :value="printSize.value"
+                        class="primary--text"
+                    />
+                </v-radio-group>
+            </v-flex>
+            <v-flex md12>
+                <v-radio-group
+                    class="printOrientationRadionGroup"
+                    v-model="pagePrintOrientationValue"
+                    row
+                    hide-details
+                >
+                    <v-radio
+                        v-for="printOrientation in pagePrintOrientationValues"
+                        :key="printOrientation.value"
+                        :name="printOrientation.value"
+                        :label="printOrientation.text"
+                        :value="printOrientation.value"
+                    />
+                </v-radio-group>
+            </v-flex>
             <v-flex
                 v-if="visibleUiElements.layout"
                 md12
@@ -278,6 +311,26 @@
             selectedScaleValue: {
                 type: Number,
                 default: 0
+            },
+            pagePrintSize: {
+                type: String,
+                default: "a4"
+            },
+            pagePrintSizeValues: {
+                type: Array,
+                default: () => []
+            },
+            pagePrintOrientation: {
+                type: String,
+                default: "portrait"
+            },
+            pagePrintOrientationValues: {
+                type: Array,
+                default: () => []
+            },
+            mapOnlyLayoutName: {
+                type: String,
+                default: () => ""
             }
         },
         data() {
@@ -386,6 +439,22 @@
                 },
                 set: function (title) {
                     this.$emit("update:title", title);
+                }
+            },
+            pagePrintSizeValue: {
+                get: function () {
+                    return this.pagePrintSize;
+                },
+                set: function (pagePrintSizeValue) {
+                    this.$emit("update:page-print-size", pagePrintSizeValue);
+                }
+            },
+            pagePrintOrientationValue: {
+                get: function () {
+                    return this.pagePrintOrientation;
+                },
+                set: function (pagePrintOrientationValue) {
+                    this.$emit("update:page-print-orientation", pagePrintOrientationValue);
                 }
             }
         },
