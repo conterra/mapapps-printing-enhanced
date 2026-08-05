@@ -22,6 +22,7 @@ import d_aspect from "dojo/aspect";
 import {replace} from "apprt-core/string-replace";
 
 const _templateOptions = Symbol("_templateOptions");
+const _templateOptionsWatchHandles = Symbol("_templateOptionsWatchHandles");
 const _printInfos = Symbol("_printInfos");
 const _printServiceUrl = Symbol("_printServiceUrl");
 const _connect = Symbol("_connect");
@@ -39,6 +40,7 @@ export default declare({
         const printViewModel = esriPrintWidget.viewModel;
         const properties = this._printingEnhancedProperties._properties;
         this.drawPrintPreview = properties.enablePrintPreview && properties.scaleEnabled;
+        this.esriPrintWidget = esriPrintWidget;
 
         // get print infos
         const url = this[_printServiceUrl] = esriPrintWidget.printServiceUrl;
@@ -53,7 +55,7 @@ export default declare({
         }
 
         // watch for changes
-        this._watchForTemplateOptionsChanges(esriPrintWidget);
+        this.refreshTemplateOptionsReference(esriPrintWidget);
 
         // handle print preview before and after printing
         d_aspect.before(printViewModel, "print", (printTemplate) => {
@@ -121,6 +123,7 @@ export default declare({
 
     deactivate() {
         this._printingPreviewDrawer.removeGraphicFromGraphicsLayer();
+        this._removeTemplateOptionsWatchHandles();
         this[_connect].disconnect();
         this[_observers].destroy();
         this[_lastPopupState]?.reset();
@@ -184,26 +187,45 @@ export default declare({
         }
     },
 
-    _watchForTemplateOptionsChanges(esriPrintWidget) {
-        const templateOptions = this[_templateOptions] = esriPrintWidget.templateOptions;
-        this[_observers].add(templateOptions.watch("layout", () => {
-            this._handleDrawTemplateDimensions(true);
-        }));
-        this[_observers].add(templateOptions.watch("scale", () => {
-            this._handleDrawTemplateDimensions();
-        }));
-        this[_observers].add(templateOptions.watch("scaleEnabled", () => {
-            this._handleDrawTemplateDimensions();
-        }));
-        this[_observers].add(templateOptions.watch("width", () => {
-            this._handleDrawTemplateDimensions();
-        }));
-        this[_observers].add(templateOptions.watch("height", () => {
-            this._handleDrawTemplateDimensions();
-        }));
-        this[_observers].add(templateOptions.watch("dpi", () => {
-            this._handleDrawTemplateDimensions();
-        }));
+    _removeTemplateOptionsWatchHandles() {
+        this[_templateOptionsWatchHandles]?.forEach((watchHandle) => {
+            watchHandle?.remove();
+        });
+        this[_templateOptionsWatchHandles] = [];
+    },
+
+    refreshTemplateOptionsReference(esriPrintWidget = this.esriPrintWidget) {
+        const templateOptions = esriPrintWidget?.templateOptions;
+        if (!templateOptions) {
+            return templateOptions;
+        }
+        if (templateOptions === this[_templateOptions]) {
+            return templateOptions;
+        }
+
+        this._removeTemplateOptionsWatchHandles();
+        this[_templateOptions] = templateOptions;
+        this[_templateOptionsWatchHandles] = [
+            templateOptions.watch("layout", () => {
+                this._handleDrawTemplateDimensions(true);
+            }),
+            templateOptions.watch("scale", () => {
+                this._handleDrawTemplateDimensions();
+            }),
+            templateOptions.watch("scaleEnabled", () => {
+                this._handleDrawTemplateDimensions();
+            }),
+            templateOptions.watch("width", () => {
+                this._handleDrawTemplateDimensions();
+            }),
+            templateOptions.watch("height", () => {
+                this._handleDrawTemplateDimensions();
+            }),
+            templateOptions.watch("dpi", () => {
+                this._handleDrawTemplateDimensions();
+            })
+        ];
+        return templateOptions;
     },
 
     _watchForExtentChange(view) {
@@ -218,14 +240,22 @@ export default declare({
     },
 
     _handleDrawTemplateDimensions(zoomTo) {
+        const templateOptions = this.refreshTemplateOptionsReference();
+        if (!templateOptions) {
+            return;
+        }
         this._printingPreviewDrawer.removeGraphicFromGraphicsLayer();
         const properties = this._printingEnhancedProperties._properties;
         async(async () => {
-            if (((this._printingToggleTool && this._printingToggleTool.active) ||
-                this._printingEnhancedToggleTool.active) && this.drawPrintPreview) {
+            if (
+                ((this._printingToggleTool && this._printingToggleTool.active) ||
+                    (this._printingEnhancedToggleTool &&
+                        this._printingEnhancedToggleTool.active)) &&
+                this.drawPrintPreview
+            ) {
                 const geometry = await this._printingPreviewDrawer
-                    .drawTemplateDimensions(this[_printInfos], this[_templateOptions], properties.defaultPageUnit);
-                if (geometry && zoomTo && this[_templateOptions].scaleEnabled) {
+                    .drawTemplateDimensions(this[_printInfos], templateOptions, properties.defaultPageUnit);
+                if (geometry && zoomTo && templateOptions.scaleEnabled) {
                     this._zoomToTemplateExtent(geometry);
                 }
             }
