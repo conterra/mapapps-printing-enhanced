@@ -26,6 +26,7 @@ module.exports = {
             print: "Print",
             layoutTab: "Settings",
             mapOnlyTab: "Map Only",
+            layout: "Layout",
             format: "Format",
             title: "Title",
             titlePlaceholder: "Print title",
