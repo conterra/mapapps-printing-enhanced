@@ -50,6 +50,7 @@ module.exports = {
         printResultAvailable: ": Druckergebnis ist verfügbar",
         noPrintResults: "Keine Druckergebnisse vorhanden",
         errors: {
+            error: "Ein Fehler beim Drucken ist aufgetreten: ",
             unknown: "Drucken: Ein unbekannter Fehler ist aufgetreten!",
             code403: "Drucken: Die konfigurierte Print-Service URL muss in ihrem Proxy als erlaubt deklariert sein!",
             code404: "Drucken: Es konnte kein Print-Service für die angegebene URL gefunden werden!"
