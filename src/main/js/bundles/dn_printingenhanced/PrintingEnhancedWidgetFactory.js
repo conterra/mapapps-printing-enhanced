@@ -37,12 +37,8 @@ export default class PrintingEnhancedWidgetFactory {
         this._ensureTemplateOptionsBinding(vm);
 
         this.printingPreviewControllerBinding = Binding.for(vm, printingPreviewController)
-            .syncToRight("enablePrintPreview", "drawPrintPreview", (enablePrintPreview) => {
-                return !!(enablePrintPreview && vm.scaleEnabled);
-            })
-            .syncToRight("scaleEnabled", "drawPrintPreview", (scaleEnabled) => {
-                return !!(scaleEnabled && vm.enablePrintPreview);
-            });
+            .syncToRight("enablePrintPreview", "drawPrintPreview", (enablePrintPreview) => !!(enablePrintPreview && vm.scaleEnabled))
+            .syncToRight("scaleEnabled", "drawPrintPreview", (scaleEnabled) => !!(scaleEnabled && vm.enablePrintPreview));
 
         widget.activateTool = () => {
             const templateOptions = this._ensureTemplateOptionsBinding(vm);
