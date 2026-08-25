@@ -355,8 +355,7 @@
                 },
                 {
                     "name": "mapWidgetModel",
-                    "providing": "map-widget.MapWidgetModel",
-                    "cardinality": "0..1"
+                    "providing": "map-widget.MapWidgetModel"
                 }
             ]
         },

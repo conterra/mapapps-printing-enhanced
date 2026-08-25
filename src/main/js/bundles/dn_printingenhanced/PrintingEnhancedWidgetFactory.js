@@ -37,12 +37,8 @@ export default class PrintingEnhancedWidgetFactory {
         this._ensureTemplateOptionsBinding(vm);
 
         this.printingPreviewControllerBinding = Binding.for(vm, printingPreviewController)
-            .syncToRight("enablePrintPreview", "drawPrintPreview", (enablePrintPreview) => {
-                return !!(enablePrintPreview && vm.scaleEnabled);
-            })
-            .syncToRight("scaleEnabled", "drawPrintPreview", (scaleEnabled) => {
-                return !!(scaleEnabled && vm.enablePrintPreview);
-            });
+            .syncToRight("enablePrintPreview", "drawPrintPreview", (enablePrintPreview) => !!(enablePrintPreview && vm.scaleEnabled))
+            .syncToRight("scaleEnabled", "drawPrintPreview", (scaleEnabled) => !!(scaleEnabled && vm.enablePrintPreview));
 
         widget.activateTool = () => {
             const templateOptions = this._ensureTemplateOptionsBinding(vm);
@@ -61,7 +57,7 @@ export default class PrintingEnhancedWidgetFactory {
                           item.formattedName;
                 // Remove file extension if already present
                 const extension = "." + String(format).toLowerCase();
-                const name = baseName.toLowerCase().includes(extension)
+                const name = baseName.toLowerCase().endsWith(extension)
                     ? baseName
                     : baseName + extension;
                 const exportedItem = {
@@ -83,7 +79,7 @@ export default class PrintingEnhancedWidgetFactory {
                 };
                 const applyError = () => {
                     exportedItem.loading = false;
-                    exportedItem.url = "";
+                    exportedItem.url = null;
                     exportedItem.error = true;
                 };
 
@@ -121,8 +117,8 @@ export default class PrintingEnhancedWidgetFactory {
         widget.deactivateTool = () => {
             this.currentMapScaleWatchSignal?.remove();
             this.currentMapScaleWatchSignal = undefined;
-            this.printingPreviewControllerBinding.disable();
-            this.templateOptionsBinding.disable();
+            this.printingPreviewControllerBinding?.disable();
+            this.templateOptionsBinding?.disable();
             this.exportedLinksWatcher?.remove();
         };
 
