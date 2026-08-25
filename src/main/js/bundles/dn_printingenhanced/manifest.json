@@ -189,7 +189,6 @@
                     "format": true,
                     "widthAndHeight": true,
                     "dpi": true,
-                    "layout": false,
                     "printPreviewCheckbox": false,
                     "scaleEnabled": false,
                     "scale": true,
@@ -197,6 +196,7 @@
                     "legendEnabled": false,
                     "attributionEnabled": false
                 },
+                "deriveLayoutFromPageSize": false,
                 "enablePrintPreview": true,
                 "enablePrintPreviewMovement": true,
                 "layoutTemplatesInfoTaskName": "Get%20Layout%20Templates%20Info%20Task",
@@ -231,10 +231,10 @@
                     }
                 ],
                 "layoutNames": {
-                    "a4_portrait": "A4_hoch",
-                    "a4_landscape": "A4_quer",
-                    "a3_portrait": "A3_hoch",
-                    "a3_landscape": "A3_quer",
+                    "a4_portrait": "A4 Portrait",
+                    "a4_landscape": "A4 Landscape",
+                    "a3_portrait": "A3 Portrait",
+                    "a3_landscape": "A3 Landscape",
                     "legend": "A4_hoch_legende",
                     "mapOnly": "MAP_ONLY"
                 },

@@ -154,6 +154,9 @@ export default class PrintingEnhancedWidgetFactory {
 
         vm.i18n = this._i18n.get().ui;
         vm.exportedLinks = [];
+        // Deriving the layout from page size/orientation is opt-in: apps that don't set
+        // deriveLayoutFromPageSize keep the original layout dropdown and manual selection.
+        const deriveLayoutFromPageSize = !!properties.deriveLayoutFromPageSize;
         const defaultVisibleUiElements = {
             "layoutTab": true,
             "mapOnlyTab": false,
@@ -163,7 +166,8 @@ export default class PrintingEnhancedWidgetFactory {
             "format": true,
             "widthAndHeight": true,
             "dpi": true,
-            "layout": true,
+            "layout": !deriveLayoutFromPageSize,
+            "pageSizeOrientation": deriveLayoutFromPageSize,
             "printPreviewCheckbox": false,
             "scaleEnabled": false,
             "scale": true,
@@ -231,7 +235,10 @@ export default class PrintingEnhancedWidgetFactory {
     _setLayoutName(vm, templateOptions, enhancedProperties) {
         if (vm.activeTabId === 1) {
             templateOptions.layout = enhancedProperties.layoutNames.mapOnly;
-        } else {
+            return;
+        }
+
+        if (enhancedProperties.deriveLayoutFromPageSize) {
             const layoutNames = enhancedProperties.layoutNames;
             let layoutName = layoutNames[vm.pagePrintSize + "_" + vm.pagePrintOrientation];
             if (!layoutName) {

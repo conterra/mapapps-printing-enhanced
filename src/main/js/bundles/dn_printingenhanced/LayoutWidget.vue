@@ -71,7 +71,10 @@
                     hide-details
                 />
             </v-flex>
-            <v-flex md12>
+            <v-flex
+                v-if="visibleUiElements.pageSizeOrientation"
+                md12
+            >
                 <v-radio-group
                     class="printSizeRadionGroup"
                     v-model="pagePrintSizeValue"
@@ -88,7 +91,10 @@
                     />
                 </v-radio-group>
             </v-flex>
-            <v-flex md12>
+            <v-flex
+                v-if="visibleUiElements.pageSizeOrientation"
+                md12
+            >
                 <v-radio-group
                     class="printOrientationRadionGroup"
                     v-model="pagePrintOrientationValue"
