@@ -19,6 +19,7 @@ import VueDijit from "apprt-vue/VueDijit";
 import Binding from "apprt-binding/Binding";
 import { getProxiedUrl } from "apprt-fetch";
 import ScaleCorrection from "./ScaleCorrection";
+import PrintTemplate from "@arcgis/core/rest/support/PrintTemplate";
 
 export default class PrintingEnhancedWidgetFactory {
 
@@ -140,6 +141,9 @@ export default class PrintingEnhancedWidgetFactory {
         const printWidget = this._printingWidget;
         const esriPrintWidget = printWidget._esriWidget;
         const printViewModel = esriPrintWidget.viewModel;
+        // Always install wrapper. It keeps default behavior, but allows controlled fallback
+        // template creation for selected edge cases (e.g. MAP_ONLY legend print).
+        this._patchToPrintTemplate(printViewModel, esriPrintWidget);
 
         if (printViewModel.templatesInfo) {
             this._setTemplatesInfos(printViewModel.templatesInfo);
@@ -251,5 +255,58 @@ export default class PrintingEnhancedWidgetFactory {
                 text: layoutStrings[layout] || layout
             };
         });
+    }
+
+    // patch toPrintTemplate to bypass the read-only templatesInfo check.
+    // When the original throws "print:layout-required", we build the PrintTemplate
+    _patchToPrintTemplate(printViewModel, esriPrintWidget) {
+        if (printViewModel._origToPrintTemplate) {
+            return; // already patched
+        }
+        const origFn = printViewModel.toPrintTemplate.bind(printViewModel);
+        printViewModel._origToPrintTemplate = origFn;
+        printViewModel.toPrintTemplate = () => {
+            const shouldUseFallbackTemplate =
+                this._forceFallbackTemplate === true || !printViewModel.templatesInfo;
+
+            if (!shouldUseFallbackTemplate) {
+                return origFn();
+            }
+            // Build the PrintTemplate ourselves from templateOptions
+            const to = esriPrintWidget.templateOptions;
+            // Used by fallback template creation (missing templatesInfo or forced fallback mode).
+            const fallbackLayoutOverride = this._fallbackLayoutOverride;
+            const effectiveLayout = fallbackLayoutOverride || to.layout;
+            const isMapOnly = !effectiveLayout || effectiveLayout === "map-only";
+
+            const templateConfig = {
+                format: to.format,
+                attributionVisible: to.attributionEnabled !== false,
+                layoutOptions: {
+                    titleText: to.title || "",
+                    authorText: to.author || "",
+                    copyrightText: to.copyright || "",
+                    customTextElements: to.customTextElements || [],
+                    legendEnabled: to.legendEnabled !== false,
+                    scalebarEnabled: to.scaleBarEnabled !== false
+                },
+                outScale: to.scaleEnabled && to.scale !== -1 ? to.scale : 0,
+                scalePreserved: !!to.scaleEnabled
+            };
+
+            if (isMapOnly) {
+                templateConfig.layout = "";
+                templateConfig.exportOptions = {
+                    dpi: to.dpi,
+                    width: to.width,
+                    height: to.height
+                };
+            } else {
+                templateConfig.layout = effectiveLayout;
+                templateConfig.exportOptions = { dpi: to.dpi };
+            }
+
+            return new PrintTemplate(templateConfig);
+        };
     }
 }
