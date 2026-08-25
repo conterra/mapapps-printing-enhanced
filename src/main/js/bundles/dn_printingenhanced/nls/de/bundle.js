@@ -41,8 +41,6 @@ module.exports = {
         scale: "Maßstab",
         scaleEnabled: "Maßstab festlegen",
         legendEnabled: "Legende einbeziehen",
-        legendTitleAppendText: " (Legende)",
-        legendNameIfNoneIsGiven: "Ohne Titel",
         attributionEnabled: "Quellennachweis einfügen",
         dpi: "Qualität",
         showPrintPreview: "Druckrahmen anzeigen",

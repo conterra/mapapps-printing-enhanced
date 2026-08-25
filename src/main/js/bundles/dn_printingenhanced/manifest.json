@@ -201,11 +201,6 @@
                 "enablePrintPreviewMovement": true,
                 "layoutTemplatesInfoTaskName": "Get%20Layout%20Templates%20Info%20Task",
                 "defaultPageUnit": "CENTIMETER",
-                "legend": {
-                    "defaultLegendEnabled": true,
-                    "legendTitleAppendText": "${ui.legendTitleAppendText}",
-                    "legendNameIfNoneIsGiven": "${ui.legendNameIfNoneIsGiven}"
-                },
                 "printSizes": [
                     {
                         "value": "a4",

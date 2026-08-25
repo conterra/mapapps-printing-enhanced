@@ -42,8 +42,6 @@ module.exports = {
             scale: "Scale",
             scaleEnabled: "Set scale",
             legendEnabled: "Enable legend",
-            legendTitleAppendText: " (Legende)",
-            legendNameIfNoneIsGiven: "Ohne Titel",
             attributionEnabled: "Enable attribution",
             dpi: "Quality",
             showPrintPreview: "Show print preview",
@@ -73,8 +71,8 @@ module.exports = {
             high: "High",
             graphicsLayerTitle: "Printing Preview",
             helperTextScaleEnabled: "Print preview can only be displayed if a scale is set.",
-            portraitLabel: "Hochformat",
-            landscapeLabel: "Querformat"
+            portraitLabel: "Portrait",
+            landscapeLabel: "Landscape"
         }
     },
     de: true
