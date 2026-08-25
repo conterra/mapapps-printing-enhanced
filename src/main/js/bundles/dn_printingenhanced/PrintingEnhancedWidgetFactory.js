@@ -57,7 +57,7 @@ export default class PrintingEnhancedWidgetFactory {
                           item.formattedName;
                 // Remove file extension if already present
                 const extension = "." + String(format).toLowerCase();
-                const name = baseName.toLowerCase().includes(extension)
+                const name = baseName.toLowerCase().endsWith(extension)
                     ? baseName
                     : baseName + extension;
                 const exportedItem = {
@@ -79,7 +79,7 @@ export default class PrintingEnhancedWidgetFactory {
                 };
                 const applyError = () => {
                     exportedItem.loading = false;
-                    exportedItem.url = "";
+                    exportedItem.url = null;
                     exportedItem.error = true;
                 };
 
@@ -117,8 +117,8 @@ export default class PrintingEnhancedWidgetFactory {
         widget.deactivateTool = () => {
             this.currentMapScaleWatchSignal?.remove();
             this.currentMapScaleWatchSignal = undefined;
-            this.printingPreviewControllerBinding.disable();
-            this.templateOptionsBinding.disable();
+            this.printingPreviewControllerBinding?.disable();
+            this.templateOptionsBinding?.disable();
             this.exportedLinksWatcher?.remove();
         };
 
