@@ -243,8 +243,6 @@ export default class PrintingEnhancedWidgetFactory {
                 activeTabId: vm.activeTabId,
                 legendValue,
                 layoutBeforePrint: templateOptions.layout,
-                pagePrintSize: vm.pagePrintSize,
-                pagePrintOrientation: vm.pagePrintOrientation,
                 titleBeforePrint: templateOptions.title,
                 fileNameBeforePrint: templateOptions.fileName
             };
@@ -252,8 +250,10 @@ export default class PrintingEnhancedWidgetFactory {
                 templateOptions.legendEnabled = legendValue === "integratedLegend";
             }
             esriPrintWidget._handlePrintMap();
+            // Each tab's legend condition only applies while that tab is active, so a
+            // legendValue left over from the other tab can't trigger an unwanted legend print.
             if (
-                legendValue === "legendOwnPage" ||
+                (vm.activeTabId !== 1 && legendValue === "legendOwnPage") ||
                 (vm.activeTabId === 1 &&
                     this._normalizeMapOnlyLegendEnabled(vm.mapOnlyLegendEnabled))
             ) {
@@ -278,26 +278,18 @@ export default class PrintingEnhancedWidgetFactory {
 
     _normalizeLegendValue(legendValue) {
         const visibleUiElements = this.vm?.visibleUiElements || {};
-        if (!visibleUiElements.legendEnabled) {
-            // Legend feature switched off entirely: always print without a legend.
-            return "noLegend";
-        }
         const enabledModes = ["integratedLegend", "legendOwnPage", "noLegend"].filter(
             (mode) => visibleUiElements[mode]
         );
         if (enabledModes.includes(legendValue)) {
             return legendValue;
         }
-        if (enabledModes.includes("noLegend")) {
-            return "noLegend";
-        }
-        // Exactly one non-"noLegend" mode configured (no UI is shown for it): use it automatically.
         return enabledModes[0] || "noLegend";
     }
 
     _normalizeMapOnlyLegendEnabled(mapOnlyLegendEnabled) {
         const visibleUiElements = this.vm?.visibleUiElements || {};
-        if (!visibleUiElements.legendEnabled || !visibleUiElements.legendOwnPage) {
+        if (!visibleUiElements.legendOwnPage) {
             return false;
         }
         if (!visibleUiElements.integratedLegend && !visibleUiElements.noLegend) {
@@ -355,11 +347,8 @@ export default class PrintingEnhancedWidgetFactory {
             templateOptions.title ||
             printContext.titleBeforePrint ||
             properties.legend.legendNameIfNoneIsGiven;
-        const sizeOrientation =
-            (printContext.pagePrintSize ?? vm.pagePrintSize) +
-            "_" +
-            (printContext.pagePrintOrientation ?? vm.pagePrintOrientation);
-        let originalLayoutName;
+        const originalLayoutName = layoutBeforePrint || properties.layoutNames.mapOnly;
+        const originalLegendEnabled = templateOptions.legendEnabled;
         templateOptions.legendEnabled = true;
 
         if (isMapOnlyMode) {
@@ -371,30 +360,36 @@ export default class PrintingEnhancedWidgetFactory {
         }
         if (legendValue === "legendOwnPage" && !isMapOnlyMode) {
             templateOptions.layout = properties.layoutNames.legend;
-            originalLayoutName = properties.layoutNames[sizeOrientation];
         }
         if (isMapOnlyMode) {
-            originalLayoutName = layoutBeforePrint || properties.layoutNames.mapOnly;
             templateOptions.layout = properties.layoutNames.legend;
             this._fallbackLayoutOverride = properties.layoutNames.legend;
             this._forceFallbackTemplate = true;
         }
-        esriPrintWidget._handlePrintMap();
+
         const that = this;
-        // Print Legend: Timeout needed, because of multiple us of "_handlePrintMap" and changing the template
-        setTimeout(() => {
+        const restore = () => {
+            // Clear the disabled guard first: restoring templateOptions.layout below triggers
+            // the preview controller's own watch, which must not be swallowed by the guard.
+            that._printingPreviewController.setDisabled(false);
             templateOptions.layout = originalLayoutName;
-            if (isMapOnlyMode && !templateOptions.layout) {
-                templateOptions.layout = properties.layoutNames.mapOnly;
-            }
-            this._fallbackLayoutOverride = undefined;
-            this._forceFallbackTemplate = false;
+            that._fallbackLayoutOverride = undefined;
+            that._forceFallbackTemplate = false;
             if (isMapOnlyMode) {
                 templateOptions.fileName = originalFileName;
             }
             templateOptions.title = originalTitle;
-            that._printingPreviewController.setDisabled(false);
-        }, properties.legend.legendTemplateOptionsRestoreDelayInMs);
+            templateOptions.legendEnabled = originalLegendEnabled;
+        };
+        try {
+            esriPrintWidget._handlePrintMap();
+        } catch (error) {
+            console.error("Error printing legend:", error);
+            restore();
+            return;
+        }
+        // Print Legend: Timeout needed, because of multiple use of "_handlePrintMap" and changing the template
+        setTimeout(restore, properties.legend.legendTemplateOptionsRestoreDelayInMs);
     }
 
     _initDefaultValues(vm, templateOptions, enhancedProperties) {

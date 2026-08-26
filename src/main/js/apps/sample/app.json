@@ -78,8 +78,6 @@
                 "enablePrintPreviewMovement": true,
                 "layoutTemplatesInfoTaskName": "Get%20Layout%20Templates%20Info%20Task",
                 "legend": {
-                    "defaultLegendEnabled": false,
-                    "defaultLegendValue": "noLegend",
                     "legendTitleAppendText": "${ui.legendTitleAppendText}",
                     "legendPrintRequestDelayInMs": 2500,
                     "legendTemplateOptionsRestoreDelayInMs": 300,

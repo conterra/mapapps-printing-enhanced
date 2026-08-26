@@ -206,7 +206,7 @@
                 width: 800,
                 enablePrintPreview: true,
                 activeTabId: 0,
-                legendValue: "noLegend",
+                legendValue: "integratedLegend",
                 mapOnlyLegendEnabled: true,
                 currentMapScale: 0,
                 exportedLinks: [],
