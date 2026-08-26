@@ -265,12 +265,12 @@ export default class PrintingEnhancedWidgetFactory {
         }
         const origFn = printViewModel.toPrintTemplate.bind(printViewModel);
         printViewModel._origToPrintTemplate = origFn;
-        printViewModel.toPrintTemplate = () => {
+        printViewModel.toPrintTemplate = (options) => {
             const shouldUseFallbackTemplate =
                 this._forceFallbackTemplate === true || !printViewModel.templatesInfo;
 
             if (!shouldUseFallbackTemplate) {
-                return origFn();
+                return origFn(options);
             }
             // Build the PrintTemplate ourselves from templateOptions
             const to = esriPrintWidget.templateOptions;
