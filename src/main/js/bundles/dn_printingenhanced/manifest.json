@@ -194,7 +194,9 @@
                     "scale": true,
                     "copyright": false,
                     "legendEnabled": true,
-                    "legendValue": true,
+                    "integratedLegend": true,
+                    "legendOwnPage": false,
+                    "noLegend": true,
                     "attributionEnabled": false
                 },
                 "deriveLayoutFromPageSize": false,
@@ -203,8 +205,6 @@
                 "layoutTemplatesInfoTaskName": "Get%20Layout%20Templates%20Info%20Task",
                 "defaultPageUnit": "CENTIMETER",
                 "legend": {
-                    "defaultLegendEnabled": true,
-                    "defaultLegendValue": "noLegend",
                     "legendTitleAppendText": "${ui.legendTitleAppendText}",
                     "legendPrintRequestDelayInMs": 2500,
                     "legendTemplateOptionsRestoreDelayInMs": 300,
@@ -240,11 +240,7 @@
                     "a3_portrait": "A3 Portrait",
                     "a3_landscape": "A3 Landscape",
                     "legend": "A4_hoch_legende",
-                    "mapOnly": "MAP_ONLY",
-                    "a4_portrait_integratedLegend": "A4_hoch_integratedLegend",
-                    "a4_landscape_integratedLegend": "A4_quer_integratedLegend",
-                    "a3_portrait_integratedLegend": "A3_hoch_integratedLegend",
-                    "a3_landscape_integratedLegend": "A3_quer_integratedLegend"
+                    "mapOnly": "MAP_ONLY"
                 },
                 "dpiValues": [
                     {

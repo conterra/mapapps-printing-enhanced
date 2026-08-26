@@ -93,6 +93,7 @@
                     :scale-enabled.sync="scaleEnabled"
                     :enable-print-preview.sync="enablePrintPreview"
                     :visible-ui-elements="visibleUiElements"
+                    :map-only-legend-enabled.sync="mapOnlyLegendEnabled"
                     @resetScale="$emit('resetScale')"
                     @rotate="rotate"
                 />
@@ -199,7 +200,6 @@
                 format: "pdf",
                 height: 1100,
                 layout: "a3-portrait",
-                legendEnabled: true,
                 scale: 0,
                 scaleEnabled: false,
                 title: "",
@@ -207,6 +207,7 @@
                 enablePrintPreview: true,
                 activeTabId: 0,
                 legendValue: "noLegend",
+                mapOnlyLegendEnabled: true,
                 currentMapScale: 0,
                 exportedLinks: [],
                 error: ""

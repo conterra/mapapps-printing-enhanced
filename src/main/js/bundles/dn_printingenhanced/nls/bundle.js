@@ -41,7 +41,6 @@ module.exports = {
             rotatePrintFrame: "Rotate print frame",
             scale: "Scale",
             scaleEnabled: "Set scale",
-            legendEnabled: "Enable legend",
             integratedLegend: "Integrierte Legende",
             legendOwnPage: "Legende auf eigener Seite",
             noLegend: "Keine Legende",

@@ -40,7 +40,6 @@ module.exports = {
         rotatePrintFrame: "Druckrahmen drehen",
         scale: "Maßstab",
         scaleEnabled: "Maßstab festlegen",
-        legendEnabled: "Legende einbeziehen",
         integratedLegend: "Integrierte Legende",
         legendOwnPage: "Legende auf eigener Seite",
         noLegend: "Keine Legende",

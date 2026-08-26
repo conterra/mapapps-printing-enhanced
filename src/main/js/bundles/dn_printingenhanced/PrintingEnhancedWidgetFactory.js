@@ -177,7 +177,10 @@ export default class PrintingEnhancedWidgetFactory {
             "scaleEnabled": false,
             "scale": true,
             "copyright": false,
-            "legendEnabled": false,
+            "legendEnabled": true,
+            "integratedLegend": true,
+            "legendOwnPage": false,
+            "noLegend": true,
             "attributionEnabled": false
         };
         vm.visibleUiElements = { ...defaultVisibleUiElements, ...properties.visibleUiElements };
@@ -245,17 +248,14 @@ export default class PrintingEnhancedWidgetFactory {
                 titleBeforePrint: templateOptions.title,
                 fileNameBeforePrint: templateOptions.fileName
             };
-            if (
-                legendValue === "noLegend" ||
-                legendValue === "legendOwnPage" ||
-                vm.activeTabId === 1
-            ) {
-                esriPrintWidget._handlePrintMap();
+            if (vm.activeTabId !== 1) {
+                templateOptions.legendEnabled = legendValue === "integratedLegend";
             }
+            esriPrintWidget._handlePrintMap();
             if (
                 legendValue === "legendOwnPage" ||
-                legendValue === "integratedLegend" ||
-                vm.activeTabId === 1
+                (vm.activeTabId === 1 &&
+                    this._normalizeMapOnlyLegendEnabled(vm.mapOnlyLegendEnabled))
             ) {
                 setTimeout(() => {
                     this._printLegend(
@@ -277,14 +277,34 @@ export default class PrintingEnhancedWidgetFactory {
     }
 
     _normalizeLegendValue(legendValue) {
-        if (
-            legendValue === "integratedLegend" ||
-            legendValue === "legendOwnPage" ||
-            legendValue === "noLegend"
-        ) {
+        const visibleUiElements = this.vm?.visibleUiElements || {};
+        if (!visibleUiElements.legendEnabled) {
+            // Legend feature switched off entirely: always print without a legend.
+            return "noLegend";
+        }
+        const enabledModes = ["integratedLegend", "legendOwnPage", "noLegend"].filter(
+            (mode) => visibleUiElements[mode]
+        );
+        if (enabledModes.includes(legendValue)) {
             return legendValue;
         }
-        return "noLegend";
+        if (enabledModes.includes("noLegend")) {
+            return "noLegend";
+        }
+        // Exactly one non-"noLegend" mode configured (no UI is shown for it): use it automatically.
+        return enabledModes[0] || "noLegend";
+    }
+
+    _normalizeMapOnlyLegendEnabled(mapOnlyLegendEnabled) {
+        const visibleUiElements = this.vm?.visibleUiElements || {};
+        if (!visibleUiElements.legendEnabled || !visibleUiElements.legendOwnPage) {
+            return false;
+        }
+        if (!visibleUiElements.integratedLegend && !visibleUiElements.noLegend) {
+            // legendOwnPage is the only configured mode (no checkbox is shown for it): always on.
+            return true;
+        }
+        return !!mapOnlyLegendEnabled;
     }
 
     _setLayoutName(vm, templateOptions, enhancedProperties) {
@@ -296,12 +316,16 @@ export default class PrintingEnhancedWidgetFactory {
 
         if (enhancedProperties.deriveLayoutFromPageSize) {
             const layoutNames = enhancedProperties.layoutNames;
-            let layoutName = layoutNames[vm.pagePrintSize + "_" + vm.pagePrintOrientation];
+            const baseLayoutName = layoutNames[vm.pagePrintSize + "_" + vm.pagePrintOrientation];
+            let layoutName = baseLayoutName;
             if (legendValue === "integratedLegend") {
+                // Falls back to the normal layout when no dedicated "..._integratedLegend"
+                // layout is configured on the print service; legendEnabled (set at print time)
+                // is what actually shows the legend on that layout.
                 layoutName =
                     layoutNames[
                         vm.pagePrintSize + "_" + vm.pagePrintOrientation + "_integratedLegend"
-                    ];
+                    ] || baseLayoutName;
             }
             if (!layoutName) {
                 console.error(
@@ -348,11 +372,6 @@ export default class PrintingEnhancedWidgetFactory {
         if (legendValue === "legendOwnPage" && !isMapOnlyMode) {
             templateOptions.layout = properties.layoutNames.legend;
             originalLayoutName = properties.layoutNames[sizeOrientation];
-        } else if (legendValue === "integratedLegend" && !isMapOnlyMode) {
-            this._printingPreviewController.setDisabled(false); // Needed to set editText and contentText
-            templateOptions.title = vm.title;
-            originalLayoutName = templateOptions.layout =
-                properties.layoutNames[sizeOrientation + "_integratedLegend"];
         }
         if (isMapOnlyMode) {
             originalLayoutName = layoutBeforePrint || properties.layoutNames.mapOnly;
@@ -391,7 +410,8 @@ export default class PrintingEnhancedWidgetFactory {
         if (defaultPagePrintOrientation && defaultPagePrintOrientation.length > 0) {
             vm.pagePrintOrientation = defaultPagePrintOrientation[0].value;
         }
-        vm.legendValue = "noLegend";
+        vm.legendValue = this._normalizeLegendValue(vm.legendValue);
+        vm.mapOnlyLegendEnabled = this._normalizeMapOnlyLegendEnabled(vm.mapOnlyLegendEnabled);
         if (templateOptions) {
             this._setLayoutName(vm, templateOptions, enhancedProperties);
         }
@@ -424,7 +444,6 @@ export default class PrintingEnhancedWidgetFactory {
             "format",
             "height",
             "layout",
-            "legendEnabled",
             "scale",
             "scaleEnabled",
             "title",
