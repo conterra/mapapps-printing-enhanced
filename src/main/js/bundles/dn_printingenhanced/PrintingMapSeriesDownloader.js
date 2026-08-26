@@ -10,6 +10,8 @@ export default function () {
             if (!mapSeriesPrintingRequests || mapSeriesPrintingRequests.length === 0)
                 return this._createMapSeriesErrorJob(this._i18n.get().mapSeriesRequestsInvalid);
 
+            numberOfConcurrentRequests = numberOfConcurrentRequests ?? this._properties.numberOfConcurrentDownloads;
+
             const stablePrintRunOptions = this._createStablePrintRunOptions(vm, printRunOptions);
 
             let totalLegendJobsCounts; // legend request is started below (need to wait for series print jobs to be finished before printing legend)
@@ -19,7 +21,9 @@ export default function () {
             const mapSeriesJob = this._createMapSeriesJob(mapSeriesTitle, totalJobCount, templateOptions.format);
 
             const that = this;
-            const resultInfos = this._executeConcurrentMapSeriesPrintingRequests(mapSeriesJob, mapSeriesPrintingRequests, numberOfConcurrentRequests);
+            const resultInfos = this._executeAndDownloadConcurrentMapSeriesPrintingRequests(
+                mapSeriesJob, mapSeriesPrintingRequests, numberOfConcurrentRequests
+            );
             resultInfos.then(async (resultInfos) => {
                 // need to wait for series print jobs to be finished before printing legend
                 let legendResultInfos;
@@ -31,7 +35,7 @@ export default function () {
                     }
                 }
 
-                mapSeriesJob.resultZipAsBlobs = await that._downloadAndZipHelper.downloadAsBlobs(resultInfos, numberOfConcurrentRequests, vm);
+                mapSeriesJob.resultZipAsBlobs = resultInfos;
 
                 if (legendResultInfos) {
                     const legendBlobs = await that._downloadAndZipHelper.downloadAsBlobs([legendResultInfos], numberOfConcurrentRequests, vm);
@@ -150,7 +154,16 @@ export default function () {
             return lastMapImageBlueprintCopy;
         },
 
-        async _executeConcurrentMapSeriesPrintingRequests(mapSeriesJob, mapSeriesPrintingRequests, numberOfConcurrentRequests = 2) {
+        /**
+         * Submits each print request and downloads its result file as one unit, so that with
+         * concurrency 1 the requests to the print service happen strictly one at a time:
+         * print -> download -> print -> download -> ... Previously printing and downloading
+         * were two separate batch phases (all prints, then all downloads), which meant
+         * "concurrency 1" only serialized each phase internally, not the print/download pairing.
+         */
+        async _executeAndDownloadConcurrentMapSeriesPrintingRequests(
+            mapSeriesJob, mapSeriesPrintingRequests, numberOfConcurrentRequests = 2
+        ) {
             const that = this;
             return Promise.map(
                 mapSeriesPrintingRequests,
@@ -175,8 +188,10 @@ export default function () {
                         const pageNumber = singleMapSeriesPrintingRequest.pagenumber + 1;
                         fileName = `${mapSeriesJob.mapSeriesTitle}-${pageNumber}.${mapSeriesJob.fileFormat}`;
                     }
+                    const url = await that._extractResultURLFromResponse(result, singleMapSeriesPrintingRequest.url);
+                    const blob = await that._downloadAndZipHelper.fetchBlobWithRetry(url);
                     return {
-                        url: await that._extractResultURLFromResponse(result, singleMapSeriesPrintingRequest.url),
+                        blob: blob,
                         fileName: fileName,
                         col: singleMapSeriesPrintingRequest.col,
                         row: singleMapSeriesPrintingRequest.row,

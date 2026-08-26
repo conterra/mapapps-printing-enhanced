@@ -1,0 +1,46 @@
+{
+  "name": "jszip",
+  "version": "2.5.0-SNAPSHOT",
+  "_original_version": "3.10.1",
+  "description": "Create, read and edit .zip files with Javascript. Bundle-Wrapper around jszip.min.js from git://github.com/Stuk/jszip.git",
+  "main": "jszip.min.js",
+  "i18n": [],
+  "dependencies": {
+  },
+  "keywords": [
+    "zip"
+  ],
+  "license": "MIT",
+  "authors": [
+    "Stuart Knightley",
+    "David Duponchel",
+    "Franz Buchinger",
+    "António Afonso"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/Stuk/jszip.git"
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

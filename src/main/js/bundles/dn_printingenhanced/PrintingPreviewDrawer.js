@@ -63,28 +63,32 @@ export default class PrintingPreviewDrawer {
     }
 
     async drawTemplateDimensions(printInfos, templateOptions, defaultPageUnit) {
-        const mapWidgetModel = this._mapWidgetModel;
-        if (!printInfos.templateInfos) {
+        const geometryParams = this.getGeometryParamsFromTemplate(printInfos, templateOptions, defaultPageUnit);
+        if (!geometryParams) {
             return;
         }
-        const printSize = this._getPrintSize(printInfos, templateOptions, defaultPageUnit);
-        if (!printSize) {
-            return;
-        }
-        const width = printSize.width;
-        const height = printSize.height;
-
-        const geometryParams = {
-            width: width,
-            height: height,
-            rotation: this._rotation ? this._rotation : mapWidgetModel.rotation
-        };
         const geometry = this._getMainFrameGeometry(geometryParams);
         const differenceGeometry = await this._getOutsideMainFrameGeometry(geometry);
         this.removeGraphicFromGraphicsLayer();
         this._addMainGraphicToGraphicsLayer(geometry);
         this._addOutsideMainGraphicToGraphicsLayer(differenceGeometry);
         return geometry;
+    }
+
+    getGeometryParamsFromTemplate(printInfos, templateOptions, defaultPageUnit) {
+        const mapWidgetModel = this._mapWidgetModel;
+        if (!printInfos.templateInfos) {
+            return null;
+        }
+        const printSize = this._getPrintSize(printInfos, templateOptions, defaultPageUnit);
+        if (!printSize) {
+            return null;
+        }
+        return {
+            width: printSize.width,
+            height: printSize.height,
+            rotation: this._rotation ? this._rotation : mapWidgetModel.rotation
+        };
     }
 
     _getPrintSize(printInfos, templateOptions, defaultPageUnit) {

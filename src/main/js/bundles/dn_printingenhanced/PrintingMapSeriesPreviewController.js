@@ -461,7 +461,7 @@ export default declare({
         const mapSeriesPrintOptions = {
             legendEnabled: vm.mapSeriesLegendEnabled !== undefined ? vm.mapSeriesLegendEnabled : vm.legendEnabled
         };
-        const mapSeriesJob = await this._printingMapSeriesDownloader.downloadMapSeries(allMapSeriesPrintingRequests, mapSeriesTitle, legendExtent, esriPrintWidget, vm, templateOptions, printingEnhancedProperties, 4, mapSeriesPrintOptions);
+        const mapSeriesJob = await this._printingMapSeriesDownloader.downloadMapSeries(allMapSeriesPrintingRequests, mapSeriesTitle, legendExtent, esriPrintWidget, vm, templateOptions, printingEnhancedProperties, undefined, mapSeriesPrintOptions);
         this.printingMapSeriesPrintJobsModel.mapSeriesJobs = [...this.printingMapSeriesPrintJobsModel.mapSeriesJobs, mapSeriesJob];
         return this.waitForMapSeriesToFinish(mapSeriesJob); // wird gemacht, um danach legende zu drucken
     },

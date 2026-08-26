@@ -596,7 +596,8 @@
                 },
                 {
                     "name": "_layerConfigurationProvider",
-                    "providing": "hzd_gisbox_config_providers.LayerConfigurationProvider"
+                    "providing": "hzd_gisbox_config_providers.LayerConfigurationProvider",
+                    "cardinality": "0..1"
                 },
                 {
                     "name": "_logService",
@@ -604,7 +605,8 @@
                 },
                 {
                     "name": "_geometrySelectionHandler",
-                    "providing": "hzd_gisbox_geometry_helpers.GeometrySelectionHandler"
+                    "providing": "hzd_gisbox_geometry_helpers.GeometrySelectionHandler",
+                    "cardinality": "0..1"
                 },
                 {
                     "name": "_eventService",
@@ -673,7 +675,7 @@
             "provides": "dn_printingenhanced.PrintingRequestBlueprintProvider",
             "immediate": true,
             "properties": {
-                "printingURLtoIntercept": "define in app.json",
+                "printingURLtoIntercept": "@@printtask.service.url@@",
                 "cancelRequestOnIntercept": true
             },
             "references": []

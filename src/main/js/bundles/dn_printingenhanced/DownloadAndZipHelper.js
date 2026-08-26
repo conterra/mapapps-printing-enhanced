@@ -13,17 +13,40 @@ export default function () {
                 infos,
                 async info => {
                     return {
-                        blob: await fetch(info.url)
-                            .then(resp => resp.blob())
-                            .catch(err => {
-                                    console.error("Fehler bei der Funktion downloadAsBlobs: " + err);
-                                }
-                            ),
+                        blob: await this.fetchBlobWithRetry(info.url),
                         fileName: info.fileName
                     }
                 },
                 {concurrency: files_per_group}
             );
+        },
+
+        /**
+         * The print service's result file can occasionally be momentarily unavailable at the
+         * returned URL right after the print job completes. Retries with a short exponential
+         * backoff to absorb that, without making the user wait long on a properly functioning
+         * print service (a slow/unreliable service, e.g. a shared public demo endpoint, is not
+         * something this can compensate for).
+         */
+        async fetchBlobWithRetry(url, retries = 3, delayMs = 400, maxDelayMs = 2000) {
+            for (let attempt = 0; attempt <= retries; attempt++) {
+                try {
+                    const response = await fetch(url);
+                    if (response.ok) {
+                        return await response.blob();
+                    }
+                    if (attempt === retries) {
+                        console.error(`Fehler bei der Funktion downloadAsBlobs: request for '${url}' failed with status ${response.status}`);
+                        return undefined;
+                    }
+                } catch (err) {
+                    if (attempt === retries) {
+                        console.error("Fehler bei der Funktion downloadAsBlobs: " + err);
+                        return undefined;
+                    }
+                }
+                await Promise.delay(Math.min(delayMs * Math.pow(2, attempt), maxDelayMs));
+            }
         },
 
         /**
@@ -35,6 +58,10 @@ export default function () {
             let zip = new jszip();
 
             blobsWrappers.forEach((blobWrapper) => {
+                if (!blobWrapper.blob) {
+                    console.error(`Fehler bei der Funktion saveBlobsAsZip: '${blobWrapper.fileName}' konnte nicht heruntergeladen werden und wird ausgelassen.`);
+                    return;
+                }
                 zip.file(blobWrapper.fileName, blobWrapper.blob);
             });
             return zip.generateAsync({type: 'blob'})

@@ -35,7 +35,8 @@
             "toc",
             "toolset",
             "dn_imprintprivacy",
-            "dn_printingenhanced"
+            "dn_printingenhanced",
+            "console"
         ],
         "i18n": [
             "bundle"
@@ -57,6 +58,7 @@
                 "visibleUiElements": {
                     "layoutTab": true,
                     "mapOnlyTab": true,
+                    "mapSeriesTab": true,
                     "title": true,
                     "fileName": true,
                     "author": true,
@@ -75,6 +77,18 @@
                 "enablePrintPreviewMovement": true,
                 "layoutTemplatesInfoTaskName": "Get%20Layout%20Templates%20Info%20Task",
                 "defaultPageUnit": "CENTIMETER",
+                "layoutNames": {
+                    "a4_portrait": "A4 Portrait",
+                    "a4_portrait_singlepage": "A4 Portrait",
+                    "a4_landscape": "A4 Landscape",
+                    "a4_landscape_singlepage": "A4 Landscape",
+                    "a3_portrait": "A3 Portrait",
+                    "a3_portrait_singlepage": "A3 Portrait",
+                    "a3_landscape": "A3 Landscape",
+                    "a3_landscape_singlepage": "A3 Landscape",
+                    "legend": "A4 Portrait",
+                    "mapOnly": "MAP_ONLY"
+                },
                 "dpiValues": [
                     {
                         "value": 96,
@@ -191,6 +205,13 @@
                         "testString": "testString"
                     }
                 ]
+            },
+            "PrintingMapSeriesPreviewDrawer": {
+                "geometryServerURL": "https://utility.arcgisonline.com/arcgis/rest/services/Geometry/GeometryServer",
+                "maxNumberOfDrawnFrames": 1000
+            },
+            "PrintingMapSeriesDownloader": {
+                "numberOfConcurrentDownloads": 4
             }
         },
         "agssearch": {
