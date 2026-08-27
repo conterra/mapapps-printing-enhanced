@@ -71,7 +71,6 @@ export default class PrintingMapSeriesPreviewDrawer {
         }
 
         this._logService.info(this._i18n.get().ui.tileCalculationOngoing);
-        this._eventService.sendEvent("ct/hzd_gisbox_loading_animation/START_ANIMATION");
 
         let filteredMainSeriesFrames = [];
         let omittedSeriesFrames = [];
@@ -96,8 +95,6 @@ export default class PrintingMapSeriesPreviewDrawer {
             filteredMainSeriesFrames = mainSeriesFrames;
             this._logService.error(this._i18n.get().ui.errors.filterEmptyTilesError);
         })
-
-        this._eventService.sendEvent("ct/hzd_gisbox_loading_animation/STOP_ANIMATION");
 
         console.log(filteredMainSeriesFrames.length);
         console.log("number of omitted frames: " + omittedSeriesFrames.length);

@@ -70,7 +70,8 @@
                     "scale": true,
                     "copyright": false,
                     "legendEnabled": false,
-                    "attributionEnabled": false
+                    "attributionEnabled": false,
+                    "doNotPrintEmptyTiles": true
                 },
                 "deriveLayoutFromPageSize": true,
                 "enablePrintPreview": true,
@@ -206,6 +207,11 @@
                     }
                 ]
             },
+            "PrintingMapSeriesPreviewController": {
+                "selectionLayers": {
+                    "layerIds": ["koelnPrecincts", "koelnBoroughs", "koelnDistricts"]
+                }
+            },
             "PrintingMapSeriesPreviewDrawer": {
                 "geometryServerURL": "https://utility.arcgisonline.com/arcgis/rest/services/Geometry/GeometryServer",
                 "maxNumberOfDrawnFrames": 1000
@@ -276,6 +282,7 @@
                             "visible": true,
                             "layers": [
                                 {
+                                    "id": "koelnDistricts",
                                     "title": "${map.koeln1.districts.title}",
                                     "url": "https://services.arcgis.com/ObdAEOfl1Z5LP2D0/arcgis/rest/services/Köln/FeatureServer/8",
                                     "type": "AGS_FEATURE",
@@ -292,6 +299,7 @@
                                     }
                                 },
                                 {
+                                    "id": "koelnBoroughs",
                                     "title": "${map.koeln1.boroughs.title}",
                                     "url": "https://services.arcgis.com/ObdAEOfl1Z5LP2D0/arcgis/rest/services/Köln/FeatureServer/7",
                                     "type": "AGS_FEATURE",
@@ -339,6 +347,7 @@
                                     }
                                 },
                                 {
+                                    "id": "koelnPrecincts",
                                     "title": "${map.koeln1.precints.title}",
                                     "url": "https://services.arcgis.com/ObdAEOfl1Z5LP2D0/arcgis/rest/services/Köln/FeatureServer/6",
                                     "type": "AGS_FEATURE",

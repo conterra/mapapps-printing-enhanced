@@ -97,6 +97,7 @@ module.exports = {
         label_drawRectangle2: "einzeichnen",
         label_currentExtent1: "Aktueller",
         label_currentExtent2: "Kartenausschnitt",
-        tileCalculationOngoing: "Nicht genutzte Kacheln werden berechnet."
+        tileCalculationOngoing: "Nicht genutzte Kacheln werden berechnet.",
+        noElementsFoundForSelection: "An der ausgewählten Stelle wurde kein Objekt gefunden."
     }
 };

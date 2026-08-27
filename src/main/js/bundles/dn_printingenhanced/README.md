@@ -293,7 +293,7 @@ The following Configs have been added for **map series**:
     - toScale: if the calculated scale is equal or below this, the config entry with the lowest value of toScale is used here.
     - roundUpTo: the finally suggested scale is rounded up to this value
     - extentFactor: the calculated scale is multiplied by this factor, to create a "buffer" around the geometry.
-- selectionLayers: layers that are allowed for the geometry selection tool
+- selectionLayers: the already-configured map layers that are queried by the geometry selection tool ({ layerIds }, referencing the "id" of layers already added to the map)
 - printingURLtoIntercept: print url that will be intercepted when printing map series (usually should be the normal print url)
 - cancelRequestOnIntercept: cancel normal print request on intercept
 - numberOfConcurrentDownloads: number of request to the print service that will be done concurrently
@@ -321,12 +321,11 @@ The following Configs have been added for **map series**:
             }
         ],
         "selectionLayers": {
-            "layerIds": [1,2,3],
-            "externalServicesIds": []
+            "layerIds": ["districts", "boroughs"]
         }
     },
     "PrintingRequestBlueprintProvider": {
-        "printingURLtoIntercept": "@@gisbox.ags.baseurl@@/@@gisbox.ags.printService@@/execute",
+        "printingURLtoIntercept": "@@printtask.service.url@@",
         "cancelRequestOnIntercept": true
     },
     "PrintingMapSeriesDownloader": {

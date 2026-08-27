@@ -49,7 +49,6 @@ export default declare({
         this._selectedObjectGeoemtry = undefined;
         this._isDisabled = true;
         this._i18n = this._i18n.get();
-        this._processId = "printing"
         this._pendingMapSeriesFrameDrawPromise = undefined;
         const that = this;
 
@@ -661,54 +660,50 @@ export default declare({
         this.handleDrawMapSeriesFrames();
     },
 
-    useGeometrySelection() {
-        let selectionLayerIds = this._properties.selectionLayers?.layerIds;
-        let externalServicesIds = this._properties.selectionLayers?.externalServicesIds;
-        let mapServerUrl = this._layerConfigurationProvider.getFisboxFachlayerServiceUrl();
+    async useGeometrySelection() {
+        const layerIds = this._properties.selectionLayers?.layerIds;
 
-        if (!selectionLayerIds?.length < 0 || !externalServicesIds?.length < 0 || !mapServerUrl) {
+        if (!Array.isArray(layerIds) || !layerIds.length) {
             console.error("parameter missing");
             this._logService.error(this._i18n.unexpectedError);
-            return
-        }
-
-        this._geometrySelectionHandler.startGeometrySelection(selectionLayerIds, externalServicesIds, mapServerUrl, this._processId, "point", false, "printingEnhancedToggleTool");
-        // --> onGeometrySelected(evt)
-    },
-
-    async onGeometrySelected(evt) {
-        let startedBy = evt.getProperty("startedBy");
-        if (startedBy !== this._processId)
-            return;
-
-        let object = evt.getProperty("objects")[0];
-        if (!object?.srcObj?.geometry) {
-            console.error("selected object has no geometry");
-            this._logService.error(this._i18n.unexpectedError);
             return;
         }
 
-        let extent;
-        if (object.srcObj.geometry.type === "point") {
-            extent = ct_geometry.calcExtent([object.srcObj.geometry]);
-            // extent needs to have a width and height > 0
-            extent.xmin = extent.xmin - 1;
-            extent.ymax = extent.ymax + 1;
-        } else {
-            extent = object.srcObj.geometry.extent;
+        try {
+            // loop to allow selecting the next object right after one was selected (tool usually still active)
+            while (true) {
+                const geometry = await this._objectSelectionHandler.selectFeatureGeometry(layerIds);
+                if (!geometry) {
+                    this._logService.warn(this._i18n.ui.noElementsFoundForSelection);
+                    continue;
+                }
+
+                let extent;
+                if (geometry.type === "point") {
+                    extent = ct_geometry.calcExtent([geometry]);
+                    // extent needs to have a width and height > 0
+                    extent.xmin = extent.xmin - 1;
+                    extent.ymax = extent.ymax + 1;
+                } else {
+                    extent = geometry.extent;
+                }
+
+                this._selectedObjectGeoemtry = geometry;
+
+                const singleMapFrameExtent = this._calcSingleMapFrameExtent(extent);
+                await this._focusOnSingleMapFrameExtent(singleMapFrameExtent);
+            }
+        } catch (e) {
+            if (this._isCancelledError(e)) {
+                console.warn("object selection has been canceled!");
+            } else {
+                console.warn(e);
+            }
         }
-
-        this._selectedObjectGeoemtry = object.srcObj.geometry;
-
-        const singleMapFrameExtent = this._calcSingleMapFrameExtent(extent);
-        await this._focusOnSingleMapFrameExtent(singleMapFrameExtent);
-
-        //restart again (tool usually still active)
-        this.useGeometrySelection()
     },
 
     cancelGeometrySelection() {
-        this._geometrySelectionHandler.cancelSelectionProcess(this._processId, true);
+        this._objectSelectionHandler.cancelSelection();
     },
 
     async useRectangleDraw() {
