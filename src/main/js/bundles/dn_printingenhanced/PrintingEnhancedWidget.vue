@@ -159,10 +159,6 @@
                 type: Array,
                 default: () => []
             },
-            exportedLinks: {
-                type: Array,
-                default: () => []
-            },
             visibleUiElements: {
                 type: Object,
                 default: () => {}
@@ -184,9 +180,9 @@
                 title: "",
                 width: 800,
                 enablePrintPreview: true,
-                printPreviewInitallyVisible: null,
                 activeTab: 0,
                 currentMapScale: 0,
+                exportedLinks: [],
                 error: ""
             };
         },

@@ -24,81 +24,110 @@ export default class PrintingEnhancedWidgetFactory {
 
     activate() {
         this._initComponent();
+        this._scaleCorrection = new ScaleCorrection();
     }
 
     createInstance() {
         const vm = this.vm;
         const widget = new VueDijit(vm, { class: "printing-enhanced-widget" });
-        const mapWidgetModel = this._mapWidgetModel;
-
+        const mapWidgetModel = this.mapWidgetModel;
         const printingPreviewController = this._printingPreviewController;
         const printWidget = this._printingWidget;
         const esriPrintWidget = printWidget._esriWidget;
-        const templateOptions = esriPrintWidget.templateOptions;
+        this._ensureTemplateOptionsBinding(vm);
 
-        this.printingPreviewControllerBinding =
-            this._createPrintingPreviewControllerBinding(vm, printingPreviewController);
-        this.templateOptionsBinding = this._createTemplateBinding(vm, templateOptions);
+        this.printingPreviewControllerBinding = Binding.for(vm, printingPreviewController)
+            .syncToRight("enablePrintPreview", "drawPrintPreview", (enablePrintPreview) => !!(enablePrintPreview && vm.scaleEnabled))
+            .syncToRight("scaleEnabled", "drawPrintPreview", (scaleEnabled) => !!(scaleEnabled && vm.enablePrintPreview));
 
         widget.activateTool = () => {
-            this.exportedLinksWatcher = esriPrintWidget.exportedLinks.on("after-add", function (event) {
+            const templateOptions = this._ensureTemplateOptionsBinding(vm);
+            this.exportedLinksWatcher = esriPrintWidget.exportedLinks.on("after-add", (event) => {
                 const item = event.item;
+                const liveTemplateOptions = this._getTemplateOptions() || templateOptions;
+                const format = liveTemplateOptions?.format || vm.format || "pdf";
+                // "Nur Karte" tab uses fileName; other tabs use title
+                const baseName =
+                    vm.activeTab === 1
+                        ? liveTemplateOptions?.fileName ||
+                          liveTemplateOptions?.title ||
+                          item.formattedName
+                        : liveTemplateOptions?.title ||
+                          liveTemplateOptions?.fileName ||
+                          item.formattedName;
+                // Remove file extension if already present
+                const extension = "." + String(format).toLowerCase();
+                const name = baseName.toLowerCase().endsWith(extension)
+                    ? baseName
+                    : baseName + extension;
                 const exportedItem = {
-                    id: item.count,
-                    name: item.count <= 0 ?
-                        `${vm.title}.${item.extension}` :
-                        `${vm.title} (${item.count}).${item.extension}`,
+                    id: item.formattedName,
+                    name: name,
                     loading: true,
                     error: false,
                     url: ""
                 };
                 vm.exportedLinks.push(exportedItem);
-                const stateWatcher = event.item.watch("state", (state) => {
-                    stateWatcher.remove();
+
+                let resolved = false;
+                const applyReady = (url) => {
+                    if (resolved) return;
+                    resolved = true;
+                    exportedItem.loading = false;
+                    exportedItem.error = false;
+                    exportedItem.url = String(getProxiedUrl(url));
+                };
+                const applyError = () => {
+                    exportedItem.loading = false;
+                    exportedItem.url = null;
+                    exportedItem.error = true;
+                };
+
+                event.item.watch("state", (state) => {
                     if (state === "ready") {
-                        exportedItem.loading = false;
-                        exportedItem.url = getProxiedUrl(item.url);
+                        applyReady(item.url);
                     } else if (state === "error") {
-                        exportedItem.loading = false;
-                        exportedItem.url = null;
-                        exportedItem.error = true;
+                        applyError();
                     }
                 });
+                event.item.watch("url", (url) => {
+                    if (url) {
+                        applyReady(url);
+                    }
+                });
+                if (item.url) {
+                    applyReady(item.url);
+                } else if (item.state === "ready") {
+                    applyReady(item.url);
+                } else if (item.state === "error") {
+                    applyError();
+                }
             });
 
-            // listen to view model methods
-            vm.$on('print', () => {
-                esriPrintWidget._handlePrintMap();
-            });
-            vm.$on('resetScale', () => {
-                esriPrintWidget._resetToCurrentScale();
-            });
+            this.currentMapScaleWatchSignal = this._syncViewModelWithCurrentMapScale(
+                vm,
+                mapWidgetModel.view
+            );
 
-            this.currentMapScaleWatchSignal = this._syncViewModelWithCurrentMapScale(vm, mapWidgetModel.view);
-
-            this.printingPreviewControllerBinding.enable()
-                .syncToLeftNow();
-
-            this.templateOptionsBinding.enable()
-                .syncToLeftNow();
+            this.printingPreviewControllerBinding.enable().syncToLeftNow();
+            if (templateOptions) {
+                this.templateOptionsBinding.enable().syncToLeftNow();
+            }
         };
         widget.deactivateTool = () => {
-            this.vm.$off();
-            this.printingPreviewControllerBinding.disable();
-            this.templateOptionsBinding.disable();
-            this.exportedLinksWatcher.remove();
+            this.currentMapScaleWatchSignal?.remove();
+            this.currentMapScaleWatchSignal = undefined;
+            this.printingPreviewControllerBinding?.disable();
+            this.templateOptionsBinding?.disable();
+            this.exportedLinksWatcher?.remove();
         };
 
         widget.own({
-            remove() {
+            remove: () => {
                 this.currentMapScaleWatchSignal?.remove();
-                this.currentMapScaleWatchSignal = undefined;
-                this.printingPreviewControllerBinding.unbind();
-                this.printingPreviewControllerBinding = undefined;
-                this.templateOptionsBinding.unbind();
-                this.templateOptionsBinding = undefined;
-                this.vm.$off();
-                this.printingPreviewController.resetGraphic();
+                this.printingPreviewControllerBinding?.unbind();
+                this.templateOptionsBinding?.unbind();
+                vm.$off();
             }
         });
 
@@ -124,7 +153,7 @@ export default class PrintingEnhancedWidgetFactory {
         }
 
         vm.i18n = this._i18n.get().ui;
-        vm.exportedItems = [];
+        vm.exportedLinks = [];
         const defaultVisibleUiElements = {
             "layoutTab": true,
             "mapOnlyTab": false,
@@ -146,38 +175,66 @@ export default class PrintingEnhancedWidgetFactory {
         vm.dpiValues = properties.dpiValues;
         vm.scaleValues = properties.scaleValues;
         vm.enablePrintPreview = properties.enablePrintPreview;
+
+        // listen to view model methods
+        vm.$on("print", () => {
+            esriPrintWidget._handlePrintMap();
+        });
+
+        vm.$on("resetScale", () => {
+            esriPrintWidget._resetToCurrentScale();
+        });
     }
 
     _syncViewModelWithCurrentMapScale(vm, mapView) {
         return mapView.watch("scale", () => {
-            const mapWidgetModel = this._mapWidgetModel;
-            const correctedScale = new ScaleCorrection().computedScale(mapWidgetModel.view, mapWidgetModel.extent, mapWidgetModel.spatialReference);
+            const mapWidgetModel = this.mapWidgetModel;
+            const correctedScale = this._scaleCorrection.computedScale(
+                mapWidgetModel.view,
+                mapWidgetModel.extent,
+                mapWidgetModel.spatialReference
+            );
             vm.currentMapScale = Math.round(correctedScale);
         });
     }
 
-    _createPrintingPreviewControllerBinding(vm, printingPreviewController) {
-        return Binding.for(vm, printingPreviewController)
-            .syncToRight("enablePrintPreview", "drawPrintPreview", (enablePrintPreview) => {
-                if (enablePrintPreview && vm.scaleEnabled) {
-                    return true;
-                } else {
-                    return false;
-                }
-            })
-            .syncToRight("scaleEnabled", "drawPrintPreview", (scaleEnabled) => {
-                if (scaleEnabled && vm.enablePrintPreview) {
-                    return true;
-                } else {
-                    return false;
-                }
-            });
+    _getTemplateOptions() {
+        return this._printingWidget?._esriWidget?.templateOptions;
     }
 
-    _createTemplateBinding(vm, templateOptions) {
-        return Binding.for(vm, templateOptions)
-            .syncAll("attributionEnabled", "author", "copyright", "dpi", "fileName", "forceFeatureAttributes",
-                "format", "height", "layout", "legendEnabled", "scale", "scaleEnabled", "title", "width");
+    _createTemplateOptionsBinding(vm, templateOptions) {
+        return Binding.for(vm, templateOptions).syncAll(
+            "attributionEnabled",
+            "author",
+            "copyright",
+            "dpi",
+            "fileName",
+            "forceFeatureAttributes",
+            "format",
+            "height",
+            "layout",
+            "legendEnabled",
+            "scale",
+            "scaleEnabled",
+            "title",
+            "width"
+        );
+    }
+
+    _ensureTemplateOptionsBinding(vm = this.vm) {
+        const templateOptions = this._getTemplateOptions();
+        if (!templateOptions || !vm) {
+            return templateOptions;
+        }
+        if (this.templateOptionsBinding && templateOptions === this._templateOptions) {
+            return templateOptions;
+        }
+
+        this.templateOptionsBinding?.disable();
+        this.templateOptionsBinding?.unbind();
+        this._templateOptions = templateOptions;
+        this.templateOptionsBinding = this._createTemplateOptionsBinding(vm, templateOptions);
+        return templateOptions;
     }
 
     _setTemplatesInfos(templatesInfo) {
