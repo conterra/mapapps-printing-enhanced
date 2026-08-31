@@ -26,6 +26,7 @@ module.exports = {
             print: "Print",
             layoutTab: "Settings",
             mapOnlyTab: "Map Only",
+            layout: "Layout",
             format: "Format",
             title: "Title",
             titlePlaceholder: "Print title",
@@ -50,6 +51,7 @@ module.exports = {
             printResultAvailable: ": print result is available",
             noPrintResults: "No print results",
             errors: {
+                error: "Error during printing: ",
                 unknown: "Printing: An unknown error occurred!",
                 code403: "Printing: The configured printing service URL has to be in your proxy whitelist!",
                 code404: "Printing: The printing service could not be resolved for the configured URL!"

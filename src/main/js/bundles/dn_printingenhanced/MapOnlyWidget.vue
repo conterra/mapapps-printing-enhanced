@@ -318,7 +318,7 @@
                     return this.width;
                 },
                 set: function (width) {
-                    this.$emit('update:width', width);
+                    this.$emit('update:width', parseInt(width));
                 }
             },
             heightValue: {
@@ -326,7 +326,7 @@
                     return this.height;
                 },
                 set: function (height) {
-                    this.$emit('update:height', height);
+                    this.$emit('update:height', parseInt(height));
                 }
             },
             scaleValue: {
@@ -334,7 +334,7 @@
                     return this.scale;
                 },
                 set: function (scale) {
-                    this.$emit('update:scale', scale);
+                    this.$emit('update:scale', parseInt(scale));
                 }
             },
             scaleEnabledValue: {
