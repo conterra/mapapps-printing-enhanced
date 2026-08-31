@@ -70,7 +70,9 @@ module.exports = {
             medium: "Medium",
             high: "High",
             graphicsLayerTitle: "Printing Preview",
-            helperTextScaleEnabled: "Print preview can only be displayed if a scale is set."
+            helperTextScaleEnabled: "Print preview can only be displayed if a scale is set.",
+            portraitLabel: "Portrait",
+            landscapeLabel: "Landscape"
         }
     },
     de: true

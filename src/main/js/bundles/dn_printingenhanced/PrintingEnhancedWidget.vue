@@ -27,7 +27,7 @@
         class="pa-0 fullHeight printing-enhanced-container"
     >
         <v-tabs
-            v-model="activeTab"
+            v-model="activeTabId"
             slider-color="primary"
             height="34"
             centered
@@ -69,6 +69,11 @@
                     :enable-print-preview.sync="enablePrintPreview"
                     :visible-ui-elements="visibleUiElements"
                     :current-map-scale="currentMapScale"
+                    :page-print-size.sync="pagePrintSize"
+                    :page-print-size-values="pagePrintSizeValues"
+                    :page-print-orientation.sync="pagePrintOrientation"
+                    :page-print-orientation-values="pagePrintOrientationValues"
+                    :map-only-layout-name="mapOnlyLayoutName"
                     @resetScale="$emit('resetScale')"
                 />
             </v-tab-item>
@@ -100,7 +105,7 @@
             </v-tab-item>
         </v-tabs>
         <v-container
-            v-if="activeTab!==2"
+            v-if="activeTabId!==2"
             grid-list-md
             fluid
             class="pa-0 px-2 pt-2 printing-button-container"
@@ -162,6 +167,26 @@
             visibleUiElements: {
                 type: Object,
                 default: () => {}
+            },
+            pagePrintSize: {
+                type: String,
+                default: "a4"
+            },
+            pagePrintSizeValues: {
+                type: Array,
+                default: () => []
+            },
+            pagePrintOrientation: {
+                type: String,
+                default: "portrait"
+            },
+            pagePrintOrientationValues: {
+                type: Array,
+                default: () => []
+            },
+            mapOnlyLayoutName: {
+                type: String,
+                default: () => ""
             }
         },
         data() {
@@ -180,31 +205,32 @@
                 title: "",
                 width: 800,
                 enablePrintPreview: true,
-                activeTab: 0,
+                activeTabId: 0,
                 currentMapScale: 0,
                 exportedLinks: [],
                 error: ""
             };
         },
         watch: {
-            activeTab: function(tab) {
-                if (tab === 0) {
+            activeTabId: function (activeTabId) {
+                if (activeTabId === 0) {
                     if (this.lastLayout) {
                         this.layout = this.lastLayout;
                     }
-                } else if (tab === 1) {
-                    if (this.layout !== "map-only") {
+                } else if (activeTabId === 1) {
+                    if (this.layout !== this.mapOnlyLayoutName) {
                         this.lastLayout = this.layout;
                     }
-                    this.layout = "map-only";
+                    this.layout = this.mapOnlyLayoutName;
                 }
+                this.$emit("activate-tab-id-changed", activeTabId);
             }
         },
         mounted: function () {
-            if (this.layout === "map-only") {
-                this.activeTab = 1;
+            if (this.layout === this.mapOnlyLayoutName) {
+                this.activeTabId = 1;
             } else {
-                this.activeTab = 0;
+                this.activeTabId = 0;
             }
             this.$emit('startup');
         },
@@ -214,7 +240,7 @@
             },
             print: function () {
                 this.$emit('print', {});
-                this.activeTab = 2;
+                this.activeTabId = 2;
             }
         }
     };

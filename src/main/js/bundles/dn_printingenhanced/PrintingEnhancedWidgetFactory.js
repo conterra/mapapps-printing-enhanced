@@ -48,7 +48,7 @@ export default class PrintingEnhancedWidgetFactory {
                 const format = liveTemplateOptions?.format || vm.format || "pdf";
                 // "Nur Karte" tab uses fileName; other tabs use title
                 const baseName =
-                    vm.activeTab === 1
+                    vm.activeTabId === 1
                         ? liveTemplateOptions?.fileName ||
                           liveTemplateOptions?.title ||
                           item.formattedName
@@ -154,6 +154,9 @@ export default class PrintingEnhancedWidgetFactory {
 
         vm.i18n = this._i18n.get().ui;
         vm.exportedLinks = [];
+        // Deriving the layout from page size/orientation is opt-in: apps that don't set
+        // deriveLayoutFromPageSize keep the original layout dropdown and manual selection.
+        const deriveLayoutFromPageSize = !!properties.deriveLayoutFromPageSize;
         const defaultVisibleUiElements = {
             "layoutTab": true,
             "mapOnlyTab": false,
@@ -163,7 +166,8 @@ export default class PrintingEnhancedWidgetFactory {
             "format": true,
             "widthAndHeight": true,
             "dpi": true,
-            "layout": true,
+            "layout": !deriveLayoutFromPageSize,
+            "pageSizeOrientation": deriveLayoutFromPageSize,
             "printPreviewCheckbox": false,
             "scaleEnabled": false,
             "scale": true,
@@ -175,15 +179,97 @@ export default class PrintingEnhancedWidgetFactory {
         vm.dpiValues = properties.dpiValues;
         vm.scaleValues = properties.scaleValues;
         vm.enablePrintPreview = properties.enablePrintPreview;
+        vm.pagePrintOrientationValues = properties.printOrientations;
+        vm.pagePrintSizeValues = properties.printSizes;
+        vm.mapOnlyLayoutName = properties.layoutNames.mapOnly;
+
+        // Watch page size/orientation to update layout name and redraw print preview
+        vm.$watch("pagePrintOrientation", () => {
+            const templateOptions = this._getTemplateOptions();
+            if (!templateOptions) {
+                return;
+            }
+            this._setLayoutName(vm, templateOptions, properties);
+            this._printingPreviewController._handleDrawTemplateDimensions(true);
+        });
+        vm.$watch("pagePrintSize", () => {
+            const templateOptions = this._getTemplateOptions();
+            if (!templateOptions) {
+                return;
+            }
+            this._setLayoutName(vm, templateOptions, properties);
+            this._printingPreviewController._handleDrawTemplateDimensions(true);
+        });
+
+        // Tab change handler
+        vm.$on("activate-tab-id-changed", (activeTabId) => {
+            const templateOptions = this._getTemplateOptions();
+            if (!templateOptions) {
+                this._lastActiveTabId = activeTabId;
+                return;
+            }
+            if (activeTabId === 0 || activeTabId === 1) {
+                this._setLayoutName(vm, templateOptions, properties);
+            }
+            this._lastActiveTabId = activeTabId;
+        });
 
         // listen to view model methods
         vm.$on("print", () => {
+            const templateOptions = this._getTemplateOptions();
+            if (!templateOptions) {
+                return;
+            }
+            // Ensure layout is always set before printing
+            this._setLayoutName(vm, templateOptions, properties);
             esriPrintWidget._handlePrintMap();
         });
 
         vm.$on("resetScale", () => {
             esriPrintWidget._resetToCurrentScale();
         });
+
+        this._initDefaultValues(vm, this._getTemplateOptions(), properties);
+    }
+
+    _setLayoutName(vm, templateOptions, enhancedProperties) {
+        if (vm.activeTabId === 1) {
+            templateOptions.layout = enhancedProperties.layoutNames.mapOnly;
+            return;
+        }
+
+        if (enhancedProperties.deriveLayoutFromPageSize) {
+            const layoutNames = enhancedProperties.layoutNames;
+            let layoutName = layoutNames[vm.pagePrintSize + "_" + vm.pagePrintOrientation];
+            if (!layoutName) {
+                console.error(
+                    "could not find layoutName for " +
+                        vm.pagePrintSize +
+                        "_" +
+                        vm.pagePrintOrientation
+                );
+                layoutName = "";
+            }
+            templateOptions.layout = layoutName;
+        }
+    }
+
+    _initDefaultValues(vm, templateOptions, enhancedProperties) {
+        const defaultPageSize = enhancedProperties.printSizes.filter(
+            (size) => size.isDefault === true
+        );
+        if (defaultPageSize && defaultPageSize.length > 0) {
+            vm.pagePrintSize = defaultPageSize[0].value;
+        }
+        const defaultPagePrintOrientation = enhancedProperties.printOrientations.filter(
+            (orientation) => orientation.isDefault === true
+        );
+        if (defaultPagePrintOrientation && defaultPagePrintOrientation.length > 0) {
+            vm.pagePrintOrientation = defaultPagePrintOrientation[0].value;
+        }
+        if (templateOptions) {
+            this._setLayoutName(vm, templateOptions, enhancedProperties);
+        }
     }
 
     _syncViewModelWithCurrentMapScale(vm, mapView) {
