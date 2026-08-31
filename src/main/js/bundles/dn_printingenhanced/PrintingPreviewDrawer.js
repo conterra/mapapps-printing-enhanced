@@ -28,12 +28,9 @@ const _differenceGraphic = Symbol("_differenceGraphic");
 const _graphicsLayer = Symbol("_graphicsLayer");
 const _sketchViewModel = Symbol("_sketchViewModel");
 
-
 let _graphicsLayerWatcher;
 let _rotation;
 export default class PrintingPreviewDrawer {
-
-
     activate() {
         const properties = this._printingEnhancedProperties;
         const mapWidgetModel = this._mapWidgetModel;

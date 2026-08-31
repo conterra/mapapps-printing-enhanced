@@ -30,7 +30,6 @@ const _lastPopupState = Symbol("_lastPopupState");
 const _view = Symbol("_view");
 
 export default declare({
-
     drawPrintPreview: false,
 
     activate() {
@@ -270,5 +269,4 @@ export default declare({
             }
         };
     }
-
 });
