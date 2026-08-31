@@ -209,7 +209,7 @@
             },
             "PrintingMapSeriesPreviewController": {
                 "selectionLayers": {
-                    "layerIds": ["koelnPrecincts", "koelnBoroughs", "koelnDistricts"]
+                    "layerIds": ["rhineCenterline", "koelnPrecincts", "koelnBoroughs", "koelnDistricts"]
                 }
             },
             "PrintingMapSeriesPreviewDrawer": {
@@ -581,6 +581,25 @@
                                     }
                                 }
                             ]
+                        },
+                        {
+                            "id": "rhineCenterline",
+                            "title": "${map.rhine.title}",
+                            "url": "resource('${app}:/assets/rhine-centerline.geojson')",
+                            "type": "GEOJSON",
+                            "copyright": "OpenStreetMap contributors",
+                            "renderer": {
+                                "type": "simple",
+                                "symbol": {
+                                    "type": "simple-line",
+                                    "color": [0, 92, 175, 1],
+                                    "width": 3,
+                                    "style": "solid"
+                                }
+                            },
+                            "popupTemplate": {
+                                "title": "{name}"
+                            }
                         }
                     ]
                 },

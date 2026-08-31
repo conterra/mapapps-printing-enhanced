@@ -69,6 +69,9 @@ module.exports = {
                     text: "<b>{NAME}</b> is a {expression/carrier} place of event."
                 }
             },
+            rhine: {
+                title: "Rhine (centerline)"
+            },
             basemaps: {
                 gray: "Street Map (gray)",
                 streets: "Street Map",
