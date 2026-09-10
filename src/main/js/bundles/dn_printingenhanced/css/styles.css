@@ -59,6 +59,6 @@
     top: 0px !important;
 }
 
-.printOrientationRadionGroup {
-    margin-top: 2px !important;
+.ctAppRoot .vue-base.printing-enhanced-widget .printOrientationRadionGroup {
+    margin-top: 2px;
 }
