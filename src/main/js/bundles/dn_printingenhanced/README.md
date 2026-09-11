@@ -1,32 +1,8 @@
-# dn_printingenhanced (GISBOX fork)
-
-This Bundle extends the Printing-Enhanced-Bundle at version 2.3.3 to match the needs for GISBOX.
-
-In specific ArcGIS deployment constellations, `PrintViewModel.templatesInfo` can be unavailable, delayed, or incomplete during runtime.
-To keep the print pipeline deterministic, this bundle activates a fallback path that reads print service capabilities (`Format`, `Layout_Template`) directly and builds `PrintTemplate` payloads from `templateOptions`.
-
-## Migration Notes
-
-This fork no longer relies on the legacy direct printing workflow that was previously built around older `PrintViewModel` behavior.
-With the newer upstream/API behavior, parts of the print state must be derived explicitly inside this bundle.
-
-In particular, this bundle now:
-
-- derives layout names from page size and orientation instead of exposing direct layout selection,
-- reads print service metadata directly and patches `toPrintTemplate()` when `PrintViewModel.templatesInfo` is not reliably available at runtime.
-
-These parts are intentional fork-specific migration logic and should be reviewed carefully during upstream updates.
-
-The following things have been changed:
-
-- The user can choose the page-size (A4, A3) and the page-layout (Portrait or Landscape) directly with radio-buttons.
-- The layout-template does not need to be chosen by the user anymore. The correct layout-name is automatically determined by the chosen parameters:
-  Page-Size, Page-Layout. It has the following Pattern: `<PageSize>_<PageOrientation>`
-- Default Values can be configured for Page-Size and Page-Layout.
-
 # dn_printingenhanced
 
 The Printing Enhanced Bundle extends the Printing bundle by further capabilities.
+
+Instead of letting the user pick a layout template directly, the widget can optionally let the user choose a page size (e.g. A4, A3) and orientation (Portrait/Landscape) with radio buttons, and derive the matching layout template automatically (see `deriveLayoutFromPageSize` below).
 
 ## Usage
 
@@ -79,11 +55,43 @@ To make the functions of this bundle available to the user, the following tool c
             "legendEnabled": false,
             "attributionEnabled": false
         },
+        "deriveLayoutFromPageSize": false,
         "enablePrintPreview": true,
         "enablePrintPreviewMovement": true,
         "showDpiSelect": true,
         "layoutTemplatesInfoTaskName": "Get Layout Templates Info Task",
         "defaultPageUnit": "CENTIMETER",
+        "printSizes": [
+            {
+                "value": "a4",
+                "text": "A4",
+                "isDefault": true
+            },
+            {
+                "value": "a3",
+                "text": "A3",
+                "isDefault": false
+            }
+        ],
+        "printOrientations": [
+            {
+                "value": "portrait",
+                "text": "${ui.portraitLabel}",
+                "isDefault": true
+            },
+            {
+                "value": "landscape",
+                "text": "${ui.landscapeLabel}",
+                "isDefault": false
+            }
+        ],
+        "layoutNames": {
+            "a4_portrait": "A4_hoch",
+            "a4_landscape": "A4_quer",
+            "a3_portrait": "A3_hoch",
+            "a3_landscape": "A3_quer",
+            "mapOnly": "MAP_ONLY"
+        },
         "dpiValues": [
             {
                 "value": 96,
@@ -195,8 +203,12 @@ To make the functions of this bundle available to the user, the following tool c
 | visibleUiElements           | Object             |                                |                                  | Controls visibility of UI elements.                                                                                                                                                                                                                                             |
 | enablePrintPreview          | Boolean            | `true` &#124; `false`          | `true`                           | Default value for the print preview.                                                                                                                                                                                                                                            |
 | enablePrintPreviewMovement  | Boolean            | `true` &#124; `false`          | `true`                           | Allows the user to edit the print preview in map.                                                                                                                                                                                                                               |
+| deriveLayoutFromPageSize    | Boolean            | `true` &#124; `false`          | `false`                          | If `true`, the layout dropdown is replaced by page-size and orientation radio buttons (see `printSizes`, `printOrientations`, `layoutNames`), and the matching layout template is selected automatically. If `false`, the original layout dropdown is used.                    |
 | layoutTemplatesInfoTaskName | String             |                                | `Get Layout Templates Info Task` | Layout templates task name.                                                                                                                                                                                                                                                     |
 | defaultPageUnit             | String             | `MILLIMETER, CENTIMETER, INCH` | `CENTIMETER`                     | Default template unit (ArcGIS Server < 10.6).                                                                                                                                                                                                                                   |
+| printSizes                  | Array              |                                | `[]`                             | Page sizes offered when `deriveLayoutFromPageSize` is `true`. Each entry has the form `{"value": <id>, "text": <GUI label>, "isDefault": <boolean>}`; the entry with `isDefault: true` is selected at startup.                                                                  |
+| printOrientations           | Array              |                                | `[]`                             | Page orientations offered when `deriveLayoutFromPageSize` is `true`, in the same form as `printSizes`.                                                                                                                                                                          |
+| layoutNames                 | Object             |                                | `{}`                             | Maps a page-size/orientation combination to the name of the matching print layout template. The key is `<printSizes value>_<printOrientations value>`; one entry is required for every combination of `printSizes` and `printOrientations`.                                   |
 | dpiValues                   | Array              |                                | `[]`                             | Available dpi values.                                                                                                                                                                                                                                                           |
 | scaleValues                 | Array              |                                | `[]`                             | Available scale values. If the array is filled, a select box will be available in the UI instead of a text field. Each entry in the array is of the type `{"value": <scaleValue>,"text": <Label in the select box>}`. If `scale` is `-1`, the current scale of the map is used. |
 | allowedFormats              | String or String[] |                                | `all`                            | Specify the print output file format(s) that the user can select based on the options available from the print service. See: https://developers.arcgis.com/javascript/latest/api-reference/esri-widgets-Print.html#allowedFormats                                               |
@@ -258,60 +270,6 @@ To filter your formats and layouts please use their entire ids as follows:
             "A4_Quer"
         ]
         ...
-    }
-}
-```
-
-### dn_printingenhanced GISBOX Configuration
-
-The _url_ of the print service can be configured on the "printing" bundle. This bundle injects the configuration of the esri printing widget.
-
-The configuration of the original dn_printingenhanced-bundle (see above) apply, except "defaultTemplate" which has been removed.
-The following configuration options have been added:
-
-- printSizes ("text" refers to the GUI-Label)
-- printOrientations
-    - "isDefault = true" to be chosen at startup.
-
-- layoutNames are the names of the printing-templates. For each combination of the values of the printSizes-entries and the values of the printOrientations there must be an entry in the layoutNames. The key is the printSizes-value plus a dash plus the printOrientations-value, followed by the value which is the name of the printing-template.
-
-```json
-"dn_printingenhanced": {
-    "Config": {
-
-        ...
-
-        "printSizes": [
-            {
-                "value": "a4",
-                "text": "A4",
-                "isDefault": false
-            },
-            {
-                "value": "a3",
-                "text": "A3",
-                "isDefault": true
-            }
-        ],
-        "printOrientations": [
-            {
-                "value": "portrait",
-                "text": "${ui.portraitLabel}",
-                "isDefault": true
-            },
-            {
-                "value": "landscape",
-                "text": "${ui.landscapeLabel}",
-                "isDefault": false
-            }
-        ],
-        "layoutNames": {
-            "a4_portrait": "A4_hoch",
-            "a4_landscape": "A4_quer",
-            "a3_portrait": "A3_hoch",
-            "a3_landscape": "A3_quer",
-            "mapOnly": "MAP_ONLY"
-        }
     }
 }
 ```
