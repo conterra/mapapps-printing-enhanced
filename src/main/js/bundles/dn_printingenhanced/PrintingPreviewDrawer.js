@@ -108,7 +108,7 @@ export default class PrintingPreviewDrawer {
         // get templateinfo
         const templateInfos = printInfos.templateInfos;
         const layout = templateOptions.layout;
-        if (!layout || layout && layout === "map-only") {
+        if (!layout || (layout && layout === this._printingEnhancedProperties.layoutNames.mapOnly)) {
             const resolution = geometry.calcPixelResolutionAtScale(printScale, spatialReference, dpi);
             templateWidth = templateOptions.width;
             templateHeight = templateOptions.height;

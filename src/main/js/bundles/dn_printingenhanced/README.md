@@ -2,6 +2,8 @@
 
 The Printing Enhanced Bundle extends the Printing bundle by further capabilities.
 
+Instead of letting the user pick a layout template directly, the widget can optionally let the user choose a page size (e.g. A4, A3) and orientation (Portrait/Landscape) with radio buttons, and derive the matching layout template automatically (see `deriveLayoutFromPageSize` below).
+
 ## Usage
 
 1. First you need to add the bundle dn_printingenhanced to your app.
@@ -53,11 +55,43 @@ To make the functions of this bundle available to the user, the following tool c
             "legendEnabled": false,
             "attributionEnabled": false
         },
+        "deriveLayoutFromPageSize": false,
         "enablePrintPreview": true,
         "enablePrintPreviewMovement": true,
         "showDpiSelect": true,
         "layoutTemplatesInfoTaskName": "Get Layout Templates Info Task",
         "defaultPageUnit": "CENTIMETER",
+        "printSizes": [
+            {
+                "value": "a4",
+                "text": "A4",
+                "isDefault": true
+            },
+            {
+                "value": "a3",
+                "text": "A3",
+                "isDefault": false
+            }
+        ],
+        "printOrientations": [
+            {
+                "value": "portrait",
+                "text": "${ui.portraitLabel}",
+                "isDefault": true
+            },
+            {
+                "value": "landscape",
+                "text": "${ui.landscapeLabel}",
+                "isDefault": false
+            }
+        ],
+        "layoutNames": {
+            "a4_portrait": "A4_hoch",
+            "a4_landscape": "A4_quer",
+            "a3_portrait": "A3_hoch",
+            "a3_landscape": "A3_quer",
+            "mapOnly": "MAP_ONLY"
+        },
         "dpiValues": [
             {
                 "value": 96,
@@ -169,8 +203,12 @@ To make the functions of this bundle available to the user, the following tool c
 | visibleUiElements           | Object             |                                |                                  | Controls visibility of UI elements.                                                                                                                                                                                                                                             |
 | enablePrintPreview          | Boolean            | `true` &#124; `false`          | `true`                           | Default value for the print preview.                                                                                                                                                                                                                                            |
 | enablePrintPreviewMovement  | Boolean            | `true` &#124; `false`          | `true`                           | Allows the user to edit the print preview in map.                                                                                                                                                                                                                               |
+| deriveLayoutFromPageSize    | Boolean            | `true` &#124; `false`          | `false`                          | If `true`, the layout dropdown is replaced by page-size and orientation radio buttons (see `printSizes`, `printOrientations`, `layoutNames`), and the matching layout template is selected automatically. If `false`, the original layout dropdown is used.                    |
 | layoutTemplatesInfoTaskName | String             |                                | `Get Layout Templates Info Task` | Layout templates task name.                                                                                                                                                                                                                                                     |
 | defaultPageUnit             | String             | `MILLIMETER, CENTIMETER, INCH` | `CENTIMETER`                     | Default template unit (ArcGIS Server < 10.6).                                                                                                                                                                                                                                   |
+| printSizes                  | Array              |                                | `[]`                             | Page sizes offered when `deriveLayoutFromPageSize` is `true`. Each entry has the form `{"value": <id>, "text": <GUI label>, "isDefault": <boolean>}`; the entry with `isDefault: true` is selected at startup.                                                                  |
+| printOrientations           | Array              |                                | `[]`                             | Page orientations offered when `deriveLayoutFromPageSize` is `true`, in the same form as `printSizes`.                                                                                                                                                                          |
+| layoutNames                 | Object             |                                | `{}`                             | Maps a page-size/orientation combination to the name of the matching print layout template. The key is `<printSizes value>_<printOrientations value>`; one entry is required for every combination of `printSizes` and `printOrientations`.                                   |
 | dpiValues                   | Array              |                                | `[]`                             | Available dpi values.                                                                                                                                                                                                                                                           |
 | scaleValues                 | Array              |                                | `[]`                             | Available scale values. If the array is filled, a select box will be available in the UI instead of a text field. Each entry in the array is of the type `{"value": <scaleValue>,"text": <Label in the select box>}`. If `scale` is `-1`, the current scale of the map is used. |
 | allowedFormats              | String or String[] |                                | `all`                            | Specify the print output file format(s) that the user can select based on the options available from the print service. See: https://developers.arcgis.com/javascript/latest/api-reference/esri-widgets-Print.html#allowedFormats                                               |

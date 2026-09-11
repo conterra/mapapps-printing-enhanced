@@ -63,7 +63,6 @@
                     "format": true,
                     "widthAndHeight": true,
                     "dpi": true,
-                    "layout": true,
                     "printPreviewCheckbox": false,
                     "scaleEnabled": false,
                     "scale": true,
@@ -71,6 +70,7 @@
                     "legendEnabled": false,
                     "attributionEnabled": false
                 },
+                "deriveLayoutFromPageSize": true,
                 "enablePrintPreview": true,
                 "enablePrintPreviewMovement": true,
                 "layoutTemplatesInfoTaskName": "Get%20Layout%20Templates%20Info%20Task",
