@@ -69,21 +69,19 @@ export default declare({
                 }
                 const customTextElements = printTemplate.layoutOptions.customTextElements;
                 properties.customTextElements.forEach((element) => {
-                    if (Object.prototype.hasOwnProperty.call(element, "elementFieldName")) {
-                        this._customTextElements?.forEach(elementWithValue => {
-                            if (Object.prototype.hasOwnProperty.call(elementWithValue, element.elementFieldName)) {
-                                customTextElements.push(elementWithValue);
-                            }
-                        });
-                    } else {
-                        if (this._user) {
-                            Object.getOwnPropertyNames(element).forEach(propName => {
-                                element[propName] = replace(element[propName], this._user);
-                            });
-                        }
-                        customTextElements.push(element);
+                    if ("elementFieldName" in element) {
+                        return;
                     }
+                    if (this._user) {
+                        Object.getOwnPropertyNames(element).forEach(propName => {
+                            element[propName] = replace(element[propName], this._user);
+                        });
+                    }
+                    customTextElements.push(element);
                 });
+                if (this._customTextElements?.length) {
+                    customTextElements.push(...this._customTextElements);
+                }
             }
             // set sketching properties to view
             if (printTemplate.scalePreserved) {

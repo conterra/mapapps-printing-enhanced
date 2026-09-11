@@ -187,7 +187,7 @@ export default class PrintingEnhancedWidgetFactory {
         vm.pagePrintOrientationValues = properties.printOrientations;
         vm.pagePrintSizeValues = properties.printSizes;
         const interactiveCustomTextElements = properties.customTextElements.filter(
-            (element) => Object.prototype.hasOwnProperty.call(element, "elementFieldName")
+            (element) => "elementFieldName" in element
         );
         vm.customTextElements = CustomTextElementsMapper.addValuePropertyToTextElements(
             interactiveCustomTextElements
