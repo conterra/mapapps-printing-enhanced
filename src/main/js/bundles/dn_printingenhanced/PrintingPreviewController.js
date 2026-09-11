@@ -68,26 +68,22 @@ export default declare({
                     printTemplate.layoutOptions.customTextElements = [];
                 }
                 const customTextElements = printTemplate.layoutOptions.customTextElements;
-                if (this._user) {
-                    properties.customTextElements.forEach((element) => {
-                        Object.getOwnPropertyNames(element).forEach(propName => {
-                            element[propName] = replace(element[propName], this._user);
-                        });
+                properties.customTextElements.forEach((element) => {
+                    if (Object.prototype.hasOwnProperty.call(element, "elementFieldName")) {
                         this._customTextElements?.forEach(elementWithValue => {
                             if (Object.prototype.hasOwnProperty.call(elementWithValue, element.elementFieldName)) {
                                 customTextElements.push(elementWithValue);
                             }
                         });
-                    });
-                } else {
-                    properties.customTextElements.forEach((element) => {
-                        this._customTextElements?.forEach(elementWithValue => {
-                            if (Object.prototype.hasOwnProperty.call(elementWithValue, element.elementFieldName)) {
-                                customTextElements.push(elementWithValue);
-                            }
-                        });
-                    });
-                }
+                    } else {
+                        if (this._user) {
+                            Object.getOwnPropertyNames(element).forEach(propName => {
+                                element[propName] = replace(element[propName], this._user);
+                            });
+                        }
+                        customTextElements.push(element);
+                    }
+                });
             }
             // set sketching properties to view
             if (printTemplate.scalePreserved) {
