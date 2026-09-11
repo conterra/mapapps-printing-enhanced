@@ -73,8 +73,8 @@ module.exports = {
             helperTextScaleEnabled: "Print preview can only be displayed if a scale is set.",
             portraitLabel: "Portrait",
             landscapeLabel: "Landscape",
-            contentLabel: "Text unter 'Inhalt'",
-            editLabel: "Text unter 'Bearbeitung'"
+            contentLabel: "Text for 'Content'",
+            editLabel: "Text for 'Edit'"
         }
     },
     de: true
