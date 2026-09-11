@@ -87,7 +87,7 @@
                         :name="printSize.value"
                         :label="printSize.text"
                         :value="printSize.value"
-                        class="primary--text"
+                        color="primary"
                     />
                 </v-radio-group>
             </v-flex>
@@ -107,6 +107,7 @@
                         :name="printOrientation.value"
                         :label="printOrientation.text"
                         :value="printOrientation.value"
+                        color="primary"
                     />
                 </v-radio-group>
             </v-flex>
