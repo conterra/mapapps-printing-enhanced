@@ -241,13 +241,11 @@
                 md12
             >
                 <v-text-field
-                    :error="!customTextElement.value || customTextElement.value.length === 0"
-                    :label="customTextElement.title"
-                    :placeholder="customTextElement.title"
                     v-model="customTextElement.value"
-                    @change="triggerCustomTextElementsUpdate()"
+                    :label="customTextElement.title"
                     hide-details
-                ></v-text-field>
+                    @change="triggerCustomTextElementsUpdate()"
+                />
             </v-flex>
         </v-layout>
     </v-container>

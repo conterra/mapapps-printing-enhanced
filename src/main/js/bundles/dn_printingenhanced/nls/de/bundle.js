@@ -72,7 +72,7 @@ module.exports = {
         helperTextScaleEnabled: "Der Druckrahmen kann nur angezeigt werden, wenn ein Maßstab festgelegt ist.",
         portraitLabel: "Hochformat",
         landscapeLabel: "Querformat",
-        contentLabel: "Text unter 'Inhalt'",
-        editLabel: "Text unter 'Bearbeitung'"
+        contentLabel: "Inhalt-Text",
+        editLabel: "Bearbeitung-Text"
     }
 };
