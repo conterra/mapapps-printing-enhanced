@@ -260,6 +260,18 @@
                     ></v-radio>
                 </v-radio-group>
             </v-flex>
+            <v-flex
+                v-for="(customTextElement, index) in customTextElementsArray"
+                :key="index"
+                md12
+            >
+                <v-text-field
+                    v-model="customTextElement.value"
+                    :label="customTextElement.title"
+                    hide-details
+                    @change="triggerCustomTextElementsUpdate()"
+                />
+            </v-flex>
         </v-layout>
     </v-container>
 </template>
@@ -356,6 +368,10 @@
                 type: Array,
                 default: () => []
             },
+            customTextElements: {
+                type: Array,
+                default: () => []
+            },
             mapOnlyLayoutName: {
                 type: String,
                 default: () => ""
@@ -368,8 +384,14 @@
         data() {
             return {
                 advancedOptions: [0],
-                showInfo: false
+                showInfo: false,
+                customTextElementsArray: this.customTextElements
             };
+        },
+        methods: {
+            triggerCustomTextElementsUpdate() {
+                this.$emit("trigger-custom-text-elements-update", this.customTextElementsArray);
+            }
         },
         computed: {
             authorValue: {

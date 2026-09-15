@@ -198,6 +198,14 @@
                     },
                     {
                         "testString": "testString"
+                    },
+                    {
+                        "elementFieldName": "contentText",
+                        "title": "${ui.contentLabel}"
+                    },
+                    {
+                        "elementFieldName": "editText",
+                        "title": "${ui.editLabel}"
                     }
                 ]
             }
