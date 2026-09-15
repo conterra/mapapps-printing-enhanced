@@ -213,6 +213,18 @@
                     class="pa-0 ma-0"
                 />
             </v-flex>
+            <v-flex
+                v-if="showMapOnlyLegendCheckbox"
+                md12
+            >
+                <v-checkbox
+                    v-model="mapOnlyLegendEnabledValue"
+                    :label="i18n.legendOwnPage"
+                    color="primary"
+                    hide-details
+                    class="pa-0 ma-0"
+                />
+            </v-flex>
         </v-layout>
     </v-container>
 </template>
@@ -280,6 +292,10 @@
             visibleUiElements: {
                 type: Object,
                 default: () => {}
+            },
+            mapOnlyLegendEnabled: {
+                type: Boolean,
+                default: true
             }
         },
         data() {
@@ -359,6 +375,23 @@
                 },
                 set: function (fileName) {
                     this.$emit('update:file-name', fileName);
+                }
+            },
+            mapOnlyLegendEnabledValue: {
+                get: function () {
+                    return this.mapOnlyLegendEnabled;
+                },
+                set: function (mapOnlyLegendEnabled) {
+                    this.$emit('update:map-only-legend-enabled', mapOnlyLegendEnabled);
+                }
+            },
+            showMapOnlyLegendCheckbox: {
+                get: function () {
+                    return !!(
+                        this.visibleUiElements.legendEnabled &&
+                        this.visibleUiElements.legendOwnPage &&
+                        (this.visibleUiElements.integratedLegend || this.visibleUiElements.noLegend)
+                    );
                 }
             }
         },

@@ -58,7 +58,6 @@
                     :dpi-values="dpiValues"
                     :format.sync="format"
                     :layout.sync="layout"
-                    :legend-enabled.sync="legendEnabled"
                     :scale.sync="scale"
                     :scale-values="scaleValues"
                     :scale-enabled.sync="scaleEnabled"
@@ -75,6 +74,7 @@
                     :page-print-orientation-values="pagePrintOrientationValues"
                     :custom-text-elements="customTextElements"
                     :map-only-layout-name="mapOnlyLayoutName"
+                    :legend-value.sync="legendValue"
                     @resetScale="$emit('resetScale')"
                     v-on:trigger-custom-text-elements-update="
                         $emit('trigger-custom-text-elements-update', $event)
@@ -97,6 +97,7 @@
                     :scale-enabled.sync="scaleEnabled"
                     :enable-print-preview.sync="enablePrintPreview"
                     :visible-ui-elements="visibleUiElements"
+                    :map-only-legend-enabled.sync="mapOnlyLegendEnabled"
                     @resetScale="$emit('resetScale')"
                     @rotate="rotate"
                 />
@@ -207,13 +208,14 @@
                 format: "pdf",
                 height: 1100,
                 layout: "a3-portrait",
-                legendEnabled: true,
                 scale: 0,
                 scaleEnabled: false,
                 title: "",
                 width: 800,
                 enablePrintPreview: true,
                 activeTabId: 0,
+                legendValue: "integratedLegend",
+                mapOnlyLegendEnabled: true,
                 currentMapScale: 0,
                 exportedLinks: [],
                 error: ""

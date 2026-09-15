@@ -224,16 +224,41 @@
                 />
             </v-flex>
             <v-flex
-                v-if="visibleUiElements.legendEnabled"
+                v-if="visibleUiElements.legendEnabled && legendCheckboxMode"
                 md12
             >
                 <v-checkbox
-                    v-model="legendEnabledValue"
-                    :label="i18n.legendEnabled"
+                    v-model="legendCheckboxComp"
+                    :label="legendCheckboxTargetMode.label"
                     color="primary"
                     hide-details
                     class="pa-0 ma-0"
                 />
+            </v-flex>
+            <v-flex
+                v-else-if="visibleUiElements.legendEnabled && legendModeSelectable"
+                md12
+            >
+                <v-radio-group v-model="legendValueComp">
+                    <v-radio
+                        v-if="visibleUiElements.integratedLegend"
+                        key="integratedLegend"
+                        value="integratedLegend"
+                        :label="i18n.integratedLegend"
+                    ></v-radio>
+                    <v-radio
+                        v-if="visibleUiElements.legendOwnPage"
+                        key="legendOwnPage"
+                        value="legendOwnPage"
+                        :label="i18n.legendOwnPage"
+                    ></v-radio>
+                    <v-radio
+                        v-if="visibleUiElements.noLegend"
+                        key="noLegend"
+                        value="noLegend"
+                        :label="i18n.noLegend"
+                    ></v-radio>
+                </v-radio-group>
             </v-flex>
             <v-flex
                 v-for="(customTextElement, index) in customTextElementsArray"
@@ -290,10 +315,6 @@
             layout: {
                 type: String,
                 default: "a3-portrait"
-            },
-            legendEnabled: {
-                type: Boolean,
-                default: true
             },
             scale: {
                 type: Number,
@@ -354,6 +375,10 @@
             mapOnlyLayoutName: {
                 type: String,
                 default: () => ""
+            },
+            legendValue: {
+                type: String,
+                default: "noLegend"
             }
         },
         data() {
@@ -407,14 +432,6 @@
                 },
                 set: function (layout) {
                     this.$emit("update:layout", layout);
-                }
-            },
-            legendEnabledValue: {
-                get: function () {
-                    return this.legendEnabled;
-                },
-                set: function (legendEnabled) {
-                    this.$emit("update:legend-enabled", legendEnabled);
                 }
             },
             scaleValue: {
@@ -484,6 +501,71 @@
                 },
                 set: function (pagePrintOrientationValue) {
                     this.$emit("update:page-print-orientation", pagePrintOrientationValue);
+                }
+            },
+            legendValueComp: {
+                get: function () {
+                    if (this.visibleLegendModes.some((mode) => mode.value === this.legendValue)) {
+                        return this.legendValue;
+                    }
+                    const fallback =
+                        this.visibleLegendModes.find((mode) => mode.value === "noLegend") ||
+                        this.visibleLegendModes[0];
+                    return fallback ? fallback.value : "noLegend";
+                },
+                set: function (legendValue) {
+                    this.$emit("update:legend-value", legendValue);
+                }
+            },
+            visibleLegendModes: {
+                get: function () {
+                    return [
+                        {
+                            value: "integratedLegend",
+                            label: this.i18n.integratedLegend,
+                            visible: this.visibleUiElements.integratedLegend
+                        },
+                        {
+                            value: "legendOwnPage",
+                            label: this.i18n.legendOwnPage,
+                            visible: this.visibleUiElements.legendOwnPage
+                        },
+                        {
+                            value: "noLegend",
+                            label: this.i18n.noLegend,
+                            visible: this.visibleUiElements.noLegend
+                        }
+                    ].filter((mode) => mode.visible);
+                }
+            },
+            legendModeSelectable: {
+                get: function () {
+                    // With 0 or 1 modes configured there is no real choice: no UI is shown and
+                    // that mode (or "noLegend" if none is configured) is used automatically.
+                    return this.visibleLegendModes.length >= 2;
+                }
+            },
+            legendCheckboxMode: {
+                get: function () {
+                    return (
+                        this.visibleLegendModes.length === 2 &&
+                        this.visibleLegendModes.some((mode) => mode.value === "noLegend")
+                    );
+                }
+            },
+            legendCheckboxTargetMode: {
+                get: function () {
+                    return this.visibleLegendModes.find((mode) => mode.value !== "noLegend");
+                }
+            },
+            legendCheckboxComp: {
+                get: function () {
+                    return this.legendValueComp !== "noLegend";
+                },
+                set: function (checked) {
+                    this.legendValueComp = checked
+                        ? this.legendCheckboxTargetMode.value
+                        : "noLegend";
                 }
             }
         },

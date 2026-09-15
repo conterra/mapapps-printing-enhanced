@@ -53,7 +53,10 @@ To make the functions of this bundle available to the user, the following tool c
             "scale": true,
             "copyright": false,
             "legendEnabled": false,
-            "attributionEnabled": false
+            "attributionEnabled": false,
+            "integratedLegend": true,
+            "legendOwnPage": true,
+            "noLegend": true
         },
         "deriveLayoutFromPageSize": false,
         "enablePrintPreview": true,
@@ -61,6 +64,11 @@ To make the functions of this bundle available to the user, the following tool c
         "showDpiSelect": true,
         "layoutTemplatesInfoTaskName": "Get Layout Templates Info Task",
         "defaultPageUnit": "CENTIMETER",
+        "legend": {
+          "legendTitleAppendText": "${ui.legendTitleAppendText}",
+          "legendPrintRequestDelayInMs": 1000,
+          "legendTemplateOptionsRestoreDelayInMs": 300
+        },
         "printSizes": [
             {
                 "value": "a4",
@@ -90,6 +98,7 @@ To make the functions of this bundle available to the user, the following tool c
             "a4_landscape": "A4_quer",
             "a3_portrait": "A3_hoch",
             "a3_landscape": "A3_quer",
+            "legend": "A4_hoch_legende",
             "mapOnly": "MAP_ONLY"
         },
         "dpiValues": [
@@ -200,15 +209,16 @@ To make the functions of this bundle available to the user, the following tool c
 | Property                    | Type               | Possible Values                | Default                          | Description                                                                                                                                                                                                                                                                     |
 | --------------------------- | ------------------ | ------------------------------ | -------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | templateOptions             | Object             |                                |                                  | Esri Print Widget TemplateOptions:https://developers.arcgis.com/javascript/latest/api-reference/esri-widgets-Print-TemplateOptions.html                                                                                                                                         |
-| visibleUiElements           | Object             |                                |                                  | Controls visibility of UI elements.                                                                                                                                                                                                                                             |
+| visibleUiElements           | Object             |                                |                                  | Controls visibility of UI elements. `integratedLegend`, `legendOwnPage` and `noLegend` individually show/hide one of the three legend mode radio options (e.g. set `integratedLegend` to `false` to only offer `legendOwnPage`/`noLegend`).                                    |
 | enablePrintPreview          | Boolean            | `true` &#124; `false`          | `true`                           | Default value for the print preview.                                                                                                                                                                                                                                            |
 | enablePrintPreviewMovement  | Boolean            | `true` &#124; `false`          | `true`                           | Allows the user to edit the print preview in map.                                                                                                                                                                                                                               |
 | deriveLayoutFromPageSize    | Boolean            | `true` &#124; `false`          | `false`                          | If `true`, the layout dropdown is replaced by page-size and orientation radio buttons (see `printSizes`, `printOrientations`, `layoutNames`), and the matching layout template is selected automatically. If `false`, the original layout dropdown is used.                    |
 | layoutTemplatesInfoTaskName | String             |                                | `Get Layout Templates Info Task` | Layout templates task name.                                                                                                                                                                                                                                                     |
 | defaultPageUnit             | String             | `MILLIMETER, CENTIMETER, INCH` | `CENTIMETER`                     | Default template unit (ArcGIS Server < 10.6).                                                                                                                                                                                                                                   |
+| legend                      | Object             |                                |                                  | Configures the legend print mode, chosen among `noLegend`, `integratedLegend` (adds the legend to the map layout) and `legendOwnPage` (sends a second print request against the dedicated legend layout, see `layoutNames.legend`). `legendTitleAppendText` is appended to the legend print's title/file name so it doesn't collide with the map print in the results list. `legendPrintRequestDelayInMs`/`legendTemplateOptionsRestoreDelayInMs` tune the delay before sending the second request and before restoring the original template options afterwards; both are environment-dependent. |
 | printSizes                  | Array              |                                | `[]`                             | Page sizes offered when `deriveLayoutFromPageSize` is `true`. Each entry has the form `{"value": <id>, "text": <GUI label>, "isDefault": <boolean>}`; the entry with `isDefault: true` is selected at startup.                                                                  |
 | printOrientations           | Array              |                                | `[]`                             | Page orientations offered when `deriveLayoutFromPageSize` is `true`, in the same form as `printSizes`.                                                                                                                                                                          |
-| layoutNames                 | Object             |                                | `{}`                             | Maps a page-size/orientation combination to the name of the matching print layout template. The key is `<printSizes value>_<printOrientations value>`; one entry is required for every combination of `printSizes` and `printOrientations`.                                   |
+| layoutNames                 | Object             |                                | `{}`                             | Maps a page-size/orientation combination to the name of the matching print layout template. The key is `<printSizes value>_<printOrientations value>`; one entry is required for every combination of `printSizes` and `printOrientations`. Optionally, a `<combination>_integratedLegend` entry can be added to use a dedicated template when the `integratedLegend` legend mode is selected; when missing, the normal layout for that combination is used instead, with the legend toggled on via the print request.                                   |
 | dpiValues                   | Array              |                                | `[]`                             | Available dpi values.                                                                                                                                                                                                                                                           |
 | scaleValues                 | Array              |                                | `[]`                             | Available scale values. If the array is filled, a select box will be available in the UI instead of a text field. Each entry in the array is of the type `{"value": <scaleValue>,"text": <Label in the select box>}`. If `scale` is `-1`, the current scale of the map is used. |
 | allowedFormats              | String or String[] |                                | `all`                            | Specify the print output file format(s) that the user can select based on the options available from the print service. See: https://developers.arcgis.com/javascript/latest/api-reference/esri-widgets-Print.html#allowedFormats                                               |
