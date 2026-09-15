@@ -40,6 +40,7 @@ export default declare({
         const properties = this._printingEnhancedProperties._properties;
         this.drawPrintPreview = properties.enablePrintPreview && properties.scaleEnabled;
         this.esriPrintWidget = esriPrintWidget;
+        this._isDisabled = false;
 
         // get print infos
         const url = this[_printServiceUrl] = esriPrintWidget.printServiceUrl;
@@ -58,6 +59,8 @@ export default declare({
 
         // handle print preview before and after printing
         d_aspect.before(printViewModel, "print", (printTemplate) => {
+            if (this._isDisabled === true)
+                return;
             // show print preview
             this._printingPreviewDrawer.showGraphicsLayer(false);
 
@@ -103,6 +106,8 @@ export default declare({
         });
 
         d_aspect.after(printViewModel, "print", (promise) => {
+            if (this._isDisabled === true)
+                return promise;
             async(() => {
                 const view = printViewModel.view;
 
@@ -128,6 +133,19 @@ export default declare({
         this[_connect].disconnect();
         this[_observers].destroy();
         this[_lastPopupState]?.reset();
+    },
+
+    setDisabled(disabled) {
+        this._isDisabled = disabled;
+    },
+
+    isDisabled() {
+        return this._isDisabled;
+    },
+
+    removePreviewGraphic() {
+        this._printingPreviewDrawer.removeGraphicFromGraphicsLayer();
+        this._printingPreviewDrawer.resetGraphic();
     },
 
     setMapWidgetModel(mapWidgetModel) {
@@ -253,6 +271,7 @@ export default declare({
         const properties = this._printingEnhancedProperties._properties;
         async(async () => {
             if (
+                this._isDisabled !== true &&
                 ((this._printingToggleTool && this._printingToggleTool.active) ||
                     (this._printingEnhancedToggleTool &&
                         this._printingEnhancedToggleTool.active)) &&

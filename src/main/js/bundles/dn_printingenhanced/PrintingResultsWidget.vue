@@ -21,10 +21,55 @@
         fluid
         class="pa-2"
     >
+        <!-- Map Series Jobs -->
+        <v-list
+            v-if="reverseMapSeriesJobs.length"
+            dense
+        >
+            <v-subheader>
+                {{ i18n.mapSeriesSubHeader }}
+            </v-subheader>
+            <v-list-tile
+                v-for="(mapSeriesJob, index) in reverseMapSeriesJobs"
+                :key="mapSeriesJob.mapSeriesTitle + mapSeriesJob.fileFormat + index"
+                @click="saveJobAgain(mapSeriesJob)"
+            >
+                <v-list-tile-action>
+                    <v-progress-circular
+                        v-if="!isMapSeriesJobFinished(mapSeriesJob)"
+                        rotate="-90"
+                        size="32"
+                        :value="getPercentageCompleted(mapSeriesJob)"
+                        color="primary"
+                    >
+                        {{ getPercentageCompleted(mapSeriesJob) }}
+                    </v-progress-circular>
+                    <v-progress-circular
+                        v-else-if="
+                            isMapSeriesJobFinished(mapSeriesJob) &&
+                            !isMapSeriesJobDownloaded(mapSeriesJob)
+                        "
+                        size="22"
+                        indeterminate
+                        color="primary"
+                    />
+                    <v-icon v-else> cloud_download </v-icon>
+                </v-list-tile-action>
+                <v-list-tile-content>
+                    <!-- eslint-disable-next-line vue/no-v-text-v-html-on-component -->
+                    <v-list-tile-title v-text="mapSeriesJob.mapSeriesTitle" />
+                </v-list-tile-content>
+            </v-list-tile>
+            <v-divider v-if="reverseExportedLinks.length > 0" />
+        </v-list>
+        <!-- Single Print Results -->
         <v-list
             v-if="reverseExportedLinks.length"
             dense
         >
+            <v-subheader v-if="reverseMapSeriesJobs.length">
+                {{ i18n.singlePrintSubHeader }}
+            </v-subheader>
             <v-list-tile
                 v-for="exportedLink in reverseExportedLinks"
                 :key="exportedLink.id"
@@ -64,7 +109,7 @@
             </v-list-tile>
         </v-list>
         <v-alert
-            v-else
+            v-if="!reverseExportedLinks.length && !reverseMapSeriesJobs.length"
             :value="true"
             type="warning"
             outline
@@ -86,11 +131,40 @@
             exportedLinks: {
                 type: Array,
                 default: () => []
+            },
+            mapSeriesJobs: {
+                type: Array,
+                default: () => []
+            }
+        },
+        methods: {
+            isMapSeriesJobFinished(mapSeriesJob) {
+                return (
+                    mapSeriesJob.completedSinglePrintJobCount ===
+                    mapSeriesJob.totalSinglePrintJobCount
+                );
+            },
+            isMapSeriesJobDownloaded(mapSeriesJob) {
+                return mapSeriesJob.downloadFinished;
+            },
+            getPercentageCompleted(mapSeriesJob) {
+                return Math.floor(
+                    (mapSeriesJob.completedSinglePrintJobCount * 100) /
+                        mapSeriesJob.totalSinglePrintJobCount
+                );
+            },
+            saveJobAgain(mapSeriesJob) {
+                if (this.isMapSeriesJobDownloaded(mapSeriesJob)) {
+                    this.$emit("save-job-again", mapSeriesJob);
+                }
             }
         },
         computed: {
             reverseExportedLinks() {
                 return this.exportedLinks.slice().reverse();
+            },
+            reverseMapSeriesJobs() {
+                return this.mapSeriesJobs.slice().reverse();
             }
         }
     };

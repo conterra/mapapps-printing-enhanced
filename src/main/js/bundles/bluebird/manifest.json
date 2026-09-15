@@ -1,0 +1,43 @@
+{
+  "name": "bluebird",
+  "version": "2.5.0-SNAPSHOT",
+  "_original_version": "3.7.2",
+  "description": "External full featured promise library",
+  "main": "bluebird.min.js",
+  "i18n": [],
+  "dependencies": {
+  },
+  "keywords": [
+    "promise"
+  ],
+  "license": "MIT",
+  "authors": [
+    "Petka Antonov"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/petkaantonov/bluebird.git"
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

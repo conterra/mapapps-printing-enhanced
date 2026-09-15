@@ -27,6 +27,7 @@
         class="pa-0 fullHeight printing-enhanced-container"
     >
         <v-tabs
+            ref="v_tabs_printing"
             v-model="activeTabId"
             slider-color="primary"
             height="34"
@@ -39,15 +40,14 @@
             <v-tab v-show="visibleUiElements.mapOnlyTab">
                 {{ i18n.mapOnlyTab }}
             </v-tab>
-            <v-tab
-                v-if="!exportedLinks.length"
-            >
+            <v-tab v-show="visibleUiElements.mapSeriesTab">
+                {{ i18n.mapSeriesTab }}
+            </v-tab>
+            <v-tab v-show="!exportedLinks.length">
                 {{ i18n.printResults }}
             </v-tab>
-            <v-tab
-                v-else
-            >
-                {{ i18n.printResults }} ({{ exportedLinks.length }})
+            <v-tab v-show="exportedLinks.length">
+                {{ i18n.printResults }} ({{ exportedLinks.length + mapSeriesJobs.length }})
             </v-tab>
             <v-tab-item v-show="visibleUiElements.layoutTab">
                 <layout-widget
@@ -101,15 +101,63 @@
                     @rotate="rotate"
                 />
             </v-tab-item>
+            <v-tab-item v-show="visibleUiElements.mapSeriesTab">
+                <map-series-widget
+                    :i18n="i18n"
+                    :author.sync="author"
+                    :copyright.sync="copyright"
+                    :dpi.sync="dpi"
+                    :dpi-values="dpiValues"
+                    :format.sync="format"
+                    :page-print-size.sync="pagePrintSize"
+                    :page-print-size-values="pagePrintSizeValues"
+                    :page-print-orientation.sync="pagePrintOrientation"
+                    :page-print-orientation-values="pagePrintOrientationValues"
+                    :map-only-layout-name="mapOnlyLayoutName"
+                    :layout.sync="layout"
+                    :legend-enabled.sync="mapSeriesLegendEnabled"
+                    :scale.sync="scale"
+                    :scale-values="scaleValues"
+                    :min-scale-for-series="minScaleForSeries"
+                    :scale-enabled.sync="scaleEnabled"
+                    :title.sync="title"
+                    :format-list="formatList"
+                    :layout-list="layoutList"
+                    :visible-ui-elements="visibleUiElements"
+                    :mapSeriesExtentType="mapSeriesExtentType"
+                    :doNotPrintEmptyTiles.sync="doNotPrintEmptyTiles"
+                    :mapSeriesJobs="mapSeriesJobs"
+                    v-on:use-map-view-extent="$emit('use-map-view-extent')"
+                    v-on:use-geometry-selection="$emit('use-geometry-selection')"
+                    v-on:cancel-geometry-selection="$emit('cancel-geometry-selection')"
+                    v-on:use-rectangle-draw="$emit('use-rectangle-draw')"
+                    v-on:cancel-rectangle-draw="$emit('cancel-rectangle-draw')"
+                    v-on:activate-single-print-mode="$emit('activate-single-print-mode')"
+                    v-on:activate-series-print-mode="$emit('activate-series-print-mode')"
+                    v-on:set-scale-value-is-valid="scaleValueIsValidForPreview = $event"
+                    @resetScale="$emit('resetScale')"
+                    ref="mapSeriesWidget"
+                />
+            </v-tab-item>
             <v-tab-item>
                 <printing-results-widget
                     :i18n="i18n"
                     :exported-links="exportedLinks"
+                    :mapSeriesJobs="mapSeriesJobs"
+                    v-on:save-job-again="$emit('save-job-again', $event)"
+                />
+            </v-tab-item>
+            <v-tab-item>
+                <printing-results-widget
+                    :i18n="i18n"
+                    :exported-links="exportedLinks"
+                    :mapSeriesJobs="mapSeriesJobs"
+                    v-on:save-job-again="$emit('save-job-again', $event)"
                 />
             </v-tab-item>
         </v-tabs>
         <v-container
-            v-if="activeTabId!==2"
+            v-if="activeTabId === 0 || activeTabId === 1 || activeTabId === 2"
             grid-list-md
             fluid
             class="pa-0 px-2 pt-2 printing-button-container"
@@ -132,10 +180,12 @@
     import Bindable from "apprt-vue/mixins/Bindable";
     import LayoutWidget from "./LayoutWidget.vue";
     import MapOnlyWidget from "./MapOnlyWidget.vue";
+    import MapSeriesWidget from "./MapSeriesWidget.vue";
     import PrintingResultsWidget from "./PrintingResultsWidget.vue";
 
     export default {
         components: {
+            MapSeriesWidget,
             "layout-widget": LayoutWidget,
             "map-only-widget": MapOnlyWidget,
             "printing-results-widget": PrintingResultsWidget
@@ -171,6 +221,10 @@
             visibleUiElements: {
                 type: Object,
                 default: () => {}
+            },
+            minScaleForSeries: {
+                type: Number,
+                default: 1000
             },
             pagePrintSize: {
                 type: String,
@@ -214,14 +268,20 @@
                 width: 800,
                 enablePrintPreview: true,
                 activeTabId: 0,
+                mapSeriesLegendEnabled: true,
+                mapSeriesExtentSet: false,
+                doNotPrintEmptyTiles: false,
+                scaleValueIsValidForPreview: false,
                 currentMapScale: 0,
                 exportedLinks: [],
+                mapSeriesJobs: [],
+                mapSeriesExtentType: "",
                 error: ""
             };
         },
         watch: {
             activeTabId: function (activeTabId) {
-                if (activeTabId === 0) {
+                if (activeTabId === 0 || activeTabId === 2) {
                     if (this.lastLayout) {
                         this.layout = this.lastLayout;
                     }
@@ -231,7 +291,16 @@
                     }
                     this.layout = this.mapOnlyLayoutName;
                 }
+                if (activeTabId === 2) {
+                    this.$emit("activate-series-print-mode");
+                } else if (activeTabId === 0 || activeTabId === 1) {
+                    this.$emit("activate-single-print-mode");
+                }
+                this.$refs?.mapSeriesWidget?.deactivateAllTools();
                 this.$emit("activate-tab-id-changed", activeTabId);
+            },
+            doNotPrintEmptyTiles: function (value) {
+                this.$emit("do-not-print-empty-tiles-changed", value);
             }
         },
         mounted: function () {
@@ -247,8 +316,18 @@
                 [this.height, this.width] = [this.width, this.height];
             },
             print: function () {
-                this.$emit('print', {});
-                this.activeTabId = 2;
+                if (this.activeTabId === 2) {
+                    if (this.$refs?.mapSeriesWidget?.legendEnabledValue !== undefined) {
+                        this.mapSeriesLegendEnabled = this.$refs.mapSeriesWidget.legendEnabledValue;
+                    }
+                    this.$emit("printMapSeries", {});
+                } else {
+                    this.$emit("print", {});
+                }
+                this.activeTabId = 4;
+            },
+            forceOnResizeForTab() {
+                this.$refs.v_tabs_printing && this.$refs.v_tabs_printing.onResize();
             }
         }
     };

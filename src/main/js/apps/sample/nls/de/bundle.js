@@ -69,6 +69,9 @@ module.exports = {
                 text: "<b>{NAME}</b> ist ein {expression/carrier} Veranstaltungsort."
             }
         },
+        rhine: {
+            title: "Rhein (Mittellinie)"
+        },
         basemaps: {
             gray: "Stra\xDFenkarte (grau)",
             streets: "Stra\xDFenkarte",
