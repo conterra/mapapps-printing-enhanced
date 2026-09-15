@@ -68,17 +68,19 @@ export default declare({
                     printTemplate.layoutOptions.customTextElements = [];
                 }
                 const customTextElements = printTemplate.layoutOptions.customTextElements;
-                if (this._user) {
-                    properties.customTextElements.forEach((element) => {
+                properties.customTextElements.forEach((element) => {
+                    if ("elementFieldName" in element) {
+                        return;
+                    }
+                    if (this._user) {
                         Object.getOwnPropertyNames(element).forEach(propName => {
                             element[propName] = replace(element[propName], this._user);
                         });
-                        customTextElements.push(element);
-                    });
-                } else {
-                    properties.customTextElements.forEach((element) => {
-                        customTextElements.push(element);
-                    });
+                    }
+                    customTextElements.push(element);
+                });
+                if (this._customTextElements?.length) {
+                    customTextElements.push(...this._customTextElements);
                 }
             }
             // set sketching properties to view
@@ -172,6 +174,10 @@ export default declare({
             this._printingPreviewDrawer.resetGraphic();
             this[_lastPopupState]?.reset();
         });
+    },
+
+    setCustomTextElements(event) {
+        this._customTextElements = event.getProperty("customTextElements");
     },
 
     setUserService(userService) {

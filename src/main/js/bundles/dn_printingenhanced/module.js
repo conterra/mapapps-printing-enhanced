@@ -20,3 +20,4 @@ import "./PrintingPropertiesOverWriter";
 import "./PrintingPreviewDrawer";
 import "./PrintingEnhancedWidgetFactory";
 import "./PrintingToggleToolHandler";
+import "./CustomTextElementsMapper";
