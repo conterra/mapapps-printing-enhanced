@@ -81,6 +81,8 @@ module.exports = {
             helperTextScaleEnabled: "Print preview can only be displayed if a scale is set.",
             portraitLabel: "Portrait",
             landscapeLabel: "Landscape",
+            contentLabel: "Content-Text",
+            editLabel: "Edit-Text",
             legendNameIfNoneIsGiven: "untitled",
             notReadyForMapSeriesPrint: "Not all prerequisites for map series printing are met.",
             askToPrintMessage: "The map series print has been configured to print a very large number of tiles. This may take a very long time. Are you sure you want to print this many tiles? <br><br> Number of tiles to be printed: ",

@@ -21,6 +21,7 @@ import "./PrintingPropertiesOverWriter";
 import "./PrintingPreviewDrawer";
 import "./PrintingEnhancedWidgetFactory";
 import "./PrintingToggleToolHandler";
+import "./CustomTextElementsMapper";
 import "./PrintingMapSeriesPreviewController";
 import "./PrintingMapSeriesPreviewDrawer";
 import "./PrintingMapSeriesPrintJobsModel";

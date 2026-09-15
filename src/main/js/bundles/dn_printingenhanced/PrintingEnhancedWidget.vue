@@ -73,8 +73,12 @@
                     :page-print-size-values="pagePrintSizeValues"
                     :page-print-orientation.sync="pagePrintOrientation"
                     :page-print-orientation-values="pagePrintOrientationValues"
+                    :custom-text-elements="customTextElements"
                     :map-only-layout-name="mapOnlyLayoutName"
                     @resetScale="$emit('resetScale')"
+                    v-on:trigger-custom-text-elements-update="
+                        $emit('trigger-custom-text-elements-update', $event)
+                    "
                 />
             </v-tab-item>
             <v-tab-item v-show="visibleUiElements.mapOnlyTab">
@@ -235,6 +239,10 @@
                 default: "portrait"
             },
             pagePrintOrientationValues: {
+                type: Array,
+                default: () => []
+            },
+            customTextElements: {
                 type: Array,
                 default: () => []
             },

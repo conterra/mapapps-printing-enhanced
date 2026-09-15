@@ -80,6 +80,8 @@ module.exports = {
         helperTextScaleEnabled: "Der Druckrahmen kann nur angezeigt werden, wenn ein Maßstab festgelegt ist.",
         portraitLabel: "Hochformat",
         landscapeLabel: "Querformat",
+        contentLabel: "Inhalt-Text",
+        editLabel: "Bearbeitung-Text",
         legendNameIfNoneIsGiven: "Ohne Titel",
         notReadyForMapSeriesPrint: "Es sind nicht alle Voraussetzungen für den Kartenseriendruck gegeben.",
         askToPrintMessage: "Der Serien-Druck wurde so konfiguriert, dass sehr viele Kacheln gedruckt werden sollen. Dadurch kann der Vorgang sehr lange dauern. Sind Sie sich sicher, dass so viele Kacheln gedruckt werden sollen? <br><br> Anzahl der Kacheln, die gedruckt werden: ",

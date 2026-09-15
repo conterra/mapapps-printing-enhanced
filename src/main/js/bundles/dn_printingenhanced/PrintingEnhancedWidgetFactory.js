@@ -17,6 +17,7 @@ import PrintingEnhancedWidget from "./PrintingEnhancedWidget.vue";
 import Vue from "apprt-vue/Vue";
 import VueDijit from "apprt-vue/VueDijit";
 import Binding from "apprt-binding/Binding";
+import CustomTextElementsMapper from "./CustomTextElementsMapper";
 import { getProxiedUrl } from "apprt-fetch";
 import ScaleCorrection from "./ScaleCorrection";
 import PrintTemplate from "@arcgis/core/rest/support/PrintTemplate";
@@ -230,6 +231,12 @@ export default class PrintingEnhancedWidgetFactory {
         vm.minScaleForSeries = this._printingMapSeriesPreviewController.minScaleForSeries;
         vm.pagePrintOrientationValues = properties.printOrientations;
         vm.pagePrintSizeValues = properties.printSizes;
+        const interactiveCustomTextElements = properties.customTextElements.filter(
+            (element) => "elementFieldName" in element
+        );
+        vm.customTextElements = CustomTextElementsMapper.addValuePropertyToTextElements(
+            interactiveCustomTextElements
+        );
         vm.mapOnlyLayoutName = properties.layoutNames.mapOnly;
 
         // Watch page size/orientation to update layout name and redraw print preview
@@ -380,11 +387,23 @@ export default class PrintingEnhancedWidgetFactory {
             esriPrintWidget._resetToCurrentScale();
         });
 
+        vm.$on("trigger-custom-text-elements-update", (ourCustomTextElements) => {
+            this._updateCustomTextElementsInTemplateOptions(ourCustomTextElements);
+        });
+
         vm.$on("do-not-print-empty-tiles-changed", (value) => {
             this._printingMapSeriesPreviewController.onDoNotPrintEmptyTilesValueChanged(value);
         });
 
         this._initDefaultValues(vm, this._getTemplateOptions(), properties);
+    }
+
+    _updateCustomTextElementsInTemplateOptions(ourCustomTextElements) {
+        const esriCustomTextElements =
+            CustomTextElementsMapper.mapToEsriCustomTextElements(ourCustomTextElements);
+        this._eventService.sendEvent("dn_printingenhanced/CUSTOM_TEXTELEMENTS", {
+            customTextElements: esriCustomTextElements
+        });
     }
 
     activateSinglePrintMode(doNotDrawPreviewGraphic) {
@@ -471,6 +490,7 @@ export default class PrintingEnhancedWidgetFactory {
         if (templateOptions) {
             this._setLayoutName(vm, templateOptions, enhancedProperties);
         }
+        this._updateCustomTextElementsInTemplateOptions(vm.customTextElements);
     }
 
     _syncViewModelWithCurrentMapScale(vm, mapView) {

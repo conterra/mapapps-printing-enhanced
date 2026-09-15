@@ -276,6 +276,21 @@ To filter your formats and layouts please use their entire ids as follows:
 }
 ```
 
+By default, `customTextElements` entries are static: the configured value (optionally containing a `${...}` replacer resolved against the logged-in user) is pushed onto the print template as-is. To let the user type a value at print time instead, use the form `{ "elementFieldName": <field name on the print template>, "title": <GUI label, e.g. "${ui.mailLabel}"> }`. One text field per entry is then rendered in the layout tab, and the value the user enters is sent to the print service under `elementFieldName` when printing.
+
+```json
+"customTextElements": [
+    {
+        "elementFieldName": "mail",
+        "title": "${ui.mailLabel}"
+    },
+    {
+        "elementFieldName": "city",
+        "title": "${ui.cityLabel}"
+    }
+]
+```
+
 ### Configuration for map series print
 
 The following Configs have been added for **map series**:
