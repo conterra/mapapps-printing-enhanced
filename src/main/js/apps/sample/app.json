@@ -67,13 +67,20 @@
                     "scaleEnabled": false,
                     "scale": true,
                     "copyright": false,
-                    "legendEnabled": false,
+                    "legendEnabled": true,
                     "attributionEnabled": false
                 },
                 "deriveLayoutFromPageSize": true,
                 "enablePrintPreview": true,
                 "enablePrintPreviewMovement": true,
                 "layoutTemplatesInfoTaskName": "Get%20Layout%20Templates%20Info%20Task",
+                "legend": {
+                    "legendModes": ["noLegend", "integratedLegend", "legendOwnPage"],
+                    "legendTitleAppendText": "${ui.legendTitleAppendText}",
+                    "legendPrintRequestDelayInMs": 2500,
+                    "legendTemplateOptionsRestoreDelayInMs": 300
+                },
+                "filenameIfNoneIsGiven": "${ui.filenameIfNoneIsGiven} X",
                 "defaultPageUnit": "CENTIMETER",
                 "dpiValues": [
                     {
