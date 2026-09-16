@@ -292,6 +292,10 @@
                 type: Object,
                 default: () => {}
             },
+            legendModes: {
+                type: Array,
+                default: () => []
+            },
             legendValue: {
                 type: String,
                 default: "noLegend"
@@ -379,7 +383,7 @@
             // "integratedLegend" isn't a valid choice for map only prints
             mapOnlyLegendModes: {
                 get: function () {
-                    return (this.visibleUiElements.legendModes || []).filter(
+                    return this.legendModes.filter(
                         (mode) => mode !== "integratedLegend"
                     );
                 }
@@ -390,7 +394,7 @@
                 get: function () {
                     return normalizeLegendValue(
                         this.legendValue,
-                        this.visibleUiElements.legendModes,
+                        this.legendModes,
                         true
                     );
                 }

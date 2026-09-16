@@ -85,6 +85,7 @@
                     :page-print-orientation-values="pagePrintOrientationValues"
                     :custom-text-elements="customTextElements"
                     :map-only-layout-name="mapOnlyLayoutName"
+                    :legend-modes="legendModes"
                     :legend-value.sync="legendValue"
                     @resetScale="$emit('resetScale')"
                     v-on:trigger-custom-text-elements-update="
@@ -111,6 +112,7 @@
                     :scale-enabled.sync="scaleEnabled"
                     :enable-print-preview.sync="enablePrintPreview"
                     :visible-ui-elements="visibleUiElements"
+                    :legend-modes="legendModes"
                     :legend-value.sync="legendValue"
                     @resetScale="$emit('resetScale')"
                     @rotate="rotate"
@@ -210,6 +212,10 @@
             mapOnlyLayoutName: {
                 type: String,
                 default: () => ""
+            },
+            legendModes: {
+                type: Array,
+                default: () => []
             }
         },
         data() {

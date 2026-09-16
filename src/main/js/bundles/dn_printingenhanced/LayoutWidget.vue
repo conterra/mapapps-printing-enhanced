@@ -226,7 +226,7 @@
             <legend-options
                 v-if="visibleUiElements.legendEnabled"
                 :i18n="i18n"
-                :legend-modes="visibleUiElements.legendModes"
+                :legend-modes="legendModes"
                 :legend-value="legendValue"
                 @update:legend-value="$emit('update:legend-value', $event)"
             />
@@ -348,6 +348,10 @@
             mapOnlyLayoutName: {
                 type: String,
                 default: () => ""
+            },
+            legendModes: {
+                type: Array,
+                default: () => []
             },
             legendValue: {
                 type: String,

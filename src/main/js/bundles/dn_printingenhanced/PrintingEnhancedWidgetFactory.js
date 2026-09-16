@@ -180,10 +180,10 @@ export default class PrintingEnhancedWidgetFactory {
             "scale": true,
             "copyright": false,
             "legendEnabled": true,
-            "legendModes": ["integratedLegend", "noLegend"],
             "attributionEnabled": false
         };
         vm.visibleUiElements = { ...defaultVisibleUiElements, ...properties.visibleUiElements };
+        vm.legendModes = properties.legend.legendModes;
         vm.dpiValues = properties.dpiValues;
         vm.scaleValues = properties.scaleValues;
         vm.enablePrintPreview = properties.enablePrintPreview;
@@ -292,7 +292,7 @@ export default class PrintingEnhancedWidgetFactory {
     }
 
     _normalizeLegendValue(legendValue, forMapOnly = false) {
-        const legendModes = this.vm?.visibleUiElements?.legendModes ?? [];
+        const legendModes = this.vm?.legendModes ?? [];
         return normalizeLegendValue(legendValue, legendModes, forMapOnly);
     }
 

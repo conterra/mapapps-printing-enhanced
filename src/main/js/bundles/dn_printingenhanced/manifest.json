@@ -198,7 +198,6 @@
                     "scale": true,
                     "copyright": false,
                     "legendEnabled": true,
-                    "legendModes": ["integratedLegend", "noLegend"],
                     "attributionEnabled": false
                 },
                 "deriveLayoutFromPageSize": false,
@@ -208,6 +207,7 @@
                 "defaultPageUnit": "CENTIMETER",
                 "filenameIfNoneIsGiven": "${ui.filenameIfNoneIsGiven}",
                 "legend": {
+                    "legendModes": ["integratedLegend", "noLegend"],
                     "legendTitleAppendText": "${ui.legendTitleAppendText}",
                     "legendPrintRequestDelayInMs": 2500,
                     "legendTemplateOptionsRestoreDelayInMs": 300
