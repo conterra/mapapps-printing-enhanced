@@ -78,9 +78,9 @@
                 "legend": {
                     "legendTitleAppendText": "${ui.legendTitleAppendText}",
                     "legendPrintRequestDelayInMs": 2500,
-                    "legendTemplateOptionsRestoreDelayInMs": 300,
-                    "legendNameIfNoneIsGiven": "${ui.legendNameIfNoneIsGiven}"
+                    "legendTemplateOptionsRestoreDelayInMs": 300
                 },
+                "filenameIfNoneIsGiven": "${ui.filenameIfNoneIsGiven} X",
                 "defaultPageUnit": "CENTIMETER",
                 "dpiValues": [
                     {

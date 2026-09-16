@@ -44,7 +44,7 @@ module.exports = {
         legendOwnPage: "Legende auf eigener Seite",
         noLegend: "Keine Legende",
         legendTitleAppendText: " (Legende)",
-        legendNameIfNoneIsGiven: "Ohne Titel",
+        filenameIfNoneIsGiven: "Ohne Titel",
         attributionEnabled: "Quellennachweis einfügen",
         dpi: "Qualität",
         showPrintPreview: "Druckrahmen anzeigen",

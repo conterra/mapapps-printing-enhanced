@@ -206,11 +206,11 @@
                 "enablePrintPreviewMovement": true,
                 "layoutTemplatesInfoTaskName": "Get%20Layout%20Templates%20Info%20Task",
                 "defaultPageUnit": "CENTIMETER",
+                "filenameIfNoneIsGiven": "${ui.filenameIfNoneIsGiven}",
                 "legend": {
                     "legendTitleAppendText": "${ui.legendTitleAppendText}",
                     "legendPrintRequestDelayInMs": 2500,
-                    "legendTemplateOptionsRestoreDelayInMs": 300,
-                    "legendNameIfNoneIsGiven": "${ui.legendNameIfNoneIsGiven}"
+                    "legendTemplateOptionsRestoreDelayInMs": 300
                 },
                 "printSizes": [
                     {

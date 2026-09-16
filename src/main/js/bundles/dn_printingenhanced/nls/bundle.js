@@ -45,7 +45,7 @@ module.exports = {
             legendOwnPage: "Legend on own page",
             noLegend: "No legend",
             legendTitleAppendText: " (Legend)",
-            legendNameIfNoneIsGiven: "untitled",
+            filenameIfNoneIsGiven: "untitled",
             attributionEnabled: "Enable attribution",
             dpi: "Quality",
             showPrintPreview: "Show print preview",

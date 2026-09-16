@@ -248,6 +248,12 @@ export default class PrintingEnhancedWidgetFactory {
                 vm.legendValue,
                 vm.activeTab === "mapOnly"
             );
+            // Fall back to a default name for the print request itself, without writing it
+            // back into the (two-way bound) title/fileName fields shown in the UI.
+            const originalTitle = templateOptions.title;
+            const originalFileName = templateOptions.fileName;
+            templateOptions.title = originalTitle || properties.filenameIfNoneIsGiven;
+            templateOptions.fileName = originalFileName || properties.filenameIfNoneIsGiven;
             const printContext = {
                 activeTab: vm.activeTab,
                 legendValue,
@@ -259,6 +265,8 @@ export default class PrintingEnhancedWidgetFactory {
                 templateOptions.legendEnabled = legendValue === "integratedLegend";
             }
             esriPrintWidget._handlePrintMap();
+            templateOptions.title = originalTitle;
+            templateOptions.fileName = originalFileName;
             if (legendValue === "legendOwnPage") {
                 setTimeout(() => {
                     this._printLegend(
@@ -340,11 +348,11 @@ export default class PrintingEnhancedWidgetFactory {
         const originalFileName =
             templateOptions.fileName ||
             printContext.fileNameBeforePrint ||
-            properties.legend.legendNameIfNoneIsGiven;
+            properties.filenameIfNoneIsGiven;
         const originalTitle =
             templateOptions.title ||
             printContext.titleBeforePrint ||
-            properties.legend.legendNameIfNoneIsGiven;
+            properties.filenameIfNoneIsGiven;
         const originalLayoutName = layoutBeforePrint || properties.layoutNames.mapOnly;
         const originalLegendEnabled = templateOptions.legendEnabled;
         templateOptions.legendEnabled = true;
