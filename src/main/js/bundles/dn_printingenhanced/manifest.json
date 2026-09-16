@@ -198,9 +198,7 @@
                     "scale": true,
                     "copyright": false,
                     "legendEnabled": true,
-                    "integratedLegend": true,
-                    "legendOwnPage": false,
-                    "noLegend": true,
+                    "legendModes": ["integratedLegend", "noLegend"],
                     "attributionEnabled": false
                 },
                 "deriveLayoutFromPageSize": false,

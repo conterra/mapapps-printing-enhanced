@@ -21,6 +21,7 @@ import CustomTextElementsMapper from "./CustomTextElementsMapper";
 import { getProxiedUrl } from "apprt-fetch";
 import ScaleCorrection from "./ScaleCorrection";
 import PrintTemplate from "@arcgis/core/rest/support/PrintTemplate";
+import { normalizeLegendValue } from "./LegendValue";
 
 export default class PrintingEnhancedWidgetFactory {
 
@@ -179,9 +180,7 @@ export default class PrintingEnhancedWidgetFactory {
             "scale": true,
             "copyright": false,
             "legendEnabled": true,
-            "integratedLegend": true,
-            "legendOwnPage": false,
-            "noLegend": true,
+            "legendModes": ["integratedLegend", "noLegend"],
             "attributionEnabled": false
         };
         vm.visibleUiElements = { ...defaultVisibleUiElements, ...properties.visibleUiElements };
@@ -245,7 +244,7 @@ export default class PrintingEnhancedWidgetFactory {
             }
             // Ensure layout is always set before printing
             this._setLayoutName(vm, templateOptions, properties);
-            const legendValue = this._normalizeLegendValue(vm.legendValue);
+            const legendValue = this._normalizeLegendValue(vm.legendValue, vm.activeTabId === 1);
             const printContext = {
                 activeTabId: vm.activeTabId,
                 legendValue,
@@ -257,13 +256,7 @@ export default class PrintingEnhancedWidgetFactory {
                 templateOptions.legendEnabled = legendValue === "integratedLegend";
             }
             esriPrintWidget._handlePrintMap();
-            // Each tab's legend condition only applies while that tab is active, so a
-            // legendValue left over from the other tab can't trigger an unwanted legend print.
-            if (
-                (vm.activeTabId !== 1 && legendValue === "legendOwnPage") ||
-                (vm.activeTabId === 1 &&
-                    this._normalizeMapOnlyLegendEnabled(vm.mapOnlyLegendEnabled))
-            ) {
+            if (legendValue === "legendOwnPage") {
                 setTimeout(() => {
                     this._printLegend(
                         esriPrintWidget,
@@ -287,27 +280,9 @@ export default class PrintingEnhancedWidgetFactory {
         this._initDefaultValues(vm, this._getTemplateOptions(), properties);
     }
 
-    _normalizeLegendValue(legendValue) {
-        const visibleUiElements = this.vm?.visibleUiElements || {};
-        const enabledModes = ["integratedLegend", "legendOwnPage", "noLegend"].filter(
-            (mode) => visibleUiElements[mode]
-        );
-        if (enabledModes.includes(legendValue)) {
-            return legendValue;
-        }
-        return enabledModes[0] || "noLegend";
-    }
-
-    _normalizeMapOnlyLegendEnabled(mapOnlyLegendEnabled) {
-        const visibleUiElements = this.vm?.visibleUiElements || {};
-        if (!visibleUiElements.legendOwnPage) {
-            return false;
-        }
-        if (!visibleUiElements.integratedLegend && !visibleUiElements.noLegend) {
-            // legendOwnPage is the only configured mode (no checkbox is shown for it): always on.
-            return true;
-        }
-        return !!mapOnlyLegendEnabled;
+    _normalizeLegendValue(legendValue, forMapOnly = false) {
+        const legendModes = this.vm?.visibleUiElements?.legendModes ?? [];
+        return normalizeLegendValue(legendValue, legendModes, forMapOnly);
     }
 
     _updateCustomTextElementsInTemplateOptions(ourCustomTextElements) {
@@ -425,7 +400,6 @@ export default class PrintingEnhancedWidgetFactory {
             vm.pagePrintOrientation = defaultPagePrintOrientation[0].value;
         }
         vm.legendValue = this._normalizeLegendValue(vm.legendValue);
-        vm.mapOnlyLegendEnabled = this._normalizeMapOnlyLegendEnabled(vm.mapOnlyLegendEnabled);
         if (templateOptions) {
             this._setLayoutName(vm, templateOptions, enhancedProperties);
         }

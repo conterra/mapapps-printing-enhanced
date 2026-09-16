@@ -97,7 +97,7 @@
                     :scale-enabled.sync="scaleEnabled"
                     :enable-print-preview.sync="enablePrintPreview"
                     :visible-ui-elements="visibleUiElements"
-                    :map-only-legend-enabled.sync="mapOnlyLegendEnabled"
+                    :legend-value.sync="legendValue"
                     @resetScale="$emit('resetScale')"
                     @rotate="rotate"
                 />
@@ -215,7 +215,6 @@
                 enablePrintPreview: true,
                 activeTabId: 0,
                 legendValue: "integratedLegend",
-                mapOnlyLegendEnabled: true,
                 currentMapScale: 0,
                 exportedLinks: [],
                 error: ""

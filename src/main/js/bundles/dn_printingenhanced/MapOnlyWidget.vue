@@ -213,26 +213,25 @@
                     class="pa-0 ma-0"
                 />
             </v-flex>
-            <v-flex
-                v-if="showMapOnlyLegendCheckbox"
-                md12
-            >
-                <v-checkbox
-                    v-model="mapOnlyLegendEnabledValue"
-                    :label="i18n.legendOwnPage"
-                    color="primary"
-                    hide-details
-                    class="pa-0 ma-0"
-                />
-            </v-flex>
+            <legend-options
+                v-if="visibleUiElements.legendEnabled"
+                :i18n="i18n"
+                :legend-modes="mapOnlyLegendModes"
+                :legend-value="mapOnlyLegendValue"
+                @update:legend-value="$emit('update:legend-value', $event)"
+            />
         </v-layout>
     </v-container>
 </template>
 <script>
     import Bindable from "apprt-vue/mixins/Bindable";
+    import LegendOptions from "./LegendOptions.vue";
+    import { normalizeLegendValue } from "./LegendValue";
 
     export default {
-        components: {},
+        components: {
+            "legend-options": LegendOptions
+        },
         mixins: [Bindable],
         props: {
             i18n: {
@@ -293,9 +292,9 @@
                 type: Object,
                 default: () => {}
             },
-            mapOnlyLegendEnabled: {
-                type: Boolean,
-                default: true
+            legendValue: {
+                type: String,
+                default: "noLegend"
             }
         },
         data() {
@@ -377,20 +376,22 @@
                     this.$emit('update:file-name', fileName);
                 }
             },
-            mapOnlyLegendEnabledValue: {
+            // "integratedLegend" isn't a valid choice for map only prints
+            mapOnlyLegendModes: {
                 get: function () {
-                    return this.mapOnlyLegendEnabled;
-                },
-                set: function (mapOnlyLegendEnabled) {
-                    this.$emit('update:map-only-legend-enabled', mapOnlyLegendEnabled);
+                    return (this.visibleUiElements.legendModes || []).filter(
+                        (mode) => mode !== "integratedLegend"
+                    );
                 }
             },
-            showMapOnlyLegendCheckbox: {
+            // Normalize value on get to handle "integratedLegend" mode being excluded in mapOnly print while not
+            // changing the config just for opening the tab
+            mapOnlyLegendValue: {
                 get: function () {
-                    return !!(
-                        this.visibleUiElements.legendEnabled &&
-                        this.visibleUiElements.legendOwnPage &&
-                        (this.visibleUiElements.integratedLegend || this.visibleUiElements.noLegend)
+                    return normalizeLegendValue(
+                        this.legendValue,
+                        this.visibleUiElements.legendModes,
+                        true
                     );
                 }
             }
