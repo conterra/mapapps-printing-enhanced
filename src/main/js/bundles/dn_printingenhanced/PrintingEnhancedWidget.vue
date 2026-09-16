@@ -27,29 +27,40 @@
         class="pa-0 fullHeight printing-enhanced-container"
     >
         <v-tabs
-            v-model="activeTabId"
+            v-model="activeTab"
             slider-color="primary"
             height="34"
             centered
             grow
         >
-            <v-tab v-show="visibleUiElements.layoutTab">
+            <v-tab
+                v-show="visibleUiElements.layoutTab"
+                href="#layout"
+            >
                 {{ i18n.layoutTab }}
             </v-tab>
-            <v-tab v-show="visibleUiElements.mapOnlyTab">
+            <v-tab
+                v-show="visibleUiElements.mapOnlyTab"
+                href="#mapOnly"
+            >
                 {{ i18n.mapOnlyTab }}
             </v-tab>
             <v-tab
                 v-if="!exportedLinks.length"
+                href="#results"
             >
                 {{ i18n.printResults }}
             </v-tab>
             <v-tab
                 v-else
+                href="#results"
             >
                 {{ i18n.printResults }} ({{ exportedLinks.length }})
             </v-tab>
-            <v-tab-item v-show="visibleUiElements.layoutTab">
+            <v-tab-item
+                v-show="visibleUiElements.layoutTab"
+                value="layout"
+            >
                 <layout-widget
                     :i18n="i18n"
                     :author.sync="author"
@@ -81,7 +92,10 @@
                     "
                 />
             </v-tab-item>
-            <v-tab-item v-show="visibleUiElements.mapOnlyTab">
+            <v-tab-item
+                v-show="visibleUiElements.mapOnlyTab"
+                value="mapOnly"
+            >
                 <map-only-widget
                     :i18n="i18n"
                     :attribution-enabled.sync="attributionEnabled"
@@ -102,7 +116,7 @@
                     @rotate="rotate"
                 />
             </v-tab-item>
-            <v-tab-item>
+            <v-tab-item value="results">
                 <printing-results-widget
                     :i18n="i18n"
                     :exported-links="exportedLinks"
@@ -110,7 +124,7 @@
             </v-tab-item>
         </v-tabs>
         <v-container
-            v-if="activeTabId!==2"
+            v-if="activeTab !== 'results'"
             grid-list-md
             fluid
             class="pa-0 px-2 pt-2 printing-button-container"
@@ -213,7 +227,7 @@
                 title: "",
                 width: 800,
                 enablePrintPreview: true,
-                activeTabId: 0,
+                activeTab: "layout",
                 legendValue: "integratedLegend",
                 currentMapScale: 0,
                 exportedLinks: [],
@@ -221,26 +235,22 @@
             };
         },
         watch: {
-            activeTabId: function (activeTabId) {
-                if (activeTabId === 0) {
+            activeTab: function (activeTab) {
+                if (activeTab === "layout") {
                     if (this.lastLayout) {
                         this.layout = this.lastLayout;
                     }
-                } else if (activeTabId === 1) {
+                } else if (activeTab === "mapOnly") {
                     if (this.layout !== this.mapOnlyLayoutName) {
                         this.lastLayout = this.layout;
                     }
                     this.layout = this.mapOnlyLayoutName;
                 }
-                this.$emit("activate-tab-id-changed", activeTabId);
+                this.$emit("activate-tab-changed", activeTab);
             }
         },
         mounted: function () {
-            if (this.layout === this.mapOnlyLayoutName) {
-                this.activeTabId = 1;
-            } else {
-                this.activeTabId = 0;
-            }
+            this.activeTab = this.layout === this.mapOnlyLayoutName ? "mapOnly" : "layout";
             this.$emit('startup');
         },
         methods: {
@@ -249,7 +259,7 @@
             },
             print: function () {
                 this.$emit('print', {});
-                this.activeTabId = 2;
+                this.activeTab = "results";
             }
         }
     };

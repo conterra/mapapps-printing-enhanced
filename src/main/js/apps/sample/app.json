@@ -68,7 +68,7 @@
                     "scale": true,
                     "copyright": false,
                     "legendEnabled": true,
-                    "legendModes": ["noLegend", "integratedLegend"],
+                    "legendModes": ["noLegend", "integratedLegend", "legendOwnPage"],
                     "attributionEnabled": false
                 },
                 "deriveLayoutFromPageSize": true,

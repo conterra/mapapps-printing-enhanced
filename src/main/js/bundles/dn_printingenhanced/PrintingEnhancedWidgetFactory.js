@@ -51,7 +51,7 @@ export default class PrintingEnhancedWidgetFactory {
                 const format = liveTemplateOptions?.format || vm.format || "pdf";
                 // "Nur Karte" tab uses fileName; other tabs use title
                 const baseName =
-                    vm.activeTabId === 1
+                    vm.activeTab === "mapOnly"
                         ? liveTemplateOptions?.fileName ||
                           liveTemplateOptions?.title ||
                           item.formattedName
@@ -216,16 +216,16 @@ export default class PrintingEnhancedWidgetFactory {
         });
 
         // Tab change handler
-        vm.$on("activate-tab-id-changed", (activeTabId) => {
+        vm.$on("activate-tab-changed", (activeTab) => {
             const templateOptions = this._getTemplateOptions();
             if (!templateOptions) {
-                this._lastActiveTabId = activeTabId;
+                this._lastActiveTab = activeTab;
                 return;
             }
-            if (activeTabId === 0 || activeTabId === 1) {
+            if (activeTab !== "results") {
                 this._setLayoutName(vm, templateOptions, properties);
             }
-            this._lastActiveTabId = activeTabId;
+            this._lastActiveTab = activeTab;
         });
 
         vm.$watch("legendValue", () => {
@@ -244,15 +244,18 @@ export default class PrintingEnhancedWidgetFactory {
             }
             // Ensure layout is always set before printing
             this._setLayoutName(vm, templateOptions, properties);
-            const legendValue = this._normalizeLegendValue(vm.legendValue, vm.activeTabId === 1);
+            const legendValue = this._normalizeLegendValue(
+                vm.legendValue,
+                vm.activeTab === "mapOnly"
+            );
             const printContext = {
-                activeTabId: vm.activeTabId,
+                activeTab: vm.activeTab,
                 legendValue,
                 layoutBeforePrint: templateOptions.layout,
                 titleBeforePrint: templateOptions.title,
                 fileNameBeforePrint: templateOptions.fileName
             };
-            if (vm.activeTabId !== 1) {
+            if (vm.activeTab !== "mapOnly") {
                 templateOptions.legendEnabled = legendValue === "integratedLegend";
             }
             esriPrintWidget._handlePrintMap();
@@ -295,7 +298,7 @@ export default class PrintingEnhancedWidgetFactory {
 
     _setLayoutName(vm, templateOptions, enhancedProperties) {
         const legendValue = this._normalizeLegendValue(vm.legendValue);
-        if (vm.activeTabId === 1) {
+        if (vm.activeTab === "mapOnly") {
             templateOptions.layout = enhancedProperties.layoutNames.mapOnly;
             return;
         }
@@ -329,10 +332,11 @@ export default class PrintingEnhancedWidgetFactory {
     _printLegend(esriPrintWidget, vm, templateOptions, properties, printContext = {}) {
         this._printingPreviewController.setDisabled(true);
         const legendValue = this._normalizeLegendValue(printContext.legendValue ?? vm.legendValue);
-        const activeTabIdForLegend = printContext.activeTabId ?? vm.activeTabId;
+        const activeTabForLegend = printContext.activeTab ?? vm.activeTab;
         const layoutBeforePrint = printContext.layoutBeforePrint ?? templateOptions.layout;
         const isMapOnlyMode =
-            activeTabIdForLegend === 1 || layoutBeforePrint === properties.layoutNames.mapOnly;
+            activeTabForLegend === "mapOnly" ||
+            layoutBeforePrint === properties.layoutNames.mapOnly;
         const originalFileName =
             templateOptions.fileName ||
             printContext.fileNameBeforePrint ||
