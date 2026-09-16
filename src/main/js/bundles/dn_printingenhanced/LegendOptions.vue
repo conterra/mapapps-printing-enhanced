@@ -37,6 +37,7 @@
                 :key="mode"
                 :value="mode"
                 :label="i18n[mode]"
+                color="primary"
             />
         </v-radio-group>
     </v-flex>
