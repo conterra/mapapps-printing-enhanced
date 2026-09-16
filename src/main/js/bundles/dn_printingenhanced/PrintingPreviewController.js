@@ -186,10 +186,6 @@ export default declare({
         this._isDisabled = disabled;
     },
 
-    removePreviewGraphic() {
-        this._printingPreviewDrawer.removeGraphicFromGraphicsLayer();
-    },
-
     isDisabled() {
         return this._isDisabled;
     },
