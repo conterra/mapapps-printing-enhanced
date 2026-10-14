@@ -345,12 +345,15 @@ export default class PrintingEnhancedWidgetFactory {
         const isMapOnlyMode =
             activeTabForLegend === "mapOnly" ||
             layoutBeforePrint === properties.layoutNames.mapOnly;
+        // Values shown in the UI are restored as they are, the default name is only used for the print request
+        const fileNameToRestore = templateOptions.fileName;
+        const titleToRestore = templateOptions.title;
         const originalFileName =
-            templateOptions.fileName ||
+            fileNameToRestore ||
             printContext.fileNameBeforePrint ||
             properties.filenameIfNoneIsGiven;
         const originalTitle =
-            templateOptions.title ||
+            titleToRestore ||
             printContext.titleBeforePrint ||
             properties.filenameIfNoneIsGiven;
         const originalLayoutName = layoutBeforePrint || properties.layoutNames.mapOnly;
@@ -382,9 +385,9 @@ export default class PrintingEnhancedWidgetFactory {
             that._fallbackLayoutOverride = undefined;
             that._forceFallbackTemplate = false;
             if (isMapOnlyMode) {
-                templateOptions.fileName = originalFileName;
+                templateOptions.fileName = fileNameToRestore;
             }
-            templateOptions.title = originalTitle;
+            templateOptions.title = titleToRestore;
             templateOptions.legendEnabled = originalLegendEnabled;
         };
         try {
