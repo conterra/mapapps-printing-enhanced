@@ -43,6 +43,8 @@
     </v-flex>
 </template>
 <script>
+    import { normalizeLegendValue } from "./LegendValue";
+
     export default {
         props: {
             i18n: {
@@ -61,15 +63,16 @@
             }
         },
         computed: {
-            // Should the legend option be shown in the ui at all? With 0 or 1 modes configured there is no real choice: no UI is shown and
-            // that mode (or "noLegend" if none is configured) is used automatically.
+            // Should the legend option be shown at all? With 0 or 1 modes there is no real choice:
+            // no UI is shown and that mode (or "noLegend" if none is configured) is used automatically.
             modeSelectable: {
                 get: function () {
                     return this.legendModes.length >= 2;
                 }
             },
 
-            // When exactly 2 modes are available, and one of them is "noLegend", a checkbox is shown instead of radio buttons
+            // When exactly 2 modes are available, and one of them is "noLegend",
+            // a checkbox is shown instead of radio buttons
             checkboxMode: {
                 get: function () {
                     return this.legendModes.length === 2 && this.legendModes.includes("noLegend");
@@ -86,13 +89,7 @@
             // Value of the radio button selection
             legendValueComp: {
                 get: function () {
-                    if (this.legendModes.includes(this.legendValue)) {
-                        return this.legendValue;
-                    }
-                    if (this.legendModes.includes("noLegend")) {
-                        return "noLegend";
-                    }
-                    return this.legendModes[0] || "noLegend";
+                    return normalizeLegendValue(this.legendValue, this.legendModes);
                 },
                 set: function (legendValue) {
                     this.$emit("update:legend-value", legendValue);

@@ -217,7 +217,7 @@
                 v-if="visibleUiElements.legendEnabled"
                 :i18n="i18n"
                 :legend-modes="mapOnlyLegendModes"
-                :legend-value="mapOnlyLegendValue"
+                :legend-value="legendValue"
                 @update:legend-value="$emit('update:legend-value', $event)"
             />
         </v-layout>
@@ -226,7 +226,7 @@
 <script>
     import Bindable from "apprt-vue/mixins/Bindable";
     import LegendOptions from "./LegendOptions.vue";
-    import { normalizeLegendValue } from "./LegendValue";
+    import { getLegendModesForMapOnly } from "./LegendValue";
 
     export default {
         components: {
@@ -380,23 +380,11 @@
                     this.$emit('update:file-name', fileName);
                 }
             },
-            // "integratedLegend" isn't a valid choice for map only prints
+            // LegendOptions normalizes the legend value against these modes,
+            // so the shared value isn't changed just by opening the tab
             mapOnlyLegendModes: {
                 get: function () {
-                    return this.legendModes.filter(
-                        (mode) => mode !== "integratedLegend"
-                    );
-                }
-            },
-            // Normalize value on get to handle "integratedLegend" mode being excluded in mapOnly print while not
-            // changing the config just for opening the tab
-            mapOnlyLegendValue: {
-                get: function () {
-                    return normalizeLegendValue(
-                        this.legendValue,
-                        this.legendModes,
-                        true
-                    );
+                    return getLegendModesForMapOnly(this.legendModes);
                 }
             }
         },

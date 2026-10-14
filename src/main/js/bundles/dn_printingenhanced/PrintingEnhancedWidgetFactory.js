@@ -216,16 +216,11 @@ export default class PrintingEnhancedWidgetFactory {
         });
 
         // Tab change handler
-        vm.$on("activate-tab-changed", (activeTab) => {
+        vm.$on("active-tab-changed", (activeTab) => {
             const templateOptions = this._getTemplateOptions();
-            if (!templateOptions) {
-                this._lastActiveTab = activeTab;
-                return;
-            }
-            if (activeTab !== "results") {
+            if (templateOptions && activeTab !== "results") {
                 this._setLayoutName(vm, templateOptions, properties);
             }
-            this._lastActiveTab = activeTab;
         });
 
         vm.$watch("legendValue", () => {

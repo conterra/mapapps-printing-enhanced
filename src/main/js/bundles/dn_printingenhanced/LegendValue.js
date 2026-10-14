@@ -14,15 +14,17 @@
  * limitations under the License.
  */
 
+// Map-only exports are plain images with no way to embed a legend,
+// so "integratedLegend" isn't a valid choice there.
+export function getLegendModesForMapOnly(legendModes = []) {
+    return legendModes.filter((mode) => mode !== "integratedLegend");
+}
+
 // Make sure the legendValue is one of the configured values.
 // If only one legend mode is configured, this also makes sure this mode is used
-// (no option shown in UI). Map-only exports are plain images with no way to embed
-// a legend, so "integratedLegend" isn't a valid choice there.
+// (no option shown in UI).
 export function normalizeLegendValue(legendValue, legendModes = [], forMapOnly = false) {
-    let modes = legendModes;
-    if (forMapOnly) {
-        modes = modes.filter((mode) => mode !== "integratedLegend");
-    }
+    const modes = forMapOnly ? getLegendModesForMapOnly(legendModes) : legendModes;
     if (modes.includes(legendValue)) {
         return legendValue;
     }

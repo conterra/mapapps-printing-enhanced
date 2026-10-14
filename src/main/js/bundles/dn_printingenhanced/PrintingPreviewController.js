@@ -186,10 +186,6 @@ export default declare({
         this._isDisabled = disabled;
     },
 
-    isDisabled() {
-        return this._isDisabled;
-    },
-
     setCustomTextElements(event) {
         this._customTextElements = event.getProperty("customTextElements");
     },

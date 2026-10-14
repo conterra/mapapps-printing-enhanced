@@ -45,17 +45,11 @@
             >
                 {{ i18n.mapOnlyTab }}
             </v-tab>
-            <v-tab
-                v-if="!exportedLinks.length"
-                href="#results"
-            >
+            <v-tab href="#results">
                 {{ i18n.printResults }}
-            </v-tab>
-            <v-tab
-                v-else
-                href="#results"
-            >
-                {{ i18n.printResults }} ({{ exportedLinks.length }})
+                <template v-if="exportedLinks.length">
+                    ({{ exportedLinks.length }})
+                </template>
             </v-tab>
             <v-tab-item
                 v-show="visibleUiElements.layoutTab"
@@ -252,7 +246,7 @@
                     }
                     this.layout = this.mapOnlyLayoutName;
                 }
-                this.$emit("activate-tab-changed", activeTab);
+                this.$emit("active-tab-changed", activeTab);
             }
         },
         mounted: function () {
