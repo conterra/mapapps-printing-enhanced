@@ -213,14 +213,25 @@
                     class="pa-0 ma-0"
                 />
             </v-flex>
+            <legend-options
+                v-if="visibleUiElements.legendEnabled"
+                :i18n="i18n"
+                :legend-modes="mapOnlyLegendModes"
+                :legend-value="legendValue"
+                @update:legend-value="$emit('update:legend-value', $event)"
+            />
         </v-layout>
     </v-container>
 </template>
 <script>
     import Bindable from "apprt-vue/mixins/Bindable";
+    import LegendOptions from "./LegendOptions.vue";
+    import { getLegendModesForMapOnly } from "./LegendValue";
 
     export default {
-        components: {},
+        components: {
+            "legend-options": LegendOptions
+        },
         mixins: [Bindable],
         props: {
             i18n: {
@@ -280,6 +291,14 @@
             visibleUiElements: {
                 type: Object,
                 default: () => {}
+            },
+            legendModes: {
+                type: Array,
+                default: () => []
+            },
+            legendValue: {
+                type: String,
+                default: "noLegend"
             }
         },
         data() {
@@ -359,6 +378,13 @@
                 },
                 set: function (fileName) {
                     this.$emit('update:file-name', fileName);
+                }
+            },
+            // LegendOptions normalizes the legend value against these modes,
+            // so the shared value isn't changed just by opening the tab
+            mapOnlyLegendModes: {
+                get: function () {
+                    return getLegendModesForMapOnly(this.legendModes);
                 }
             }
         },
