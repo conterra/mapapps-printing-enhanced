@@ -80,7 +80,7 @@
                     "legendPrintRequestDelayInMs": 2500,
                     "legendTemplateOptionsRestoreDelayInMs": 300
                 },
-                "filenameIfNoneIsGiven": "${ui.filenameIfNoneIsGiven} X",
+                "filenameIfNoneIsGiven": "${ui.filenameIfNoneIsGiven}",
                 "defaultPageUnit": "CENTIMETER",
                 "dpiValues": [
                     {
