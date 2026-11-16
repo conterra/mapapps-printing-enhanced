@@ -27,6 +27,7 @@ const _graphic = Symbol("_graphic");
 const _differenceGraphic = Symbol("_differenceGraphic");
 const _graphicsLayer = Symbol("_graphicsLayer");
 const _sketchViewModel = Symbol("_sketchViewModel");
+const OVERLAY_EXTENT_EXPAND_FACTOR = 3;
 
 let _graphicsLayerWatcher;
 let _rotation;
@@ -65,10 +66,12 @@ export default class PrintingPreviewDrawer {
     async drawTemplateDimensions(printInfos, templateOptions, defaultPageUnit) {
         const mapWidgetModel = this._mapWidgetModel;
         if (!printInfos.templateInfos) {
+            this.removeGraphicFromGraphicsLayer();
             return;
         }
         const printSize = this._getPrintSize(printInfos, templateOptions, defaultPageUnit);
         if (!printSize) {
+            this.removeGraphicFromGraphicsLayer();
             return;
         }
         const width = printSize.width;
@@ -80,11 +83,33 @@ export default class PrintingPreviewDrawer {
             rotation: this._rotation ? this._rotation : mapWidgetModel.rotation
         };
         const geometry = this._getMainFrameGeometry(geometryParams);
-        const differenceGeometry = await this._getOutsideMainFrameGeometry(geometry);
-        this.removeGraphicFromGraphicsLayer();
-        this._addMainGraphicToGraphicsLayer(geometry);
-        this._addOutsideMainGraphicToGraphicsLayer(differenceGeometry);
+        const differenceGeometry = this._getOutsideMainFrameGeometry(geometry);
+        if (this._isPreviewDisplayed()) {
+            this._updatePreviewGraphics(geometry, differenceGeometry);
+        } else {
+            this.removeGraphicFromGraphicsLayer();
+            this._addMainGraphicToGraphicsLayer(geometry);
+            this._addOutsideMainGraphicToGraphicsLayer(differenceGeometry);
+        }
         return geometry;
+    }
+
+    _isPreviewDisplayed() {
+        const graphics = this[_graphicsLayer].graphics;
+        return graphics.includes(this[_graphic]) && graphics.includes(this[_differenceGraphic]);
+    }
+
+    _updatePreviewGraphics(geometry, differenceGeometry) {
+        this._completeSketching();
+        this[_graphic].geometry = geometry;
+        this[_differenceGraphic].geometry = differenceGeometry;
+        this._postPrintSettings(geometry);
+    }
+
+    _postPrintSettings(geometry) {
+        if (this._printingEnhancedProperties.enablePrintPreviewMovement) {
+            this._eventService.postEvent("dn_printingenhanced/PRINTSETTINGS", { geometry: geometry });
+        }
     }
 
     _getPrintSize(printInfos, templateOptions, defaultPageUnit) {
@@ -155,8 +180,9 @@ export default class PrintingPreviewDrawer {
     _getMainFrameGeometry(geometryParams) {
         const mapWidgetModel = this._mapWidgetModel;
         const view = mapWidgetModel.view;
+        const isFrameMovableByUser = this._printingEnhancedProperties.enablePrintPreviewMovement;
         let centerPoint = mapWidgetModel.center;
-        if (this[_graphic]) {
+        if (isFrameMovableByUser && this[_graphic]) {
             centerPoint = this[_graphic].geometry.centroid;
         }
 
@@ -181,9 +207,38 @@ export default class PrintingPreviewDrawer {
         return geometryEngine.rotate(polygon, geometryParams.rotation);
     }
 
-    async _getOutsideMainFrameGeometry(geometry) {
-        const mapWidgetModel = this._mapWidgetModel;
-        return await geometryEngine.difference(mapWidgetModel.extent, geometry);
+    moveFrameToViewCenter() {
+        if (!this._isLivePreviewUpdateEnabled() || !this._isPreviewDisplayed()) {
+            return;
+        }
+        const frame = this[_graphic].geometry;
+        const viewCenter = this._mapWidgetModel.view.center;
+        const movedFrame = this._translatePolygon(
+            frame,
+            viewCenter.x - frame.centroid.x,
+            viewCenter.y - frame.centroid.y
+        );
+        this[_graphic].geometry = movedFrame;
+        this[_differenceGraphic].geometry = this._getOutsideMainFrameGeometry(movedFrame);
+    }
+
+    _isLivePreviewUpdateEnabled() {
+        const properties = this._printingEnhancedProperties;
+        return !properties.enablePrintPreviewMovement && properties.livePrintPreviewUpdate;
+    }
+
+    _translatePolygon(polygon, dx, dy) {
+        return new Polygon({
+            rings: polygon.rings.map((ring) => ring.map(([x, y]) => [x + dx, y + dy])),
+            spatialReference: polygon.spatialReference
+        });
+    }
+
+    _getOutsideMainFrameGeometry(geometry) {
+        // Graphics are rendered slightly delayed while the map moves.
+        // The enlarged extent prevents undarkened stripes from flickering at the map borders.
+        const overlayExtent = this._mapWidgetModel.view.extent.clone().expand(OVERLAY_EXTENT_EXPAND_FACTOR);
+        return geometryEngine.difference(overlayExtent, geometry);
     }
 
     _addGraphicsLayerToMap(map, graphicsLayer) {
@@ -220,7 +275,7 @@ export default class PrintingPreviewDrawer {
                 multipleSelectionEnabled: false
             }
         });
-        sketchViewModel.on("update", async (event) => {
+        sketchViewModel.on("update", (event) => {
             const graphics = event.graphics;
             if (graphics.length) {
                 const graphic = graphics[0];
@@ -237,7 +292,7 @@ export default class PrintingPreviewDrawer {
                 if (this[_differenceGraphic]) {
                     this[_graphicsLayer].remove(this[_differenceGraphic]);
                 }
-                const differenceGeometry = await this._getOutsideMainFrameGeometry(geometry);
+                const differenceGeometry = this._getOutsideMainFrameGeometry(geometry);
                 this._addOutsideMainGraphicToGraphicsLayer(differenceGeometry);
             }
         });
@@ -250,9 +305,7 @@ export default class PrintingPreviewDrawer {
             symbol: properties.printingPreviewSymbol
         });
         this[_graphicsLayer].add(graphic);
-        if (properties.enablePrintPreviewMovement) {
-            this._eventService.postEvent("dn_printingenhanced/PRINTSETTINGS", { geometry: graphic.geometry });
-        }
+        this._postPrintSettings(geometry);
     }
 
     _addOutsideMainGraphicToGraphicsLayer(geometry) {
