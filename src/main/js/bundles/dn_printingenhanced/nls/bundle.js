@@ -58,7 +58,7 @@ module.exports = {
                 scaleTooSmall: "The print scale is too small",
                 mapSeriesScaleToLow: "The current scale is too large. Minimum is 1:",
                 filterEmptyTilesError: "An error occurred while determining the unused tiles.",
-                tooManyFrames: "Too many tiles are being generated. A maximum of 1000 tiles can be generated.",
+                tooManyFrames: "Too many tiles are being generated. A maximum of ${maxNumberOfDrawnFrames} tiles can be generated.",
                 error: "Error during printing: ",
                 unknown: "Printing: An unknown error occurred!",
                 code403: "Printing: The configured printing service URL has to be in your proxy whitelist!",

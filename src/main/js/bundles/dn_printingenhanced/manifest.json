@@ -238,14 +238,10 @@
                     }
                 ],
                 "layoutNames": {
-                    "a4_portrait": "A4 Portrait Overview",
-                    "a4_portrait_singlepage": "A4 Portrait Singlepage",
-                    "a4_landscape": "A4 Landscape Overview",
-                    "a4_landscape_singlepage": "A4 Landscape Singlepage",
-                    "a3_portrait": "A3 Portrait Overview",
-                    "a3_portrait_singlepage": "A3 Portrait Singlepage",
-                    "a3_landscape": "A3 Landscape Overview",
-                    "a3_landscape_singlepage": "A3 Landscape Singlepage",
+                    "a4_portrait": "A4 Portrait",
+                    "a4_landscape": "A4 Landscape",
+                    "a3_portrait": "A3 Portrait",
+                    "a3_landscape": "A3 Landscape",
                     "legend": "A4_hoch_legende",
                     "mapOnly": "MAP_ONLY"
                 },
@@ -672,7 +668,8 @@
             "immediate": true,
             "properties": {
                 "printingURLtoIntercept": "@@printtask.service.url@@",
-                "cancelRequestOnIntercept": true
+                "cancelRequestOnIntercept": true,
+                "blueprintRequestTimeoutInMs": 30000
             },
             "references": []
         },

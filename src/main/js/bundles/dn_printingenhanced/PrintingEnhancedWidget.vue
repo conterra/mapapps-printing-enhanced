@@ -43,11 +43,11 @@
             <v-tab v-show="visibleUiElements.mapSeriesTab">
                 {{ i18n.mapSeriesTab }}
             </v-tab>
-            <v-tab v-show="!exportedLinks.length">
+            <v-tab>
                 {{ i18n.printResults }}
-            </v-tab>
-            <v-tab v-show="exportedLinks.length">
-                {{ i18n.printResults }} ({{ exportedLinks.length + mapSeriesJobs.length }})
+                <template v-if="printResultsCount">
+                    ({{ printResultsCount }})
+                </template>
             </v-tab>
             <v-tab-item v-show="visibleUiElements.layoutTab">
                 <layout-widget
@@ -137,14 +137,6 @@
                     v-on:set-scale-value-is-valid="scaleValueIsValidForPreview = $event"
                     @resetScale="$emit('resetScale')"
                     ref="mapSeriesWidget"
-                />
-            </v-tab-item>
-            <v-tab-item>
-                <printing-results-widget
-                    :i18n="i18n"
-                    :exported-links="exportedLinks"
-                    :mapSeriesJobs="mapSeriesJobs"
-                    v-on:save-job-again="$emit('save-job-again', $event)"
                 />
             </v-tab-item>
             <v-tab-item>
@@ -279,16 +271,23 @@
                 error: ""
             };
         },
+        computed: {
+            printResultsCount() {
+                return this.exportedLinks.length + this.mapSeriesJobs.length;
+            }
+        },
         watch: {
-            activeTabId: function (activeTabId) {
+            activeTabId: function (activeTabId, previousTabId) {
+                // The map-only and map series tabs overwrite the shared layout,
+                // so remember the user's choice whenever the layout tab is left.
+                if (previousTabId === 0 && this.layout !== this.mapOnlyLayoutName) {
+                    this.lastLayout = this.layout;
+                }
                 if (activeTabId === 0 || activeTabId === 2) {
                     if (this.lastLayout) {
                         this.layout = this.lastLayout;
                     }
                 } else if (activeTabId === 1) {
-                    if (this.layout !== this.mapOnlyLayoutName) {
-                        this.lastLayout = this.layout;
-                    }
                     this.layout = this.mapOnlyLayoutName;
                 }
                 if (activeTabId === 2) {
@@ -324,7 +323,7 @@
                 } else {
                     this.$emit("print", {});
                 }
-                this.activeTabId = 4;
+                this.activeTabId = 3;
             },
             forceOnResizeForTab() {
                 this.$refs.v_tabs_printing && this.$refs.v_tabs_printing.onResize();

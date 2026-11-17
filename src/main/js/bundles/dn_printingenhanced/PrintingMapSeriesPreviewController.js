@@ -392,7 +392,7 @@ export default declare({
             layoutName = "";
         }
         if (!layoutNameSinglePage) {
-            console.error("Could not find layoutName for " + vm.pagePrintSize + "_" + vm.pagePrintOrientation);
+            // "_singlepage" entries are optional: fall back to the overview layout
             layoutNameSinglePage = layoutName;
         }
         templateOptions.layout = layoutName;

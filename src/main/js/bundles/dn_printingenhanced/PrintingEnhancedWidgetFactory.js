@@ -456,13 +456,7 @@ export default class PrintingEnhancedWidgetFactory {
             layoutName = "";
         }
         if (!layoutNameSinglePage) {
-            console.error(
-                "could not find layoutNameSinglePage for " +
-                    vm.pagePrintSize +
-                    "_" +
-                    vm.pagePrintOrientation +
-                    "_singlepage"
-            );
+            // "_singlepage" entries are optional: fall back to the overview layout
             layoutNameSinglePage = layoutName;
         }
         templateOptions.layout = layoutName;

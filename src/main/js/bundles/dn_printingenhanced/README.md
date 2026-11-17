@@ -210,7 +210,7 @@ To make the functions of this bundle available to the user, the following tool c
 | defaultPageUnit             | String             | `MILLIMETER, CENTIMETER, INCH` | `CENTIMETER`                     | Default template unit (ArcGIS Server < 10.6).                                                                                                                                                                                                                                   |
 | printSizes                  | Array              |                                | `[]`                             | Page sizes offered when `deriveLayoutFromPageSize` is `true`. Each entry has the form `{"value": <id>, "text": <GUI label>, "isDefault": <boolean>}`; the entry with `isDefault: true` is selected at startup.                                                                  |
 | printOrientations           | Array              |                                | `[]`                             | Page orientations offered when `deriveLayoutFromPageSize` is `true`, in the same form as `printSizes`.                                                                                                                                                                          |
-| layoutNames                 | Object             |                                | `{}`                             | Maps a page-size/orientation combination to the name of the matching print layout template. The key is `<printSizes value>_<printOrientations value>`; one entry is required for every combination of `printSizes` and `printOrientations`.                                   |
+| layoutNames                 | Object             |                                | `{}`                             | Maps a page-size/orientation combination to the name of the matching print layout template. The key is `<printSizes value>_<printOrientations value>`; one entry is required for every combination of `printSizes` and `printOrientations`. Also used by the map series print, see [Configuration for map series print](#configuration-for-map-series-print). |
 | dpiValues                   | Array              |                                | `[]`                             | Available dpi values.                                                                                                                                                                                                                                                           |
 | scaleValues                 | Array              |                                | `[]`                             | Available scale values. If the array is filled, a select box will be available in the UI instead of a text field. Each entry in the array is of the type `{"value": <scaleValue>,"text": <Label in the select box>}`. If `scale` is `-1`, the current scale of the map is used. |
 | allowedFormats              | String or String[] |                                | `all`                            | Specify the print output file format(s) that the user can select based on the options available from the print service. See: https://developers.arcgis.com/javascript/latest/api-reference/esri-widgets-Print.html#allowedFormats                                               |
@@ -295,12 +295,17 @@ By default, `customTextElements` entries are static: the configured value (optio
 
 The following Configs have been added for **map series**:
 
-- every layoutname has a additional layout for printing an overview page and its single pages.
-  The layoutname for the overview page is the normal layoutname.
-  The layoutname for the single page is the normal layoutname plus "\_singlepage".
-  E.g.
-    - "a4_portrait": "A4_hoch_overview",
-    - "a4_portrait_singlepage": "A4_hoch_singlepage"
+- layoutNames: the map series print always takes its layouts from `layoutNames`, based on the page size and orientation
+  selected in the "Serie" tab. This also applies when `deriveLayoutFromPageSize` is `false`, so `layoutNames` has to
+  contain an entry for every combination of `printSizes` and `printOrientations` in that case too.
+    - The entry `<size>_<orientation>` (e.g. `a4_portrait`) is used for the overview page.
+      In derive mode, the same entry is also used for the single print.
+    - Optionally, the entry `<size>_<orientation>_singlepage` (e.g. `a4_portrait_singlepage`) defines a separate
+      layout for the individual pages of the series. If it is missing, the individual pages use the overview layout.
+
+  E.g. to use a separate layout for the individual pages of the A4 portrait series:
+    - "a4_portrait": "A4_hoch",
+    - "a4_portrait_singlepage": "A4_hoch_einzelseite"
 - mapSeriesTileOverlap: overlap of the tiles in percent. Default is 0.05 (5%).
 - askToPrintManyFramesThreshold: threshold for number of frames that the user can print without confirming: if the user wants to print more map series frames than allowed by this threshold, they will be asked to confirm that they actually want to print that many frames
 - minScaleForSeries: minimum print scale for map series print. if below, the frames of the map-series won't update to it and the print cant start.
@@ -311,6 +316,7 @@ The following Configs have been added for **map series**:
 - selectionLayers: the already-configured map layers that are queried by the geometry selection tool ({ layerIds }, referencing the "id" of layers already added to the map)
 - printingURLtoIntercept: print url that will be intercepted when printing map series (usually should be the normal print url)
 - cancelRequestOnIntercept: cancel normal print request on intercept
+- blueprintRequestTimeoutInMs: maximum time in milliseconds to wait for the intercepted print request that serves as template for all map series print requests. If it doesn't arrive in time, the map series print is aborted. Default is 30000 (30 seconds).
 - numberOfConcurrentDownloads: number of request to the print service that will be done concurrently
 - legendFileNamePrefix: Prefix for legend file
 - fileNameSuffixOverviewPage: suffix for the overview page file name in map series mode
@@ -341,7 +347,8 @@ The following Configs have been added for **map series**:
     },
     "PrintingRequestBlueprintProvider": {
         "printingURLtoIntercept": "@@printtask.service.url@@",
-        "cancelRequestOnIntercept": true
+        "cancelRequestOnIntercept": true,
+        "blueprintRequestTimeoutInMs": 30000
     },
     "PrintingMapSeriesDownloader": {
         "numberOfConcurrentDownloads": 4,

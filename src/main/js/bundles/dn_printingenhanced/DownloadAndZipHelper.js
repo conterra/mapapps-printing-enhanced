@@ -15,6 +15,7 @@
  */
 import {delay, mapWithConcurrency} from "./utils";
 import jszip from "jszip";
+import {apprtFetch} from "apprt-fetch";
 
 export default function () {
     return {
@@ -46,7 +47,7 @@ export default function () {
         async fetchBlobWithRetry(url, retries = 3, delayMs = 400, maxDelayMs = 2000) {
             for (let attempt = 0; attempt <= retries; attempt++) {
                 try {
-                    const response = await fetch(url);
+                    const response = await apprtFetch(url);
                     if (response.ok) {
                         return await response.blob();
                     }

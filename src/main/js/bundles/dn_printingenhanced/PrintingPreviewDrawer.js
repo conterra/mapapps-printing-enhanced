@@ -75,12 +75,16 @@ export default class PrintingPreviewDrawer {
         return geometry;
     }
 
-    getGeometryParamsFromTemplate(printInfos, templateOptions, defaultPageUnit) {
+    /**
+     * @param layout layout whose map frame is measured; defaults to the single print layout
+     *               (`templateOptions.layout`). The map series passes its single page layout instead.
+     */
+    getGeometryParamsFromTemplate(printInfos, templateOptions, defaultPageUnit, layout = templateOptions.layout) {
         const mapWidgetModel = this._mapWidgetModel;
         if (!printInfos.templateInfos) {
             return null;
         }
-        const printSize = this._getPrintSize(printInfos, templateOptions, defaultPageUnit);
+        const printSize = this._getPrintSize(printInfos, templateOptions, defaultPageUnit, layout);
         if (!printSize) {
             return null;
         }
@@ -91,7 +95,7 @@ export default class PrintingPreviewDrawer {
         };
     }
 
-    _getPrintSize(printInfos, templateOptions, defaultPageUnit) {
+    _getPrintSize(printInfos, templateOptions, defaultPageUnit, layout) {
         const printSize = {};
         let templateWidth;
         let templateHeight;
@@ -111,7 +115,6 @@ export default class PrintingPreviewDrawer {
 
         // get templateinfo
         const templateInfos = printInfos.templateInfos;
-        const layout = templateOptions.layoutSinglePage || templateOptions.layoutNameSinglePage || templateOptions.layout;
         if (!layout || (layout && layout === this._printingEnhancedProperties.layoutNames.mapOnly)) {
             const resolution = geometry.calcPixelResolutionAtScale(printScale, spatialReference, dpi);
             templateWidth = templateOptions.width;

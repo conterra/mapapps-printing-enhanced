@@ -35,8 +35,7 @@
             "toc",
             "toolset",
             "dn_imprintprivacy",
-            "dn_printingenhanced",
-            "console"
+            "dn_printingenhanced"
         ],
         "i18n": [
             "bundle"

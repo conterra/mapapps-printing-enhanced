@@ -18,6 +18,7 @@ import Graphic from "@arcgis/core/Graphic";
 import GraphicsLayer from "@arcgis/core/layers/GraphicsLayer";
 import apprt_when from "apprt-core/when";
 import {apprtFetch, ContentType} from "apprt-fetch";
+import {replace} from "apprt-core/string-replace";
 import {createFormData} from "./utils";
 
 
@@ -50,7 +51,10 @@ export default class PrintingMapSeriesPreviewDrawer {
     }
 
     async drawMapSeriesFrames(mapSeriesExtent, printInfos, templateOptions, defaultPageUnit, doNotPrintEmptyTiles, mapSeriesExtentType, selectedObjectGeometry) {
-        const geometryParams = this._printingPreviewDrawer.getGeometryParamsFromTemplate(printInfos, templateOptions, defaultPageUnit);
+        const singlePageLayout =
+            templateOptions.layoutSinglePage || templateOptions.layoutNameSinglePage || templateOptions.layout;
+        const geometryParams = this._printingPreviewDrawer
+            .getGeometryParamsFromTemplate(printInfos, templateOptions, defaultPageUnit, singlePageLayout);
         let mainSeriesFrames = this._createAllMapFramesForMapSeries(mapSeriesExtent, geometryParams);
 
         if (mapSeriesExtentType === "object-geometry" && doNotPrintEmptyTiles && mainSeriesFrames?.length > 0) {
@@ -186,7 +190,9 @@ export default class PrintingMapSeriesPreviewDrawer {
         // Sicherheitsgrenze
         if (numberOfColumns * numberOfRows > this._properties.maxNumberOfDrawnFrames) {
             console.warn(`Canceling, because there are too many MapFrames to draw: ${numberOfRows * numberOfColumns}. Allowed number of frames: ${this._properties.maxNumberOfDrawnFrames}`);
-            this._logService.error(this._i18n.get().ui.errors.tooManyFrames);
+            this._logService.error(replace(this._i18n.get().ui.errors.tooManyFrames, {
+                maxNumberOfDrawnFrames: this._properties.maxNumberOfDrawnFrames
+            }));
             return [];
         }
 
