@@ -23,7 +23,8 @@
         "printing": "^4.20.0",
         "map-widget": "^4.20.0",
         "coordinatetransformer": "^4.20.0",
-        "jszip": "2.5.0-SNAPSHOT"
+        "ct": "^4.20.0",
+        "dojo": "^1.17.0"
     },
     "cssThemesExtension": [
         {
@@ -667,7 +668,6 @@
         },
         {
             "name": "PrintingRequestBlueprintProvider",
-            "impl": "./PrintingRequestBlueprintProvider",
             "provides": "dn_printingenhanced.PrintingRequestBlueprintProvider",
             "immediate": true,
             "properties": {
@@ -720,13 +720,11 @@
         },
         {
             "name": "PrintingMapSeriesPrintJobsModel",
-            "impl": "./PrintingMapSeriesPrintJobsModel",
             "provides": "dn_printingenhanced.PrintingMapSeriesPrintJobsModel",
             "immediate": true
         },
         {
             "name": "RectangleDrawer",
-            "impl": "./RectangleDrawer",
             "provides": "dn_printingenhanced.RectangleDrawer",
             "immediate": true,
             "references": [
@@ -738,7 +736,6 @@
         },
         {
             "name": "ObjectSelectionHandler",
-            "impl": "./ObjectSelectionHandler",
             "provides": "dn_printingenhanced.ObjectSelectionHandler",
             "immediate": true,
             "references": [
@@ -750,7 +747,6 @@
         },
         {
             "name": "DownloadAndZipHelper",
-            "impl": "./DownloadAndZipHelper",
             "provides": "dn_printingenhanced.DownloadAndZipHelper",
             "immediate": true,
             "references": [
