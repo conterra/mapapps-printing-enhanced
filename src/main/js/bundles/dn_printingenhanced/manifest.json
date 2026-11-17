@@ -23,7 +23,6 @@
         "printing": "^4.20.0",
         "map-widget": "^4.20.0",
         "coordinatetransformer": "^4.20.0",
-        "bluebird": "2.5.0-SNAPSHOT",
         "jszip": "2.5.0-SNAPSHOT"
     },
     "cssThemesExtension": [

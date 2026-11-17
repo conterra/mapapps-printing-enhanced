@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import * as Promise from "bluebird";
+import {delay, mapWithConcurrency} from "./utils";
 import jszip from "jszip";
 
 export default function () {
@@ -24,7 +24,7 @@ export default function () {
          * @param files_per_group
          */
         async downloadAsBlobs(infos, files_per_group = 2, vm) {
-            return Promise.map(
+            return mapWithConcurrency(
                 infos,
                 async info => {
                     return {
@@ -32,7 +32,7 @@ export default function () {
                         fileName: info.fileName
                     }
                 },
-                {concurrency: files_per_group}
+                files_per_group
             );
         },
 
@@ -60,7 +60,7 @@ export default function () {
                         return undefined;
                     }
                 }
-                await Promise.delay(Math.min(delayMs * Math.pow(2, attempt), maxDelayMs));
+                await delay(Math.min(delayMs * Math.pow(2, attempt), maxDelayMs));
             }
         },
 

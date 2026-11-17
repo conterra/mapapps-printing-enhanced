@@ -13,10 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import Promise from "bluebird";
 import {Evented_Mixin} from "apprt-core/Events";
 import {apprtFetch, ContentType} from "apprt-fetch";
-import {createFormData} from "./utils";
+import {createFormData, delay, mapWithConcurrency} from "./utils";
 import { apprtFetchJson } from "apprt-fetch";
 
 export default function () {
@@ -71,9 +70,7 @@ export default function () {
         async _executeMapSeriesLegendRequest(esriPrintWidget, vm, templateOptions, properties, mapSeriesJob, legendExtent, stablePrintRunOptions) {
             let legendPrintingRequest = await this._createLegendRequestBlueprint(esriPrintWidget, vm, templateOptions, properties, legendExtent, stablePrintRunOptions);
             if (!legendPrintingRequest) { // no legend printed
-                this._attachCompletionCountFunction(mapSeriesJob, new Promise((res, rej) => {
-                    res()
-                }));
+                this._attachCompletionCountFunction(mapSeriesJob, Promise.resolve());
                 return
             }
 
@@ -180,7 +177,7 @@ export default function () {
             mapSeriesJob, mapSeriesPrintingRequests, numberOfConcurrentRequests = 2
         ) {
             const that = this;
-            return Promise.map(
+            return mapWithConcurrency(
                 mapSeriesPrintingRequests,
                 async singleMapSeriesPrintingRequest => {
                     const formData = createFormData(singleMapSeriesPrintingRequest.body);
@@ -213,7 +210,7 @@ export default function () {
                         extent: singleMapSeriesPrintingRequest
                     };
                 },
-                {concurrency: numberOfConcurrentRequests}
+                numberOfConcurrentRequests
             );
         },
 
@@ -257,7 +254,7 @@ export default function () {
                     throw new Error(`Print job failed: ${msg}`);
                 }
                 // Still running, wait and try again
-                await new globalThis.Promise(resolve => setTimeout(resolve, interval));
+                await delay(interval);
             }
         },
 
