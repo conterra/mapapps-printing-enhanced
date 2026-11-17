@@ -197,7 +197,7 @@
                     "scaleEnabled": false,
                     "scale": true,
                     "copyright": false,
-                    "legendEnabled": false,
+                    "legendEnabled": true,
                     "attributionEnabled": false
                 },
                 "deriveLayoutFromPageSize": false,
@@ -205,6 +205,13 @@
                 "enablePrintPreviewMovement": true,
                 "layoutTemplatesInfoTaskName": "Get%20Layout%20Templates%20Info%20Task",
                 "defaultPageUnit": "CENTIMETER",
+                "filenameIfNoneIsGiven": "${ui.filenameIfNoneIsGiven}",
+                "legend": {
+                    "legendModes": ["integratedLegend", "noLegend"],
+                    "legendTitleAppendText": "${ui.legendTitleAppendText}",
+                    "legendPrintRequestDelayInMs": 2500,
+                    "legendTemplateOptionsRestoreDelayInMs": 300
+                },
                 "printSizes": [
                     {
                         "value": "a4",
