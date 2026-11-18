@@ -115,17 +115,13 @@
                              :name="printOrientation.value" :label="printOrientation.text" :value="printOrientation.value"/>
                 </v-radio-group>
             </v-flex>
-            <v-flex
+            <legend-options
                 v-if="visibleUiElements.legendEnabled"
-                md12>
-                <v-checkbox
-                    v-model="legendEnabledValue"
-                    :label="i18n.legendEnabled"
-                    color="primary"
-                    hide-details
-                    class="pa-0 ma-0"
-                ></v-checkbox>
-            </v-flex>
+                :i18n="i18n"
+                :legend-modes="legendModes"
+                :legend-value="legendValue"
+                @update:legend-value="$emit('update:legend-value', $event)"
+            />
             <v-flex
                 v-if="visibleUiElements.doNotPrintEmptyTiles"
                 md12>
@@ -221,9 +217,12 @@
 </template>
 <script>
 import Bindable from "apprt-vue/mixins/Bindable";
+import LegendOptions from "./LegendOptions.vue";
 
 export default {
-        components: {},
+        components: {
+            "legend-options": LegendOptions
+        },
         mixins: [Bindable],
         props: {
             i18n: {
@@ -276,9 +275,13 @@ export default {
                 type: String,
                 default: () => ""
             },
-            legendEnabled: {
-                type: Boolean,
-                default: true
+            legendModes: {
+                type: Array,
+                default: () => []
+            },
+            legendValue: {
+                type: String,
+                default: "noLegend"
             },
             scale: {
                 type: Number,
@@ -399,14 +402,6 @@ export default {
                 },
                 set: function (pagePrintOrientationValue) {
                     this.$emit('update:page-print-orientation', pagePrintOrientationValue);
-                }
-            },
-            legendEnabledValue: {
-                get: function () {
-                    return this.legendEnabled;
-                },
-                set: function (legendEnabled) {
-                    this.$emit('update:legend-enabled', legendEnabled);
                 }
             },
             scaleValue: {

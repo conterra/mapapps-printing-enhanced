@@ -213,8 +213,6 @@
                 "defaultPageUnit": "CENTIMETER",
                 "filenameIfNoneIsGiven": "${ui.filenameIfNoneIsGiven}",
                 "legend": {
-                    "defaultLegendEnabled": true,
-                    "legendNameIfNoneIsGiven": "${ui.legendNameIfNoneIsGiven}",
                     "legendModes": ["integratedLegend", "noLegend"],
                     "legendTitleAppendText": "${ui.legendTitleAppendText}",
                     "legendPrintRequestDelayInMs": 2500,

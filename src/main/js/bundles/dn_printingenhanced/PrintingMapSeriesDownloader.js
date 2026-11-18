@@ -16,48 +16,35 @@
 import {Evented_Mixin} from "apprt-core/Events";
 import {apprtFetch, ContentType} from "apprt-fetch";
 import {createFormData, delay, mapWithConcurrency} from "./utils";
+import {applyLegendEnabled} from "./LegendLayers";
 import { apprtFetchJson } from "apprt-fetch";
 
 export default function () {
     return {
-        async downloadMapSeries(mapSeriesPrintingRequests, mapSeriesTitle, legendExtent, esriPrintWidget, vm, templateOptions, properties, numberOfConcurrentRequests, printRunOptions) {
+        async downloadMapSeries(mapSeriesPrintingRequests, mapSeriesTitle, legendExtent, templateOptions, properties, numberOfConcurrentRequests, printRunOptions) {
             if (!mapSeriesPrintingRequests || mapSeriesPrintingRequests.length === 0)
                 return this._createMapSeriesErrorJob(mapSeriesTitle, templateOptions?.format, this._i18n.get().ui.mapSeriesRequestsInvalid);
 
             numberOfConcurrentRequests = numberOfConcurrentRequests ?? this._properties.numberOfConcurrentDownloads;
 
-            const stablePrintRunOptions = this._createStablePrintRunOptions(vm, printRunOptions);
-
-            let totalLegendJobsCounts; // legend request is started below (need to wait for series print jobs to be finished before printing legend)
-            stablePrintRunOptions.legendEnabled ? totalLegendJobsCounts = 1 : totalLegendJobsCounts = 0;
-
-            let totalJobCount = mapSeriesPrintingRequests.length + totalLegendJobsCounts;
+            // the legend page is printed after the map series pages (it is built from their last request)
+            const printLegendOwnPage = printRunOptions?.legendOwnPage === true;
+            const totalJobCount = mapSeriesPrintingRequests.length + (printLegendOwnPage ? 1 : 0);
             const mapSeriesJob = this._createMapSeriesJob(mapSeriesTitle, totalJobCount, templateOptions.format);
 
-            const that = this;
             const resultInfos = this._executeAndDownloadConcurrentMapSeriesPrintingRequests(
                 mapSeriesJob, mapSeriesPrintingRequests, numberOfConcurrentRequests
             );
             resultInfos.then(async (resultInfos) => {
-                // need to wait for series print jobs to be finished before printing legend
-                let legendResultInfos;
-                if (stablePrintRunOptions.legendEnabled) {
-                    legendResultInfos = await this._executeMapSeriesLegendRequest(esriPrintWidget, vm, templateOptions, properties, mapSeriesJob, legendExtent, stablePrintRunOptions);
-                    if (!legendResultInfos) {
-                        // there was an error, which should not block the download of the map series
-                        mapSeriesJob.completedSinglePrintJobCount = mapSeriesJob.completedSinglePrintJobCount + 1;
-                    }
+                if (printLegendOwnPage) {
+                    // never throws: a failing legend must not block the download of the map series
+                    mapSeriesJob.legendResultZipAsBlob = await this._printMapSeriesLegend(
+                        templateOptions, properties, mapSeriesJob, legendExtent
+                    );
+                    mapSeriesJob.completedSinglePrintJobCount = mapSeriesJob.completedSinglePrintJobCount + 1;
                 }
 
                 mapSeriesJob.resultZipAsBlobs = resultInfos;
-
-                if (legendResultInfos) {
-                    const legendBlobs = await that._downloadAndZipHelper.downloadAsBlobs([legendResultInfos], numberOfConcurrentRequests, vm);
-                    if (legendBlobs.length > 0) {
-                        mapSeriesJob.legendResultZipAsBlob = legendBlobs[0];
-                    }
-                }
-
                 mapSeriesJob.downloadFinished = true;
                 mapSeriesJob.emit("downloadFinished");
             }).catch(error => {
@@ -68,16 +55,44 @@ export default function () {
             return mapSeriesJob;
         },
 
-        async _executeMapSeriesLegendRequest(esriPrintWidget, vm, templateOptions, properties, mapSeriesJob, legendExtent, stablePrintRunOptions) {
-            let legendPrintingRequest = await this._createLegendRequestBlueprint(esriPrintWidget, vm, templateOptions, properties, legendExtent, stablePrintRunOptions);
-            if (!legendPrintingRequest) { // no legend printed
-                this._attachCompletionCountFunction(mapSeriesJob, Promise.resolve());
-                return
+        /**
+         * Prints and downloads the legend of a map series.
+         * Never throws: if anything fails (e.g. the legend layout does not exist on the print service),
+         * the user is notified and undefined is returned, so the map series can be downloaded without legend.
+         * @returns {Promise<{blob: Blob, fileName: string}|undefined>}
+         */
+        async _printMapSeriesLegend(templateOptions, properties, mapSeriesJob, legendExtent) {
+            try {
+                const legendResultInfo = await this._executeMapSeriesLegendRequest(
+                    templateOptions, properties, mapSeriesJob, legendExtent
+                );
+                const blob = await this._downloadAndZipHelper.fetchBlobWithRetry(legendResultInfo.url);
+                if (!blob) {
+                    throw new Error(`Legend print result could not be downloaded from '${legendResultInfo.url}'`);
+                }
+                return {
+                    blob,
+                    fileName: legendResultInfo.fileName
+                };
+            } catch (error) {
+                console.error("[PrintingMapSeriesDownloader] Legend could not be printed:", error);
+                this._logService.warn(this._i18n.get().ui.errors.legendPrintFailed);
+                return undefined;
+            }
+        },
+
+        /**
+         * @returns {Promise<{url: string, fileName: string}>} rejects if the legend could not be printed
+         */
+        async _executeMapSeriesLegendRequest(templateOptions, properties, mapSeriesJob, legendExtent) {
+            const legendPrintingRequest = this._createLegendRequestBlueprint(templateOptions, properties, legendExtent);
+            if (!legendPrintingRequest) {
+                throw new Error("No printing request blueprint available to create the legend request from");
             }
 
             const formData = createFormData(legendPrintingRequest.body);
-            const requestPromise = apprtFetch(legendPrintingRequest.url, {
-               method: "POST",
+            const response = await apprtFetch(legendPrintingRequest.url, {
+                method: "POST",
                 body: formData,
                 credentials: "include",
                 headers: {
@@ -86,52 +101,16 @@ export default function () {
                 timeoutMillis: this._properties.printingRequestTimeout,
                 proxyMode: "force-off"
             });
-
-            this._attachCompletionCountFunction(mapSeriesJob, requestPromise);
-
-            return requestPromise.then(async (res) => {
-                const responseJson = await res.json();
-                const resultUrl = await this._extractResultURLFromResponse(responseJson, legendPrintingRequest.url);
-                if (!resultUrl) {
-                    return;
-                }
-                return {
-                    url: resultUrl,
-                    fileName: `${this._properties.legendFileNamePrefix}.${mapSeriesJob.fileFormat}`
-                };
-            }, (err) => {
-                console.error(err);
-                this._logService.error(this._i18n.get().ui.errors.error);
-            });
-        },
-
-        _createStablePrintRunOptions(vm, printRunOptions) {
-            const legendEnabledValue =
-                printRunOptions?.legendEnabled !== undefined
-                    ? printRunOptions.legendEnabled
-                    : vm.mapSeriesLegendEnabled !== undefined
-                        ? vm.mapSeriesLegendEnabled
-                        : vm.legendEnabled;
-
+            const responseJson = await response.json();
+            // throws if the print service reports an error, e.g. an unknown Layout_Template
+            const resultUrl = await this._extractResultURLFromResponse(responseJson, legendPrintingRequest.url);
+            if (!resultUrl) {
+                throw new Error("Print service returned no result URL for the legend");
+            }
             return {
-                legendEnabled: this._toBoolean(legendEnabledValue, true)
+                url: resultUrl,
+                fileName: `${this._properties.legendFileNamePrefix}.${mapSeriesJob.fileFormat}`
             };
-        },
-
-        _toBoolean(value, fallback = false) {
-            if (value === undefined || value === null) {
-                return fallback;
-            }
-            if (typeof value === "string") {
-                const normalized = value.trim().toLowerCase();
-                if (normalized === "true") {
-                    return true;
-                }
-                if (normalized === "false") {
-                    return false;
-                }
-            }
-            return Boolean(value);
         },
 
         /**
@@ -139,9 +118,9 @@ export default function () {
          * This is done manually to avoid the expensive legend request to be done twice because canceling the request
          * of a blueprint cannot be done right now (see https://conterrade.atlassian.net/browse/MAPAPPS-6898
          */
-        async _createLegendRequestBlueprint(esriPrintWidget, vm, templateOptions, properties, legendExtent, stablePrintRunOptions) {
-            let legendTitle = templateOptions.title || properties.legend.legendNameIfNoneIsGiven;
-            legendTitle += properties.legend.legendTitleAppendText;
+        _createLegendRequestBlueprint(templateOptions, properties, legendExtent) {
+            const legendTitle = (templateOptions.title || properties.filenameIfNoneIsGiven)
+                + properties.legend.legendTitleAppendText;
 
             const printingRequestBlueprint = this._createLegendBlueprintFromMapImageBlueprint(legendTitle, legendExtent, properties.layoutNames.legend, templateOptions.customTextElements);
 
@@ -161,6 +140,8 @@ export default function () {
             lastMapImageBlueprintCopy.body.Layout_Template = legendTemplateName;
             webMapAsJson.layoutOptions.titleText = legendTitle;
             webMapAsJson.layoutOptions.customTextElements = customTextElements;
+            // the map series pages are printed without legend (empty legend layers), the legend page needs them
+            applyLegendEnabled(lastMapImageBlueprintCopy, webMapAsJson.layoutOptions, true);
             lastMapImageBlueprintCopy.body.Web_Map_as_JSON = JSON.stringify(webMapAsJson);
             delete lastMapImageBlueprintCopy.col;
             delete lastMapImageBlueprintCopy.row;

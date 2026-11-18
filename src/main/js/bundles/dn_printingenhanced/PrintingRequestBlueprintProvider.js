@@ -15,6 +15,7 @@
  */
 import esriConfig from "@arcgis/core/config";
 import QueryablePromiseHelper from "./QueryablePromiseHelper"
+import { applyLegendEnabled } from "./LegendLayers";
 
 function escapeRegExp(value) {
     return String(value).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
@@ -216,7 +217,7 @@ export default function () {
                 );
             }
             if (printState?.legendEnabled !== undefined) {
-                webMapAsJsonObject.layoutOptions.legendEnabled = printState.legendEnabled;
+                applyLegendEnabled(blueprint, webMapAsJsonObject.layoutOptions, printState.legendEnabled);
             }
             if (printState?.scalebarEnabled !== undefined) {
                 webMapAsJsonObject.layoutOptions.scalebarEnabled = printState.scalebarEnabled;

@@ -125,11 +125,18 @@ export default function () {
         async _createLegacyFallbackBlueprint(printState) {
             const esriTemplateOptions = this._printingWidget?._esriWidget?.templateOptions;
             const originalLayout = esriTemplateOptions?.layout;
+            const originalLegendEnabled = esriTemplateOptions?.legendEnabled;
             const interceptBlueprintPromise =
                 this._printingRequestBlueprintProvider.getPrintingRequestBlueprint();
             try {
                 if (esriTemplateOptions && printState?.overviewLayoutTemplate) {
                     esriTemplateOptions.layout = printState.overviewLayoutTemplate;
+                }
+                if (esriTemplateOptions) {
+                    // capture the blueprint with legend, so it contains the legend layers
+                    // (legendOptions.operationalLayers) needed for the separate legend page.
+                    // The map series pages remove them again via printState.legendEnabled.
+                    esriTemplateOptions.legendEnabled = true;
                 }
                 this._printingWidget._esriWidget._handlePrintMap();
             } catch (error) {
@@ -149,6 +156,7 @@ export default function () {
             } finally {
                 if (esriTemplateOptions) {
                     esriTemplateOptions.layout = originalLayout;
+                    esriTemplateOptions.legendEnabled = originalLegendEnabled;
                 }
             }
         },

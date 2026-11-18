@@ -217,7 +217,7 @@ To make the functions of this bundle available to the user, the following tool c
 | defaultPageUnit             | String             | `MILLIMETER, CENTIMETER, INCH` | `CENTIMETER`                     | Default template unit (ArcGIS Server < 10.6).                                                                                                                                                                                                                                   |
 | filenameIfNoneIsGiven       | String             |                                | `untitled`                       | Title/file name used for a print request (both the main print and, if applicable, the second legend request) when the user left the title/file name field empty.                                                                                                              |
 | legend                      | Object             |                                |                                  | Configures the legend print mode. See fields below.                                                                                                                                                                                                                             |
-| legend.legendModes          | Array              | `"noLegend"`, `"integratedLegend"`, `"legendOwnPage"` | `["integratedLegend", "noLegend"]` | Legend modes the user can choose from. The order defines the order in the UI. `integratedLegend` is preselected if available, otherwise the first entry. With fewer than two modes no legend option is shown and the only mode (or `noLegend`) is used. `integratedLegend` is not available in the map-only tab. |
+| legend.legendModes          | Array              | `"noLegend"`, `"integratedLegend"`, `"legendOwnPage"` | `["integratedLegend", "noLegend"]` | Legend modes the user can choose from. The order defines the order in the UI. `integratedLegend` is preselected if available, otherwise the first entry. With fewer than two modes no legend option is shown and the only mode (or `noLegend`) is used. `integratedLegend` is not available in the map-only tab; in the map series tab it only applies to the overview page. |
 | legend.legendTitleAppendText | String            |                                | `" (Legend)"`                    | Appended to the legend print's title/file name so it doesn't collide with the map print in the results list.                                                                                                                                                                   |
 | legend.legendPrintRequestDelayInMs | Number      |                                | `2500`                           | Delay (ms) before sending the second (legend) print request after the main print request; environment-dependent.                                                                                                                                                                |
 | legend.legendTemplateOptionsRestoreDelayInMs | Number |                             | `300`                            | Delay (ms) before restoring the original template options after the second (legend) print request; environment-dependent.                                                                                                                                                       |
@@ -323,6 +323,16 @@ The following Configs have been added for **map series**:
   E.g. to use a separate layout for the individual pages of the A4 portrait series:
     - "a4_portrait": "A4_hoch",
     - "a4_portrait_singlepage": "A4_hoch_einzelseite"
+- Legend: the map series uses the same `legend.legendModes` as the single print. The individual pages never
+  contain a legend.
+    - `integratedLegend`: only the overview page contains the legend. It uses the layout
+      `<size>_<orientation>_integratedLegend`, or `<size>_<orientation>` if not configured. The legend only lists
+      the map's layers, not the tile frames and labels of the overview page. A map series with a single tile
+      (e.g. from the object selection) has no overview page: its only page is printed with the overview layout
+      and the legend instead, with the scale adjusted to fit the tile into that layout's map frame.
+    - `legendOwnPage`: a separate legend page is printed with `layoutNames.legend` after all pages and added to
+      the ZIP file. If it cannot be printed (e.g. the layout does not exist on the print service), the map series
+      is downloaded without legend and the user is notified.
 - mapSeriesTileOverlap: overlap of the tiles in percent. Default is 0.05 (5%).
 - askToPrintManyFramesThreshold: threshold for number of frames that the user can print without confirming: if the user wants to print more map series frames than allowed by this threshold, they will be asked to confirm that they actually want to print that many frames
 - minScaleForSeries: minimum print scale for map series print. if below, the frames of the map-series won't update to it and the print cant start.

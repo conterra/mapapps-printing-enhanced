@@ -136,7 +136,8 @@
                     :page-print-orientation-values="pagePrintOrientationValues"
                     :map-only-layout-name="mapOnlyLayoutName"
                     :layout.sync="layout"
-                    :legend-enabled.sync="mapSeriesLegendEnabled"
+                    :legend-modes="legendModes"
+                    :legend-value.sync="legendValue"
                     :scale.sync="scale"
                     :scale-values="scaleValues"
                     :min-scale-for-series="minScaleForSeries"
@@ -285,7 +286,6 @@
                 enablePrintPreview: true,
                 activeTab: "layout",
                 legendValue: "integratedLegend",
-                mapSeriesLegendEnabled: true,
                 mapSeriesExtentSet: false,
                 doNotPrintEmptyTiles: false,
                 scaleValueIsValidForPreview: false,
@@ -337,9 +337,6 @@
             },
             print: function () {
                 if (this.activeTab === "mapSeries") {
-                    if (this.$refs?.mapSeriesWidget?.legendEnabledValue !== undefined) {
-                        this.mapSeriesLegendEnabled = this.$refs.mapSeriesWidget.legendEnabledValue;
-                    }
                     this.$emit("printMapSeries", {});
                 } else {
                     this.$emit("print", {});

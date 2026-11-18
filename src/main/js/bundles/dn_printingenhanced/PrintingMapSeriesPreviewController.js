@@ -23,6 +23,8 @@ import d_string from "dojo/string";
 import ct_lang from "ct/_lang";
 import ct_geometry from "ct/mapping/geometry";
 import Extent from "@arcgis/core/geometry/Extent";
+import { normalizeLegendValue } from "./LegendValue";
+import { applyLegendEnabled } from "./LegendLayers";
 
 const _templateOptions = Symbol("_templateOptions");
 const _templateOptionsWatchHandles = Symbol("_templateOptionsWatchHandles");
@@ -228,6 +230,32 @@ export default declare({
         return templateOptions?.layoutSinglePage || templateOptions?.layoutNameSinglePage;
     },
 
+    /**
+     * Layout for the page with the integrated legend: "<size>_<orientation>_integratedLegend",
+     * falling back to the overview layout (same resolution as for the single print).
+     */
+    _getIntegratedLegendLayoutName(vm, printingEnhancedProperties, overviewLayoutName) {
+        return (
+            printingEnhancedProperties?.layoutNames?.[
+                vm.pagePrintSize + "_" + vm.pagePrintOrientation + "_integratedLegend"
+            ] || overviewLayoutName
+        );
+    },
+
+    /**
+     * Turns the only page of a single-tile map series into a page with integrated legend.
+     * The page uses the integrated legend layout instead of the "_singlepage" layout, so the map scale is
+     * recalculated to fit the tile into that layout's map frame (like on the overview page).
+     */
+    _applyIntegratedLegendToSinglePage(printingRequest, layoutName) {
+        const webMapObj = JSON.parse(printingRequest.body.Web_Map_as_JSON);
+        webMapObj.layoutOptions = webMapObj.layoutOptions || {};
+        applyLegendEnabled(printingRequest, webMapObj.layoutOptions, true);
+        this._setMapOptions(webMapObj, layoutName);
+        printingRequest.body.Web_Map_as_JSON = JSON.stringify(webMapObj);
+        printingRequest.body.Layout_Template = layoutName;
+    },
+
     _getOverviewLayoutName(templateOptions, vm, printingEnhancedProperties) {
         return (
             templateOptions?.layout ||
@@ -256,7 +284,8 @@ export default declare({
             authorText: templateOptions?.author || "",
             copyrightText: templateOptions?.copyright || "",
             customTextElements: templateOptions?.customTextElements || [],
-            legendEnabled: templateOptions?.legendEnabled !== false,
+            // map series pages never contain a legend; it is only available on its own page (legendOwnPage)
+            legendEnabled: false,
             scalebarEnabled: templateOptions?.scaleBarEnabled !== false,
             scale: templateOptions?.scale,
             scaleEnabled: templateOptions?.scaleEnabled && templateOptions?.scale !== -1
@@ -420,6 +449,10 @@ export default declare({
     async _printMapSeries(vm, mapSeriesTitle, esriPrintWidget, templateOptions, printingEnhancedProperties) {
         // Show a placeholder for the Map-Series-Job, because adding the real one takes a bit.
         this._showPlaceholderMapSeriesJob(mapSeriesTitle, templateOptions.format);
+        const legendValue = normalizeLegendValue(
+            vm.legendValue,
+            printingEnhancedProperties.legend?.legendModes
+        );
         let allMapSeriesPrintingRequests;
         try {
             const overviewLayoutName = this._getOverviewLayoutName(
@@ -427,6 +460,10 @@ export default declare({
                 vm,
                 printingEnhancedProperties
             );
+            // integratedLegend: only the overview page gets the legend (the tile pages never do)
+            const integratedLegendLayoutName = legendValue === "integratedLegend"
+                ? this._getIntegratedLegendLayoutName(vm, printingEnhancedProperties, overviewLayoutName)
+                : undefined;
             const printState = this._createMapSeriesPrintState(
                 templateOptions,
                 vm,
@@ -442,14 +479,20 @@ export default declare({
             }
 
             // Übersicht einfügen
-            if(allMapSeriesPrintingRequests.length > 1) {
-                const overviewReq = await this._buildOverviewPrintRequest(overviewLayoutName);
+            if (allMapSeriesPrintingRequests.length > 1) {
+                const overviewReq = await this._buildOverviewPrintRequest(
+                    integratedLegendLayoutName || overviewLayoutName,
+                    !!integratedLegendLayoutName
+                );
                 if (overviewReq && allMapSeriesPrintingRequests[0]) {
                     overviewReq.url = allMapSeriesPrintingRequests[0].url; // use same print service
                     allMapSeriesPrintingRequests.unshift(overviewReq);
                 } else {
                     console.warn("Could not add overview page to map series print requests.");
                 }
+            } else if (integratedLegendLayoutName && allMapSeriesPrintingRequests.length === 1) {
+                // no overview page for a single tile (e.g. object selection): this page takes its role
+                this._applyIntegratedLegendToSinglePage(allMapSeriesPrintingRequests[0], integratedLegendLayoutName);
             }
         } finally {
             this._hidePlaceholderMapSeriesJob(mapSeriesTitle);
@@ -457,9 +500,9 @@ export default declare({
 
         const legendExtent = this._calcLegendExtent();
         const mapSeriesPrintOptions = {
-            legendEnabled: vm.mapSeriesLegendEnabled !== undefined ? vm.mapSeriesLegendEnabled : vm.legendEnabled
+            legendOwnPage: legendValue === "legendOwnPage"
         };
-        const mapSeriesJob = await this._printingMapSeriesDownloader.downloadMapSeries(allMapSeriesPrintingRequests, mapSeriesTitle, legendExtent, esriPrintWidget, vm, templateOptions, printingEnhancedProperties, undefined, mapSeriesPrintOptions);
+        const mapSeriesJob = await this._printingMapSeriesDownloader.downloadMapSeries(allMapSeriesPrintingRequests, mapSeriesTitle, legendExtent, templateOptions, printingEnhancedProperties, undefined, mapSeriesPrintOptions);
         this.printingMapSeriesPrintJobsModel.mapSeriesJobs = [...this.printingMapSeriesPrintJobsModel.mapSeriesJobs, mapSeriesJob];
         return this.waitForMapSeriesToFinish(mapSeriesJob); // wird gemacht, um danach legende zu drucken
     },
@@ -785,8 +828,11 @@ export default declare({
 
     /**
      * Builds a print request for an overview page showing all map series frames with labels.
+     * @param layoutname layout of the overview page
+     * @param {boolean} legendEnabled integrated legend on the overview page. It only lists the map's layers,
+     *      not the frames and labels added here.
      */
-    async _buildOverviewPrintRequest(layoutname) {
+    async _buildOverviewPrintRequest(layoutname, legendEnabled = false) {
         if (!this.mapSeriesMainFrames?.length) return null;
         if (!layoutname) {
             console.warn("Could not determine overview layout name for map series print.");
@@ -799,6 +845,13 @@ export default declare({
         // Clone original body to avoid mutating blueprint
         const bodyClone = { ...blueprint.body };
         const webMapObj = JSON.parse(bodyClone.Web_Map_as_JSON);
+        webMapObj.layoutOptions = webMapObj.layoutOptions || {};
+        // the legend layers are determined before the frame layers are added below, so those are never in the legend
+        applyLegendEnabled(
+            { legendOperationalLayers: blueprint.legendOperationalLayers },
+            webMapObj.layoutOptions,
+            legendEnabled
+        );
 
         // Build polygon features (frames) and separate centroid point features for perfectly centered labels
         const frameFeatures = this.mapSeriesMainFrames.map((f, idx) => ({

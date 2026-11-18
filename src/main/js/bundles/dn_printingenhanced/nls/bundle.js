@@ -45,7 +45,6 @@ module.exports = {
             rotatePrintFrame: "Rotate print frame",
             scale: "Scale",
             scaleEnabled: "Set scale",
-            legendEnabled: "Enable legend",
             integratedLegend: "Integrated legend",
             legendOwnPage: "Legend on own page",
             noLegend: "No legend",
@@ -66,6 +65,7 @@ module.exports = {
                 filterEmptyTilesError: "An error occurred while determining the unused tiles.",
                 tooManyFrames: "Too many tiles are being generated. A maximum of ${maxNumberOfDrawnFrames} tiles can be generated.",
                 error: "Error during printing: ",
+                legendPrintFailed: "The legend could not be printed. The map series will be downloaded without legend.",
                 unknown: "Printing: An unknown error occurred!",
                 code403: "Printing: The configured printing service URL has to be in your proxy whitelist!",
                 code404: "Printing: The printing service could not be resolved for the configured URL!"
@@ -89,7 +89,6 @@ module.exports = {
             landscapeLabel: "Landscape",
             contentLabel: "Content-Text",
             editLabel: "Edit-Text",
-            legendNameIfNoneIsGiven: "untitled",
             notReadyForMapSeriesPrint: "Not all prerequisites for map series printing are met.",
             askToPrintMessage: "The map series print has been configured to print a very large number of tiles. This may take a very long time. Are you sure you want to print this many tiles? <br><br> Number of tiles to be printed: ",
             askToPrintTitle: "Confirm printing of many maps",

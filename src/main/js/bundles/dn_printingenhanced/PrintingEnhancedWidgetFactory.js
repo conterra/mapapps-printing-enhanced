@@ -311,10 +311,6 @@ export default class PrintingEnhancedWidgetFactory {
             this._invalidateMapSeriesBlueprint("Scale changed");
         });
 
-        vm.$watch("mapSeriesLegendEnabled", () => {
-            this._invalidateMapSeriesBlueprint("Map series legend setting changed");
-        });
-
         vm.$watch("format", () => {
             this._invalidateMapSeriesBlueprint("Print format changed");
             this._refreshTemplateOptionsControllers();
@@ -372,7 +368,7 @@ export default class PrintingEnhancedWidgetFactory {
                 }
                 this._refreshTemplateOptionsControllers();
                 const mapSeriesTitle =
-                    templateOptions.title || properties.legend.legendNameIfNoneIsGiven;
+                    templateOptions.title || properties.filenameIfNoneIsGiven;
                 await this._printingMapSeriesPreviewController.handlePrintMapSeries(
                     mapSeriesTitle,
                     esriPrintWidget,
@@ -595,10 +591,6 @@ export default class PrintingEnhancedWidgetFactory {
             vm.pagePrintOrientation = defaultPagePrintOrientation[0].value;
         }
         vm.legendValue = this._normalizeLegendValue(vm.legendValue);
-        vm.mapSeriesLegendEnabled =
-            enhancedProperties?.legend?.defaultLegendEnabled !== undefined
-                ? enhancedProperties.legend.defaultLegendEnabled
-                : true;
         if (templateOptions) {
             this._setLayoutName(vm, templateOptions, enhancedProperties);
         }
