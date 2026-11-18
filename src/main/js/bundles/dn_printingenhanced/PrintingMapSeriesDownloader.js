@@ -22,7 +22,7 @@ export default function () {
     return {
         async downloadMapSeries(mapSeriesPrintingRequests, mapSeriesTitle, legendExtent, esriPrintWidget, vm, templateOptions, properties, numberOfConcurrentRequests, printRunOptions) {
             if (!mapSeriesPrintingRequests || mapSeriesPrintingRequests.length === 0)
-                return this._createMapSeriesErrorJob(this._i18n.get().mapSeriesRequestsInvalid);
+                return this._createMapSeriesErrorJob(mapSeriesTitle, templateOptions?.format, this._i18n.get().ui.mapSeriesRequestsInvalid);
 
             numberOfConcurrentRequests = numberOfConcurrentRequests ?? this._properties.numberOfConcurrentDownloads;
 
@@ -60,10 +60,11 @@ export default function () {
 
                 mapSeriesJob.downloadFinished = true;
                 mapSeriesJob.emit("downloadFinished");
-            }, error => {
+            }).catch(error => {
                 console.error(error);
                 this._logService.error(this._i18n.get().ui.errors.error);
-            })
+                this._markMapSeriesJobAsFailed(mapSeriesJob, error?.message || String(error));
+            });
             return mapSeriesJob;
         },
 
@@ -303,23 +304,23 @@ export default function () {
                     this.resultZipAsBlobs = null;
                     this.legendResultZipAsBlob = null;
                     this.fileFormat = fileFormat;
+                    this.failed = false;
                     this.errorMsg = "";
                 }
             });
             return new mapSeriesJobClazz();
         },
 
-        _createMapSeriesErrorJob(message) {
-            return {
-                totalSinglePrintJobCount: 0,
-                completedSinglePrintJobCount: 0,
-                downloadFinished: true,
-                mapSeriesTitle: "",
-                resultZipAsBlobs: null,
-                legendResultZipAsBlob: null,
-                fileFormat: "",
-                errorMsg: message
-            };
+        _createMapSeriesErrorJob(mapSeriesTitle, fileFormat, message) {
+            const mapSeriesJob = this._createMapSeriesJob(mapSeriesTitle, 0, fileFormat);
+            this._markMapSeriesJobAsFailed(mapSeriesJob, message);
+            return mapSeriesJob;
+        },
+
+        _markMapSeriesJobAsFailed(mapSeriesJob, message) {
+            mapSeriesJob.failed = true;
+            mapSeriesJob.errorMsg = message || "";
+            mapSeriesJob.emit("failed");
         }
     }
 }

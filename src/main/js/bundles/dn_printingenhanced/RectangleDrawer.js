@@ -21,8 +21,11 @@ export default function () {
             const that = this;
             if (this._activeDrawPromise) await this.cancelRectangleDrawing();
             this._activeDrawPromise = new CancelablePromise((resolve, reject, oncancel) => {
-                let drawing = this._drawing;
-                drawing.mode = "rectangle";
+                const drawing = this._getDrawing();
+                if (!drawing) {
+                    reject(new Error("No map view available for rectangle drawing"));
+                    return;
+                }
                 if (this._drawListener) this._drawListener.remove();
                 this._drawListener = drawing.watch("graphic", (evt) => {
                     let graphic = evt.value;
@@ -51,9 +54,39 @@ export default function () {
             }
         },
 
-        _deactivateRectangleDrawing() {
+        deactivate() {
+            this._deactivateRectangleDrawing();
+            this._drawing = undefined;
+        },
+
+        /**
+         * Returns a dedicated drawing instance (instead of the shared default map drawing),
+         * so that neither its mode nor its drawn graphics interfere with other bundles.
+         * A new instance is created if the map view has changed (e.g. 2D/3D switch).
+         */
+        _getDrawing() {
+            const view = this._mapWidgetModel.view;
+            if (!view) {
+                return undefined;
+            }
             let drawing = this._drawing;
-            drawing.active = false;
+            if (!drawing || drawing.view !== view) {
+                if (drawing) {
+                    drawing.active = false;
+                }
+                drawing = this._drawing = this._drawingFactory.createDrawing({
+                    view,
+                    mode: "rectangle"
+                });
+            }
+            return drawing;
+        },
+
+        _deactivateRectangleDrawing() {
+            const drawing = this._drawing;
+            if (drawing) {
+                drawing.active = false;
+            }
             let drawListener = this._drawListener;
             this._drawListener = undefined;
             if (drawListener) {

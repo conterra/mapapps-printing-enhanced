@@ -22,7 +22,6 @@ import d_aspect from "dojo/aspect";
 import d_string from "dojo/string";
 import ct_lang from "ct/_lang";
 import ct_geometry from "ct/mapping/geometry";
-import QueryablePromiseHelper from "./QueryablePromiseHelper";
 import Extent from "@arcgis/core/geometry/Extent";
 
 const _templateOptions = Symbol("_templateOptions");
@@ -483,14 +482,31 @@ export default declare({
         this.printingMapSeriesPrintJobsModel.mapSeriesJobs = this.printingMapSeriesPrintJobsModel.mapSeriesJobs.filter(job => job.mapSeriesTitle !== mapSeriesTitle + "...",);
     },
 
+    /**
+     * Resolves once the map series job has either finished downloading or failed.
+     * Failures are already reported by the downloader and shown in the results list.
+     */
     async waitForMapSeriesToFinish(mapSeriesJob) {
-        const qpm = new QueryablePromiseHelper();
-        mapSeriesJob.on("downloadFinished", () => qpm.resolve());
-        return qpm.waitForPromiseToResolve();
+        if (mapSeriesJob.downloadFinished || mapSeriesJob.failed) {
+            return mapSeriesJob;
+        }
+        return new Promise((resolve) => {
+            const handles = [];
+            const done = () => {
+                handles.forEach((handle) => handle.remove());
+                resolve(mapSeriesJob);
+            };
+            handles.push(mapSeriesJob.on("downloadFinished", done));
+            handles.push(mapSeriesJob.on("failed", done));
+        });
     },
 
     saveJobAsZip(mapSeriesJob, vm) {
-        let allblobs = mapSeriesJob.resultZipAsBlobs;
+        if (mapSeriesJob.failed || !mapSeriesJob.downloadFinished || !mapSeriesJob.resultZipAsBlobs) {
+            return;
+        }
+        // copy, so repeated downloads do not add the legend multiple times
+        const allblobs = [...mapSeriesJob.resultZipAsBlobs];
         if (mapSeriesJob.legendResultZipAsBlob) allblobs.push(mapSeriesJob.legendResultZipAsBlob);
         this._downloadAndZipHelper.saveBlobsAsZip(allblobs, mapSeriesJob.mapSeriesTitle, vm);
     },

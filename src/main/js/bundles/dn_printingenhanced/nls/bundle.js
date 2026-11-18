@@ -52,6 +52,7 @@ module.exports = {
             printResults: "Results",
             printResultLoading: "Print result is loading",
             printError: "An error occurred while loading the print result",
+            mapSeriesPrintError: "Map series print failed",
             printResultAvailable: ": print result is available",
             noPrintResults: "No print results",
             errors: {

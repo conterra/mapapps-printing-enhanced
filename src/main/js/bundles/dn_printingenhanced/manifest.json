@@ -23,6 +23,8 @@
         "printing": "^4.20.0",
         "map-widget": "^4.20.0",
         "coordinatetransformer": "^4.20.0",
+        "filesaver": "^4.20.0",
+        "mapdraw-api": "^4.20.0",
         "ct": "^4.20.0",
         "dojo": "^1.17.0"
     },
@@ -726,8 +728,12 @@
             "immediate": true,
             "references": [
                 {
-                    "name": "_drawing",
-                    "providing": "mapdraw-api.DefaultMapDrawing"
+                    "name": "_drawingFactory",
+                    "providing": "mapdraw-api.DrawingFactory"
+                },
+                {
+                    "name": "_mapWidgetModel",
+                    "providing": "map-widget.MapWidgetModel"
                 }
             ]
         },

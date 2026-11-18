@@ -51,6 +51,7 @@ module.exports = {
         printResults: "Ergebnisse",
         printResultLoading: "Druckergebnis wird geladen",
         printError: "Es ist ein Fehler beim Laden des Druckergebnisses aufgetreten",
+        mapSeriesPrintError: "Kartenseriendruck fehlgeschlagen",
         printResultAvailable: ": Druckergebnis ist verfügbar",
         noPrintResults: "Keine Druckergebnisse vorhanden",
         errors: {

@@ -35,8 +35,16 @@
                 @click="saveJobAgain(mapSeriesJob)"
             >
                 <v-list-tile-action>
+                    <v-icon
+                        v-if="isMapSeriesJobFailed(mapSeriesJob)"
+                        color="red"
+                        role="alert"
+                        :aria-label="i18n.mapSeriesPrintError"
+                    >
+                        error
+                    </v-icon>
                     <v-progress-circular
-                        v-if="!isMapSeriesJobFinished(mapSeriesJob)"
+                        v-else-if="!isMapSeriesJobFinished(mapSeriesJob)"
                         rotate="-90"
                         size="32"
                         :value="getPercentageCompleted(mapSeriesJob)"
@@ -58,6 +66,13 @@
                 <v-list-tile-content>
                     <!-- eslint-disable-next-line vue/no-v-text-v-html-on-component -->
                     <v-list-tile-title v-text="mapSeriesJob.mapSeriesTitle" />
+                    <v-list-tile-sub-title
+                        v-if="isMapSeriesJobFailed(mapSeriesJob)"
+                        class="red--text"
+                        :title="mapSeriesJob.errorMsg"
+                    >
+                        {{ i18n.mapSeriesPrintError }}
+                    </v-list-tile-sub-title>
                 </v-list-tile-content>
             </v-list-tile>
             <v-divider v-if="reverseExportedLinks.length > 0" />
@@ -147,14 +162,23 @@
             isMapSeriesJobDownloaded(mapSeriesJob) {
                 return mapSeriesJob.downloadFinished;
             },
+            isMapSeriesJobFailed(mapSeriesJob) {
+                return !!mapSeriesJob.failed;
+            },
             getPercentageCompleted(mapSeriesJob) {
+                if (!mapSeriesJob.totalSinglePrintJobCount) {
+                    return 0;
+                }
                 return Math.floor(
                     (mapSeriesJob.completedSinglePrintJobCount * 100) /
                         mapSeriesJob.totalSinglePrintJobCount
                 );
             },
             saveJobAgain(mapSeriesJob) {
-                if (this.isMapSeriesJobDownloaded(mapSeriesJob)) {
+                if (
+                    !this.isMapSeriesJobFailed(mapSeriesJob) &&
+                    this.isMapSeriesJobDownloaded(mapSeriesJob)
+                ) {
                     this.$emit("save-job-again", mapSeriesJob);
                 }
             }
