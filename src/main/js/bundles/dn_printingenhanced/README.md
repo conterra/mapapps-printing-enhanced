@@ -349,7 +349,7 @@ The following Configs have been added for **map series**:
 - legendFileNamePrefix: Prefix for legend file
 - fileNameSuffixOverviewPage: suffix for the overview page file name in map series mode
 - printingRequestTimeout: timeout for waiting for a print job to execute
-- geometryServerURL: URL of the ArcGIS Server GeometryServer that is used to filter empty tiles (tiles not covered by selected print geometry), e.g. "https://dev0221w.conterra.de/server/rest/services/Utilities/Geometry/GeometryServer"
+- geometryServerURL: URL of the ArcGIS Server GeometryServer that is used to filter empty tiles (tiles not covered by selected print geometry)
 - maxNumberOfDrawnFrames: maximum number of frames that will be drawn in the map; this implicitly also restricts the number of max frames printed
 
 ```json
