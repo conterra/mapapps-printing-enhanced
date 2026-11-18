@@ -201,19 +201,24 @@
                     "scaleEnabled": false,
                     "scale": true,
                     "copyright": false,
+                    "legendEnabled": true,
                     "attributionEnabled": false,
                     "mapSeriesTab": true,
-                    "doNotPrintEmptyTiles": true,
-                    "legendEnabled": false
+                    "doNotPrintEmptyTiles": true
                 },
                 "deriveLayoutFromPageSize": false,
                 "enablePrintPreview": true,
                 "enablePrintPreviewMovement": true,
                 "layoutTemplatesInfoTaskName": "Get%20Layout%20Templates%20Info%20Task",
                 "defaultPageUnit": "CENTIMETER",
+                "filenameIfNoneIsGiven": "${ui.filenameIfNoneIsGiven}",
                 "legend": {
                     "defaultLegendEnabled": true,
-                    "legendNameIfNoneIsGiven": "${ui.legendNameIfNoneIsGiven}"
+                    "legendNameIfNoneIsGiven": "${ui.legendNameIfNoneIsGiven}",
+                    "legendModes": ["integratedLegend", "noLegend"],
+                    "legendTitleAppendText": "${ui.legendTitleAppendText}",
+                    "legendPrintRequestDelayInMs": 2500,
+                    "legendTemplateOptionsRestoreDelayInMs": 300
                 },
                 "printSizes": [
                     {

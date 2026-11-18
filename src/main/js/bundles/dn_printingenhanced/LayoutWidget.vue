@@ -223,18 +223,13 @@
                     hide-details
                 />
             </v-flex>
-            <v-flex
+            <legend-options
                 v-if="visibleUiElements.legendEnabled"
-                md12
-            >
-                <v-checkbox
-                    v-model="legendEnabledValue"
-                    :label="i18n.legendEnabled"
-                    color="primary"
-                    hide-details
-                    class="pa-0 ma-0"
-                />
-            </v-flex>
+                :i18n="i18n"
+                :legend-modes="legendModes"
+                :legend-value="legendValue"
+                @update:legend-value="$emit('update:legend-value', $event)"
+            />
             <v-flex
                 v-for="(customTextElement, index) in customTextElementsArray"
                 :key="index"
@@ -252,9 +247,12 @@
 </template>
 <script>
     import Bindable from "apprt-vue/mixins/Bindable";
+    import LegendOptions from "./LegendOptions.vue";
 
     export default {
-        components: {},
+        components: {
+            "legend-options": LegendOptions
+        },
         mixins: [Bindable],
         props: {
             i18n: {
@@ -290,10 +288,6 @@
             layout: {
                 type: String,
                 default: "a3-portrait"
-            },
-            legendEnabled: {
-                type: Boolean,
-                default: true
             },
             scale: {
                 type: Number,
@@ -354,6 +348,14 @@
             mapOnlyLayoutName: {
                 type: String,
                 default: () => ""
+            },
+            legendModes: {
+                type: Array,
+                default: () => []
+            },
+            legendValue: {
+                type: String,
+                default: "noLegend"
             }
         },
         data() {
@@ -407,14 +409,6 @@
                 },
                 set: function (layout) {
                     this.$emit("update:layout", layout);
-                }
-            },
-            legendEnabledValue: {
-                get: function () {
-                    return this.legendEnabled;
-                },
-                set: function (legendEnabled) {
-                    this.$emit("update:legend-enabled", legendEnabled);
                 }
             },
             scaleValue: {

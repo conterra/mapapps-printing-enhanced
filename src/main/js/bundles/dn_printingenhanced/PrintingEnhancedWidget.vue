@@ -28,28 +28,40 @@
     >
         <v-tabs
             ref="v_tabs_printing"
-            v-model="activeTabId"
+            v-model="activeTab"
             slider-color="primary"
             height="34"
             centered
             grow
         >
-            <v-tab v-show="visibleUiElements.layoutTab">
+            <v-tab
+                v-show="visibleUiElements.layoutTab"
+                href="#layout"
+            >
                 {{ i18n.layoutTab }}
             </v-tab>
-            <v-tab v-show="visibleUiElements.mapOnlyTab">
+            <v-tab
+                v-show="visibleUiElements.mapOnlyTab"
+                href="#mapOnly"
+            >
                 {{ i18n.mapOnlyTab }}
             </v-tab>
-            <v-tab v-show="visibleUiElements.mapSeriesTab">
+            <v-tab
+                v-show="visibleUiElements.mapSeriesTab"
+                href="#mapSeries"
+            >
                 {{ i18n.mapSeriesTab }}
             </v-tab>
-            <v-tab>
+            <v-tab href="#results">
                 {{ i18n.printResults }}
                 <template v-if="printResultsCount">
                     ({{ printResultsCount }})
                 </template>
             </v-tab>
-            <v-tab-item v-show="visibleUiElements.layoutTab">
+            <v-tab-item
+                v-show="visibleUiElements.layoutTab"
+                value="layout"
+            >
                 <layout-widget
                     :i18n="i18n"
                     :author.sync="author"
@@ -58,7 +70,6 @@
                     :dpi-values="dpiValues"
                     :format.sync="format"
                     :layout.sync="layout"
-                    :legend-enabled.sync="legendEnabled"
                     :scale.sync="scale"
                     :scale-values="scaleValues"
                     :scale-enabled.sync="scaleEnabled"
@@ -75,13 +86,18 @@
                     :page-print-orientation-values="pagePrintOrientationValues"
                     :custom-text-elements="customTextElements"
                     :map-only-layout-name="mapOnlyLayoutName"
+                    :legend-modes="legendModes"
+                    :legend-value.sync="legendValue"
                     @resetScale="$emit('resetScale')"
                     v-on:trigger-custom-text-elements-update="
                         $emit('trigger-custom-text-elements-update', $event)
                     "
                 />
             </v-tab-item>
-            <v-tab-item v-show="visibleUiElements.mapOnlyTab">
+            <v-tab-item
+                v-show="visibleUiElements.mapOnlyTab"
+                value="mapOnly"
+            >
                 <map-only-widget
                     :i18n="i18n"
                     :attribution-enabled.sync="attributionEnabled"
@@ -97,11 +113,16 @@
                     :scale-enabled.sync="scaleEnabled"
                     :enable-print-preview.sync="enablePrintPreview"
                     :visible-ui-elements="visibleUiElements"
+                    :legend-modes="legendModes"
+                    :legend-value.sync="legendValue"
                     @resetScale="$emit('resetScale')"
                     @rotate="rotate"
                 />
             </v-tab-item>
-            <v-tab-item v-show="visibleUiElements.mapSeriesTab">
+            <v-tab-item
+                v-show="visibleUiElements.mapSeriesTab"
+                value="mapSeries"
+            >
                 <map-series-widget
                     :i18n="i18n"
                     :author.sync="author"
@@ -139,7 +160,7 @@
                     ref="mapSeriesWidget"
                 />
             </v-tab-item>
-            <v-tab-item>
+            <v-tab-item value="results">
                 <printing-results-widget
                     :i18n="i18n"
                     :exported-links="exportedLinks"
@@ -149,7 +170,7 @@
             </v-tab-item>
         </v-tabs>
         <v-container
-            v-if="activeTabId === 0 || activeTabId === 1 || activeTabId === 2"
+            v-if="activeTab !== 'results'"
             grid-list-md
             fluid
             class="pa-0 px-2 pt-2 printing-button-container"
@@ -241,6 +262,10 @@
             mapOnlyLayoutName: {
                 type: String,
                 default: () => ""
+            },
+            legendModes: {
+                type: Array,
+                default: () => []
             }
         },
         data() {
@@ -253,13 +278,13 @@
                 format: "pdf",
                 height: 1100,
                 layout: "a3-portrait",
-                legendEnabled: true,
                 scale: 0,
                 scaleEnabled: false,
                 title: "",
                 width: 800,
                 enablePrintPreview: true,
-                activeTabId: 0,
+                activeTab: "layout",
+                legendValue: "integratedLegend",
                 mapSeriesLegendEnabled: true,
                 mapSeriesExtentSet: false,
                 doNotPrintEmptyTiles: false,
@@ -277,37 +302,33 @@
             }
         },
         watch: {
-            activeTabId: function (activeTabId, previousTabId) {
+            activeTab: function (activeTab, previousTab) {
                 // The map-only and map series tabs overwrite the shared layout,
                 // so remember the user's choice whenever the layout tab is left.
-                if (previousTabId === 0 && this.layout !== this.mapOnlyLayoutName) {
+                if (previousTab === "layout" && this.layout !== this.mapOnlyLayoutName) {
                     this.lastLayout = this.layout;
                 }
-                if (activeTabId === 0 || activeTabId === 2) {
+                if (activeTab === "layout" || activeTab === "mapSeries") {
                     if (this.lastLayout) {
                         this.layout = this.lastLayout;
                     }
-                } else if (activeTabId === 1) {
+                } else if (activeTab === "mapOnly") {
                     this.layout = this.mapOnlyLayoutName;
                 }
-                if (activeTabId === 2) {
+                if (activeTab === "mapSeries") {
                     this.$emit("activate-series-print-mode");
-                } else if (activeTabId === 0 || activeTabId === 1) {
+                } else if (activeTab === "layout" || activeTab === "mapOnly") {
                     this.$emit("activate-single-print-mode");
                 }
                 this.$refs?.mapSeriesWidget?.deactivateAllTools();
-                this.$emit("activate-tab-id-changed", activeTabId);
+                this.$emit("active-tab-changed", activeTab);
             },
             doNotPrintEmptyTiles: function (value) {
                 this.$emit("do-not-print-empty-tiles-changed", value);
             }
         },
         mounted: function () {
-            if (this.layout === this.mapOnlyLayoutName) {
-                this.activeTabId = 1;
-            } else {
-                this.activeTabId = 0;
-            }
+            this.activeTab = this.layout === this.mapOnlyLayoutName ? "mapOnly" : "layout";
             this.$emit('startup');
         },
         methods: {
@@ -315,7 +336,7 @@
                 [this.height, this.width] = [this.width, this.height];
             },
             print: function () {
-                if (this.activeTabId === 2) {
+                if (this.activeTab === "mapSeries") {
                     if (this.$refs?.mapSeriesWidget?.legendEnabledValue !== undefined) {
                         this.mapSeriesLegendEnabled = this.$refs.mapSeriesWidget.legendEnabledValue;
                     }
@@ -323,7 +344,7 @@
                 } else {
                     this.$emit("print", {});
                 }
-                this.activeTabId = 3;
+                this.activeTab = "results";
             },
             forceOnResizeForTab() {
                 this.$refs.v_tabs_printing && this.$refs.v_tabs_printing.onResize();
