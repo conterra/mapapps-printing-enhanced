@@ -104,7 +104,10 @@ mapappsBrowserSync.registerTask({
         paths: [
             // Ensure @@key@@ expressions filtered in tests files
             /^\/js\/tests\/(runTests.html|test-init.js|init-packs.js)$/
-        ]
+        ],
+        // Locally override @@key@@ values (e.g. printtask.service.url) via gulpfile.overrides.js;
+        // these take precedence over src/test/resources/application.properties.
+        config: localOverrides?.properties ?? {}
     },
     jsreg: {
         //npmDir : __dirname + "/node_modules/",

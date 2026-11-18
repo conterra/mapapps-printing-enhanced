@@ -134,6 +134,19 @@ export default declare({
         this[_lastPopupState]?.reset();
     },
 
+    setDisabled(disabled) {
+        this._isDisabled = disabled;
+    },
+
+    isDisabled() {
+        return this._isDisabled;
+    },
+
+    removePreviewGraphic() {
+        this._printingPreviewDrawer.removeGraphicFromGraphicsLayer();
+        this._printingPreviewDrawer.resetGraphic();
+    },
+
     setMapWidgetModel(mapWidgetModel) {
         if (mapWidgetModel.view) {
             this._watchForExtentChange(mapWidgetModel.view);
@@ -268,6 +281,7 @@ export default declare({
         const properties = this._printingEnhancedProperties._properties;
         async(async () => {
             if (
+                this._isDisabled !== true &&
                 ((this._printingToggleTool && this._printingToggleTool.active) ||
                     (this._printingEnhancedToggleTool &&
                         this._printingEnhancedToggleTool.active)) &&

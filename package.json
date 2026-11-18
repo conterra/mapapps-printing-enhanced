@@ -12,6 +12,7 @@
       "e2e-test:ui": "playwright test --ui"
     },
     "dependencies": {
+        "jszip": "3.10.1",
         "@arcgis/core": "4.33.14",
         "vue": "2.7.16"
     },

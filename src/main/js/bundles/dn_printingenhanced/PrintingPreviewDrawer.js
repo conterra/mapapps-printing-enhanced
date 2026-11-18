@@ -63,22 +63,10 @@ export default class PrintingPreviewDrawer {
     }
 
     async drawTemplateDimensions(printInfos, templateOptions, defaultPageUnit) {
-        const mapWidgetModel = this._mapWidgetModel;
-        if (!printInfos.templateInfos) {
+        const geometryParams = this.getGeometryParamsFromTemplate(printInfos, templateOptions, defaultPageUnit);
+        if (!geometryParams) {
             return;
         }
-        const printSize = this._getPrintSize(printInfos, templateOptions, defaultPageUnit);
-        if (!printSize) {
-            return;
-        }
-        const width = printSize.width;
-        const height = printSize.height;
-
-        const geometryParams = {
-            width: width,
-            height: height,
-            rotation: this._rotation ? this._rotation : mapWidgetModel.rotation
-        };
         const geometry = this._getMainFrameGeometry(geometryParams);
         const differenceGeometry = await this._getOutsideMainFrameGeometry(geometry);
         this.removeGraphicFromGraphicsLayer();
@@ -87,7 +75,27 @@ export default class PrintingPreviewDrawer {
         return geometry;
     }
 
-    _getPrintSize(printInfos, templateOptions, defaultPageUnit) {
+    /**
+     * @param layout layout whose map frame is measured; defaults to the single print layout
+     *               (`templateOptions.layout`). The map series passes its single page layout instead.
+     */
+    getGeometryParamsFromTemplate(printInfos, templateOptions, defaultPageUnit, layout = templateOptions.layout) {
+        const mapWidgetModel = this._mapWidgetModel;
+        if (!printInfos.templateInfos) {
+            return null;
+        }
+        const printSize = this._getPrintSize(printInfos, templateOptions, defaultPageUnit, layout);
+        if (!printSize) {
+            return null;
+        }
+        return {
+            width: printSize.width,
+            height: printSize.height,
+            rotation: this._rotation ? this._rotation : mapWidgetModel.rotation
+        };
+    }
+
+    _getPrintSize(printInfos, templateOptions, defaultPageUnit, layout) {
         const printSize = {};
         let templateWidth;
         let templateHeight;
@@ -107,7 +115,6 @@ export default class PrintingPreviewDrawer {
 
         // get templateinfo
         const templateInfos = printInfos.templateInfos;
-        const layout = templateOptions.layout;
         if (!layout || (layout && layout === this._printingEnhancedProperties.layoutNames.mapOnly)) {
             const resolution = geometry.calcPixelResolutionAtScale(printScale, spatialReference, dpi);
             templateWidth = templateOptions.width;
