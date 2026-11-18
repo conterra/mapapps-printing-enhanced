@@ -104,7 +104,7 @@
                 <v-radio-group class="printSizeRadionGroup" v-model="pagePrintSizeValue" row hide-details>
                     <v-radio v-for="printSize in pagePrintSizeValues" :key="printSize.value" :name="printSize.value"
                              :label="printSize.text" :value="printSize.value"
-                             class="primary--text"
+                             color="primary"
                     />
                 </v-radio-group>
             </v-flex>
@@ -112,7 +112,8 @@
                     md12>
                 <v-radio-group class="printOrientationRadionGroup" v-model="pagePrintOrientationValue" row hide-details>
                     <v-radio v-for="printOrientation in pagePrintOrientationValues" :key="printOrientation.value"
-                             :name="printOrientation.value" :label="printOrientation.text" :value="printOrientation.value"/>
+                             :name="printOrientation.value" :label="printOrientation.text" :value="printOrientation.value"
+                             color="primary"/>
                 </v-radio-group>
             </v-flex>
             <legend-options

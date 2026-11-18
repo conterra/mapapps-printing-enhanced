@@ -47,7 +47,7 @@
                 "minimizeOnClose": true,
                 "windowClass": "noPadding",
                 "marginBox": {
-                    "w": 340,
+                    "w": 360,
                     "h": 425
                 }
             }
@@ -60,13 +60,13 @@
             "window": {
                 "resizable": true,
                 "marginBox": {
-                    "w": 340,
+                    "w": 360,
                     "h": 425,
                     "t": 125,
                     "l": 25
                 },
                 "minSize": {
-                    "w": 340,
+                    "w": 360,
                     "h": 350
                 }
             }
@@ -81,7 +81,7 @@
                 "resizable": false,
                 "draggable": false,
                 "marginBox": {
-                    "w": 340,
+                    "w": 360,
                     "h": 425,
                     "t": 125,
                     "l": 25
@@ -203,7 +203,7 @@
                     "copyright": false,
                     "legendEnabled": true,
                     "attributionEnabled": false,
-                    "mapSeriesTab": true,
+                    "mapSeriesTab": false,
                     "doNotPrintEmptyTiles": true
                 },
                 "deriveLayoutFromPageSize": false,
