@@ -310,7 +310,7 @@ The following Configs have been added for **map series**:
 - askToPrintManyFramesThreshold: threshold for number of frames that the user can print without confirming: if the user wants to print more map series frames than allowed by this threshold, they will be asked to confirm that they actually want to print that many frames
 - minScaleForSeries: minimum print scale for map series print. if below, the frames of the map-series won't update to it and the print cant start.
 - scaleModifications: modifications of the suggested scale for the map-series-frames when selecting a geometry
-    - toScale: if the calculated scale is equal or below this, the config entry with the lowest value of toScale is used here.
+    - toScale: the entry with the lowest toScale that is equal to or above the calculated scale is used. If the calculated scale is above every toScale, the entry with the highest toScale is used.
     - roundUpTo: the finally suggested scale is rounded up to this value
     - extentFactor: the calculated scale is multiplied by this factor, to create a "buffer" around the geometry.
 - selectionLayers: the already-configured map layers that are queried by the geometry selection tool ({ layerIds }, referencing the "id" of layers already added to the map)

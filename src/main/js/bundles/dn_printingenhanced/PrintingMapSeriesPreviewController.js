@@ -570,13 +570,26 @@ export default declare({
 
         const exactScale = (mapSeriesExtent.width * factor / templateWidth);
         const scaleMod = this._getScaleModification(exactScale);
+        if (!scaleMod) {
+            return exactScale;
+        }
         return this._getRoundedScale(exactScale * scaleMod.extentFactor, scaleMod.roundUpTo);
     },
 
+    /**
+     * Returns the scale modification with the lowest toScale that is >= scale.
+     * If scale is larger than every toScale, the entry with the largest toScale is used,
+     * so that large geometries still get a buffer and rounding.
+     * Returns undefined only if no scale modifications are configured.
+     */
     _getScaleModification(scale) {
-        // Array is pre-sorted by toScale in activate!
-        const scaleMods = this.scaleModifications?.sort((scaleModA, scaleModB) => scaleModA.toScale - scaleModB.toScale);
-        return scaleMods?.find(scaleMod => scale <= scaleMod.toScale);
+        const scaleMods = this.scaleModifications;
+        if (!Array.isArray(scaleMods) || !scaleMods.length) {
+            return undefined;
+        }
+        const sortedScaleMods = [...scaleMods].sort((scaleModA, scaleModB) => scaleModA.toScale - scaleModB.toScale);
+        return sortedScaleMods.find(scaleMod => scale <= scaleMod.toScale)
+            ?? sortedScaleMods[sortedScaleMods.length - 1];
     },
 
     _getRoundedScale(scale, roundUpTo) {
@@ -713,7 +726,8 @@ export default declare({
             if (this._isCancelledError(e)) {
                 console.warn("object selection has been canceled!");
             } else {
-                console.warn(e);
+                console.error(e);
+                this._logService.error(this._i18n.unexpectedError);
             }
         }
     },
