@@ -43,7 +43,6 @@ export default declare({
         const printViewModel = esriPrintWidget.viewModel;
         this.esriPrintWidget = esriPrintWidget;
         this.mapSeriesMainFrames = [];
-        this.minScaleForSeries = this._properties.minScaleForSeries;
         this.scaleModifications = this._properties.scaleModifications;
         this._doNotPrintEmptyTiles = false; // represents the current value selected in the widget; not in sync - do not change here!
         this._mapSeriesExtentType = undefined;
@@ -206,9 +205,7 @@ export default declare({
                 this.handleDrawMapSeriesFrames();
             }),
             templateOptions.watch("scale", () => {
-                if (templateOptions.scale >= this.minScaleForSeries) {
-                    this.handleDrawMapSeriesFrames();
-                }
+                this.handleDrawMapSeriesFrames();
             }),
             templateOptions.watch("scaleEnabled", () => {
                 this.handleDrawMapSeriesFrames();
@@ -284,7 +281,8 @@ export default declare({
             authorText: templateOptions?.author || "",
             copyrightText: templateOptions?.copyright || "",
             customTextElements: templateOptions?.customTextElements || [],
-            // map series pages never contain a legend; it is only available on its own page (legendOwnPage)
+            // tile pages never contain a legend; the overview page (integratedLegend) and the own legend page
+            // (legendOwnPage) are handled separately in _printMapSeries
             legendEnabled: false,
             scalebarEnabled: templateOptions?.scaleBarEnabled !== false,
             scale: templateOptions?.scale,
@@ -570,16 +568,15 @@ export default declare({
     // ZoomTo is not enough for use with Object-Selection! You have to update the scale after zooming, too, so the
     // preview-MapFrames are calculated correctly (are based on this scale, not the current extent!)
     async _focusOnSingleMapFrameExtent(singleMapFrameExtent) {
-        let neededScale = this._calculateNeededScaleForSingleMapFrame(singleMapFrameExtent, this[_printInfos], this.esriPrintWidget.templateOptions, this._printingEnhancedProperties.defaultPageUnit);
-
-        if (neededScale < this.minScaleForSeries) {
-            neededScale = this.minScaleForSeries;
-        }
+        const neededScale = this._calculateNeededScaleForSingleMapFrame(singleMapFrameExtent, this[_printInfos], this.esriPrintWidget.templateOptions, this._printingEnhancedProperties.defaultPageUnit);
 
         this.setMapSeriesExtent(singleMapFrameExtent, "object-geometry");
         this._mapWidgetModel.extent = singleMapFrameExtent;
         await async(() => {
-            this.esriPrintWidget.templateOptions.scale = Math.round(neededScale);
+            // keep the current scale if none could be calculated (e.g. missing template infos)
+            if (neededScale > 0) {
+                this.esriPrintWidget.templateOptions.scale = Math.round(neededScale);
+            }
         }, 200);
 
         this.handleDrawMapSeriesFrames(false);
@@ -587,12 +584,12 @@ export default declare({
 
     _calculateNeededScaleForSingleMapFrame(mapSeriesExtent, printInfos, templateOptions, defaultPageUnit) {
         if (!printInfos.templateInfos) {
-            return this.minScaleForSeries;
+            return undefined;
         }
         const layoutName = this._getSinglePageLayoutName(templateOptions) || templateOptions.layout;
         const templateInfo = printInfos.templateInfos.filter((info) => info.layoutTemplate === layoutName)[0];
         if (!templateInfo) {
-            return this.minScaleForSeries;
+            return undefined;
         }
         const frameSize = templateInfo.activeDataFrameSize || templateInfo.webMapFrameSize;
         const templateWidth = frameSize[0];

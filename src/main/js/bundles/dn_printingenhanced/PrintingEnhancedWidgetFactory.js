@@ -230,7 +230,6 @@ export default class PrintingEnhancedWidgetFactory {
         vm.dpiValues = properties.dpiValues;
         vm.scaleValues = properties.scaleValues;
         vm.enablePrintPreview = properties.enablePrintPreview;
-        vm.minScaleForSeries = this._printingMapSeriesPreviewController.minScaleForSeries;
         vm.pagePrintOrientationValues = properties.printOrientations;
         vm.pagePrintSizeValues = properties.printSizes;
         const interactiveCustomTextElements = properties.customTextElements.filter(

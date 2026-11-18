@@ -61,7 +61,6 @@ module.exports = {
             noPrintResults: "No print results",
             errors: {
                 scaleTooSmall: "The print scale is too small",
-                mapSeriesScaleToLow: "The current scale is too large. Minimum is 1:",
                 filterEmptyTilesError: "An error occurred while determining the unused tiles.",
                 tooManyFrames: "Too many tiles are being generated. A maximum of ${maxNumberOfDrawnFrames} tiles can be generated.",
                 error: "Error during printing: ",

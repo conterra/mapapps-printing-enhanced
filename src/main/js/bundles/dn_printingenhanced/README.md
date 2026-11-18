@@ -335,7 +335,6 @@ The following Configs have been added for **map series**:
       is downloaded without legend and the user is notified.
 - mapSeriesTileOverlap: overlap of the tiles in percent. Default is 0.05 (5%).
 - askToPrintManyFramesThreshold: threshold for number of frames that the user can print without confirming: if the user wants to print more map series frames than allowed by this threshold, they will be asked to confirm that they actually want to print that many frames
-- minScaleForSeries: minimum print scale for map series print. if below, the frames of the map-series won't update to it and the print cant start.
 - scaleModifications: modifications of the suggested scale for the map-series-frames when selecting a geometry
     - toScale: the entry with the lowest toScale that is equal to or above the calculated scale is used. If the calculated scale is above every toScale, the entry with the highest toScale is used.
     - roundUpTo: the finally suggested scale is rounded up to this value
@@ -355,7 +354,6 @@ The following Configs have been added for **map series**:
 "dn_printingenhanced": {
     "PrintingMapSeriesPreviewController": {
         "askToPrintManyFramesThreshold": 100,
-        "minScaleForSeries": 1000,
         "scaleModifications": [
             {
                 "toScale": 2000,

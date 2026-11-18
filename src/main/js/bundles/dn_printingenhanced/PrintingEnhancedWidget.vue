@@ -140,7 +140,6 @@
                     :legend-value.sync="legendValue"
                     :scale.sync="scale"
                     :scale-values="scaleValues"
-                    :min-scale-for-series="minScaleForSeries"
                     :scale-enabled.sync="scaleEnabled"
                     :title.sync="title"
                     :format-list="formatList"
@@ -156,7 +155,6 @@
                     v-on:cancel-rectangle-draw="$emit('cancel-rectangle-draw')"
                     v-on:activate-single-print-mode="$emit('activate-single-print-mode')"
                     v-on:activate-series-print-mode="$emit('activate-series-print-mode')"
-                    v-on:set-scale-value-is-valid="scaleValueIsValidForPreview = $event"
                     @resetScale="$emit('resetScale')"
                     ref="mapSeriesWidget"
                 />
@@ -236,10 +234,6 @@
                 type: Object,
                 default: () => {}
             },
-            minScaleForSeries: {
-                type: Number,
-                default: 1000
-            },
             pagePrintSize: {
                 type: String,
                 default: "a4"
@@ -288,7 +282,6 @@
                 legendValue: "integratedLegend",
                 mapSeriesExtentSet: false,
                 doNotPrintEmptyTiles: false,
-                scaleValueIsValidForPreview: false,
                 currentMapScale: 0,
                 exportedLinks: [],
                 mapSeriesJobs: [],

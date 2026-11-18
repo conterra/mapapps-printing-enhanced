@@ -60,7 +60,6 @@ module.exports = {
         noPrintResults: "Keine Druckergebnisse vorhanden",
         errors: {
             scaleTooSmall: "Der Druck-Maßstab ist zu klein",
-            mapSeriesScaleToLow: "Der aktuelle Maßstab ist zu groß. Minimum ist 1:",
             filterEmptyTilesError: "Beim Ermitteln der nicht genutzten Kacheln ist ein Fehler aufgetreten.",
             tooManyFrames: "Es werden zu viele Kacheln erzeugt. Es können maximal ${maxNumberOfDrawnFrames} Kacheln erzeugt werden.",
             error: "Ein Fehler beim Drucken ist aufgetreten: ",

@@ -173,22 +173,10 @@
                     v-model.number="scaleValue"
                     :label="i18n.scale"
                     :disabled="!scaleEnabled"
-                    :error="!scaleValueIsValidForPreview"
                     step="1"
                     type="number"
-                    hide-details>
-                  <template v-slot:append>
-                    <v-tooltip
-                        v-if="!scaleValueIsValidForPreview"
-                        top
-                    >
-                      <template v-slot:activator="{ on }">
-                        <v-icon color="error" v-on="on">error</v-icon>
-                      </template>
-                      {{ i18n.errors.mapSeriesScaleToLow + minScaleForSeries}}
-                    </v-tooltip>
-                  </template>
-                </v-text-field>
+                    hide-details
+                ></v-text-field>
             </v-flex>
             <v-flex
                 v-if="!scaleValues.length && visibleUiElements.scale"
@@ -290,10 +278,6 @@ export default {
             scaleEnabled: {
                 type: Boolean,
                 default: false
-            },
-            minScaleForSeries: {
-              type: Number,
-              default: 1000
             },
             title: {
                 type: String,
@@ -435,11 +419,6 @@ export default {
                 set: function (value) {
                     this.$emit('update:doNotPrintEmptyTiles', value);
                 }
-            },
-            scaleValueIsValidForPreview: function() {
-              const isValid = this.scaleValue && (this.scaleValue >= this.minScaleForSeries);
-              this.$emit('set-scale-value-is-valid', isValid);
-              return isValid;
             }
         },
         watch: {

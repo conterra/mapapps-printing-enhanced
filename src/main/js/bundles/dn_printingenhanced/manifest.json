@@ -512,7 +512,6 @@
                     }
                 ],
                 "askToPrintManyFramesThreshold": 100,
-                "minScaleForSeries": 1000,
                 "scaleModifications": [
                     {
                         "toScale": 2000,
