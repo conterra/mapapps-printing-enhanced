@@ -31,7 +31,7 @@ export default function () {
                     return {
                         blob: await this.fetchBlobWithRetry(info.url),
                         fileName: info.fileName
-                    }
+                    };
                 },
                 files_per_group
             );
@@ -85,9 +85,9 @@ export default function () {
                     that._fileSaver.saveFromBlob(zipFile, `${zipFileName}.zip`);
                     zip = undefined;
                 }).catch(err => {
-                        console.error("Fehler bei der Funktion saveBlobsAsZip: " + err);
-                    }
+                    console.error("Fehler bei der Funktion saveBlobsAsZip: " + err);
+                }
                 );
         }
-    }
+    };
 }

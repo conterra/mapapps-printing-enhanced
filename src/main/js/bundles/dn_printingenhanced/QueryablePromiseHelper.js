@@ -29,7 +29,7 @@ export default class QueryablePromiseHelper {
         this._queryablePromiseResolveFunction = function (resolve, reject) {
             that.resolveFunction = resolve;
             that.rejectFunction = reject;
-        }
+        };
     }
 
     async waitForPromiseToResolve() {

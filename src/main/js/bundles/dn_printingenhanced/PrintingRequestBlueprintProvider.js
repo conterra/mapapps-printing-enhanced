@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import esriConfig from "@arcgis/core/config";
-import QueryablePromiseHelper from "./QueryablePromiseHelper"
+import QueryablePromiseHelper from "./QueryablePromiseHelper";
 import { applyLegendEnabled } from "./LegendLayers";
 
 function escapeRegExp(value) {
@@ -77,7 +77,7 @@ export default function () {
             if (!this.qpm) this.qpm = new QueryablePromiseHelper();
             const timeoutInMs = Number(this._properties.blueprintRequestTimeoutInMs) || 30000;
             let timeoutId;
-            const timeoutPromise = new globalThis.Promise((_, reject) => {
+            const timeoutPromise = new Promise((_, reject) => {
                 timeoutId = setTimeout(() => {
                     const msg = "Timed out while waiting for intercepted print request blueprint.";
                     console.error(msg, {
@@ -95,7 +95,7 @@ export default function () {
             });
 
             try {
-                return await globalThis.Promise.race([
+                return await Promise.race([
                     this.qpm.waitForPromiseToResolve(),
                     timeoutPromise
                 ]);
@@ -132,7 +132,7 @@ export default function () {
                     if (this._cancelRequestOnIntercept) this._cancelRequest(request);
                     this.qpm?.resolve(JSON.parse(JSON.stringify(this.PrintingRequestBlueprint)));
                 }
-            }
+            };
             esriConfig.request.interceptors.unshift(this._requestInterceptor);
         },
 
@@ -178,7 +178,7 @@ export default function () {
                     Layout_Template: requestParams.Layout_Template,
                     f: requestParams.f,
                     Web_Map_as_JSON: webMapAsJson
-                },
+                }
             };
         },
 

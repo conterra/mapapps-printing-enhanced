@@ -55,7 +55,7 @@
                     <v-progress-circular
                         v-else-if="
                             isMapSeriesJobFinished(mapSeriesJob) &&
-                            !isMapSeriesJobDownloaded(mapSeriesJob)
+                                !isMapSeriesJobDownloaded(mapSeriesJob)
                         "
                         size="22"
                         indeterminate
