@@ -72,6 +72,46 @@
                 />
             </v-flex>
             <v-flex
+                v-if="visibleUiElements.pageSizeOrientation"
+                md12
+            >
+                <v-radio-group
+                    class="printSizeRadionGroup"
+                    v-model="pagePrintSizeValue"
+                    row
+                    hide-details
+                >
+                    <v-radio
+                        v-for="printSize in pagePrintSizeValues"
+                        :key="printSize.value"
+                        :name="printSize.value"
+                        :label="printSize.text"
+                        :value="printSize.value"
+                        color="primary"
+                    />
+                </v-radio-group>
+            </v-flex>
+            <v-flex
+                v-if="visibleUiElements.pageSizeOrientation"
+                md12
+            >
+                <v-radio-group
+                    class="printOrientationRadionGroup"
+                    v-model="pagePrintOrientationValue"
+                    row
+                    hide-details
+                >
+                    <v-radio
+                        v-for="printOrientation in pagePrintOrientationValues"
+                        :key="printOrientation.value"
+                        :name="printOrientation.value"
+                        :label="printOrientation.text"
+                        :value="printOrientation.value"
+                        color="primary"
+                    />
+                </v-radio-group>
+            </v-flex>
+            <v-flex
                 v-if="visibleUiElements.layout"
                 md12
             >
@@ -101,11 +141,9 @@
                         small
                         top
                         class="infoButton"
-                        @click="showInfo=!showInfo"
+                        @click="showInfo = !showInfo"
                     >
-                        <v-icon color="primary">
-                            info
-                        </v-icon>
+                        <v-icon color="primary"> info </v-icon>
                     </v-btn>
                 </div>
                 <div
@@ -185,16 +223,23 @@
                     hide-details
                 />
             </v-flex>
-            <v-flex
+            <legend-options
                 v-if="visibleUiElements.legendEnabled"
+                :i18n="i18n"
+                :legend-modes="legendModes"
+                :legend-value="legendValue"
+                @update:legend-value="$emit('update:legend-value', $event)"
+            />
+            <v-flex
+                v-for="(customTextElement, index) in customTextElementsArray"
+                :key="index"
                 md12
             >
-                <v-checkbox
-                    v-model="legendEnabledValue"
-                    :label="i18n.legendEnabled"
-                    color="primary"
+                <v-text-field
+                    v-model="customTextElement.value"
+                    :label="customTextElement.title"
                     hide-details
-                    class="pa-0 ma-0"
+                    @change="triggerCustomTextElementsUpdate()"
                 />
             </v-flex>
         </v-layout>
@@ -202,9 +247,12 @@
 </template>
 <script>
     import Bindable from "apprt-vue/mixins/Bindable";
+    import LegendOptions from "./LegendOptions.vue";
 
     export default {
-        components: {},
+        components: {
+            "legend-options": LegendOptions
+        },
         mixins: [Bindable],
         props: {
             i18n: {
@@ -241,10 +289,6 @@
                 type: String,
                 default: "a3-portrait"
             },
-            legendEnabled: {
-                type: Boolean,
-                default: true
-            },
             scale: {
                 type: Number,
                 default: 0
@@ -271,8 +315,7 @@
             },
             visibleUiElements: {
                 type: Object,
-                default: () => {
-                }
+                default: () => {}
             },
             currentMapScale: {
                 type: Number,
@@ -281,13 +324,51 @@
             selectedScaleValue: {
                 type: Number,
                 default: 0
+            },
+            pagePrintSize: {
+                type: String,
+                default: "a4"
+            },
+            pagePrintSizeValues: {
+                type: Array,
+                default: () => []
+            },
+            pagePrintOrientation: {
+                type: String,
+                default: "portrait"
+            },
+            pagePrintOrientationValues: {
+                type: Array,
+                default: () => []
+            },
+            customTextElements: {
+                type: Array,
+                default: () => []
+            },
+            mapOnlyLayoutName: {
+                type: String,
+                default: () => ""
+            },
+            legendModes: {
+                type: Array,
+                default: () => []
+            },
+            legendValue: {
+                type: String,
+                default: "noLegend"
             }
         },
         data() {
             return {
                 advancedOptions: [0],
-                showInfo: false
+                showInfo: false,
+                customTextElementsArray: this.customTextElements
             };
+        },
+        methods: {
+            triggerCustomTextElementsUpdate() {
+                this.$emit("trigger-custom-text-elements-update", this.customTextElementsArray);
+            }
         },
         computed: {
             authorValue: {
@@ -295,7 +376,7 @@
                     return this.author;
                 },
                 set: function (author) {
-                    this.$emit('update:author', author);
+                    this.$emit("update:author", author);
                 }
             },
             copyrightValue: {
@@ -303,7 +384,7 @@
                     return this.copyright;
                 },
                 set: function (copyright) {
-                    this.$emit('update:copyright', copyright);
+                    this.$emit("update:copyright", copyright);
                 }
             },
             dpiValue: {
@@ -311,7 +392,7 @@
                     return this.dpi;
                 },
                 set: function (dpi) {
-                    this.$emit('update:dpi', dpi);
+                    this.$emit("update:dpi", dpi);
                 }
             },
             formatValue: {
@@ -319,7 +400,7 @@
                     return this.format;
                 },
                 set: function (format) {
-                    this.$emit('update:format', format);
+                    this.$emit("update:format", format);
                 }
             },
             layoutValue: {
@@ -327,15 +408,7 @@
                     return this.layout;
                 },
                 set: function (layout) {
-                    this.$emit('update:layout', layout);
-                }
-            },
-            legendEnabledValue: {
-                get: function () {
-                    return this.legendEnabled;
-                },
-                set: function (legendEnabled) {
-                    this.$emit('update:legend-enabled', legendEnabled);
+                    this.$emit("update:layout", layout);
                 }
             },
             scaleValue: {
@@ -343,24 +416,28 @@
                     return this.scale;
                 },
                 set: function (scale) {
-                    this.$emit('update:scale', scale);
+                    this.$emit("update:scale", scale);
                 }
             },
             scaleValuesIncludingCurrentScale: {
                 get() {
                     const predefinedScaleValues = this.scaleValues || [];
-                    return predefinedScaleValues.map(entry => {
+                    return predefinedScaleValues.map((entry) => {
                         if (entry.value === -1) {
-                            const localizedScale = new Intl.NumberFormat().format(this.currentMapScale);
-                            return Object.assign({}, {
-                                text: `${entry.text} (1:${localizedScale})`,
-                                value: -1
-                            });
+                            const localizedScale = new Intl.NumberFormat().format(
+                                this.currentMapScale
+                            );
+                            return Object.assign(
+                                {},
+                                {
+                                    text: `${entry.text} (1:${localizedScale})`,
+                                    value: -1
+                                }
+                            );
                         } else {
                             return Object.assign({}, entry);
                         }
                     });
-
                 }
             },
             scaleEnabledValue: {
@@ -368,7 +445,7 @@
                     return this.scaleEnabled;
                 },
                 set: function (scaleEnabled) {
-                    this.$emit('update:scale-enabled', scaleEnabled);
+                    this.$emit("update:scale-enabled", scaleEnabled);
                 }
             },
             enablePrintPreviewValue: {
@@ -376,7 +453,7 @@
                     return this.enablePrintPreview;
                 },
                 set: function (enablePrintPreview) {
-                    this.$emit('update:enable-print-preview', enablePrintPreview);
+                    this.$emit("update:enable-print-preview", enablePrintPreview);
                 }
             },
             titleValue: {
@@ -384,7 +461,23 @@
                     return this.title;
                 },
                 set: function (title) {
-                    this.$emit('update:title', title);
+                    this.$emit("update:title", title);
+                }
+            },
+            pagePrintSizeValue: {
+                get: function () {
+                    return this.pagePrintSize;
+                },
+                set: function (pagePrintSizeValue) {
+                    this.$emit("update:page-print-size", pagePrintSizeValue);
+                }
+            },
+            pagePrintOrientationValue: {
+                get: function () {
+                    return this.pagePrintOrientation;
+                },
+                set: function (pagePrintOrientationValue) {
+                    this.$emit("update:page-print-orientation", pagePrintOrientationValue);
                 }
             }
         },
