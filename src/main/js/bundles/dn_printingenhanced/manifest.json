@@ -209,6 +209,7 @@
                 "deriveLayoutFromPageSize": false,
                 "enablePrintPreview": true,
                 "enablePrintPreviewMovement": true,
+                "livePrintPreviewUpdate": true,
                 "layoutTemplatesInfoTaskName": "Get%20Layout%20Templates%20Info%20Task",
                 "defaultPageUnit": "CENTIMETER",
                 "filenameIfNoneIsGiven": "${ui.filenameIfNoneIsGiven}",

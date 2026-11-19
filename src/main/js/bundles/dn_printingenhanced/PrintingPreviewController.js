@@ -269,6 +269,21 @@ export default declare({
                 this._handleDrawTemplateDimensions();
             }
         }));
+        this._watchForViewCenterChangeWhileMoving(view);
+    },
+
+    _watchForViewCenterChangeWhileMoving(view) {
+        let isAnimationFrameRequested = false;
+        this[_observers].add(view.watch("center", () => {
+            if (isAnimationFrameRequested || view.stationary) {
+                return;
+            }
+            isAnimationFrameRequested = true;
+            requestAnimationFrame(() => {
+                isAnimationFrameRequested = false;
+                this._printingPreviewDrawer?.moveFrameToViewCenter();
+            });
+        }));
     },
 
     _handleDrawTemplateDimensions(zoomTo) {
@@ -277,7 +292,6 @@ export default declare({
         if (!templateOptions) {
             return;
         }
-        this._printingPreviewDrawer.removeGraphicFromGraphicsLayer();
         const properties = this._printingEnhancedProperties._properties;
         async(async () => {
             if (
@@ -292,6 +306,8 @@ export default declare({
                 if (geometry && zoomTo && templateOptions.scaleEnabled) {
                     this._zoomToTemplateExtent(geometry);
                 }
+            } else {
+                this._printingPreviewDrawer.removeGraphicFromGraphicsLayer();
             }
         }, 100);
     },
