@@ -16,7 +16,7 @@
 import {declare} from "apprt-core/Mutable";
 
 const PrintingMapSeriesPrintJobsModel = declare({
-   mapSeriesJobs: []
+    mapSeriesJobs: []
 });
 
 export default PrintingMapSeriesPrintJobsModel;

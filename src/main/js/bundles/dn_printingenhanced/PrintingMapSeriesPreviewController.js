@@ -103,7 +103,7 @@ export default declare({
                                 customTextElements.push(elementWithValue);
                             }
                         });
-                    })
+                    });
                 }
             }
             // set sketching properties to view
@@ -337,7 +337,7 @@ export default declare({
                 zoomTo && this._zoomToMapSeriesFramesExtent(this.mapSeriesMainFrames);
             }
         }, 200);
-        const trackedDrawPromise = globalThis.Promise.resolve(drawPromise);
+        const trackedDrawPromise = Promise.resolve(drawPromise);
         this._pendingMapSeriesFrameDrawPromise = trackedDrawPromise;
         trackedDrawPromise.then(() => {
             if (this._pendingMapSeriesFrameDrawPromise === trackedDrawPromise) {
@@ -362,8 +362,8 @@ export default declare({
             console.warn("Not all prerequisites are met to start printing Map-Series.");
             this._logService.warn(this._i18n.ui.notReadyForMapSeriesPrint);
             return new Promise((res, rej) => {
-                rej("Not all prerequisites are met to start printing Map-Series")
-            })
+                rej("Not all prerequisites are met to start printing Map-Series");
+            });
         }
 
         templateOptions = currentTemplateOptions;
@@ -377,7 +377,7 @@ export default declare({
             }
         }
 
-        return await this._printMapSeries(vm, mapSeriesTitle, esriPrintWidget, templateOptions, printingEnhancedProperties)
+        return await this._printMapSeries(vm, mapSeriesTitle, esriPrintWidget, templateOptions, printingEnhancedProperties);
     },
 
     async _ensureMapSeriesFramesAreReadyForPrint() {
@@ -520,7 +520,7 @@ export default declare({
     },
 
     _hidePlaceholderMapSeriesJob(mapSeriesTitle) {
-        this.printingMapSeriesPrintJobsModel.mapSeriesJobs = this.printingMapSeriesPrintJobsModel.mapSeriesJobs.filter(job => job.mapSeriesTitle !== mapSeriesTitle + "...",);
+        this.printingMapSeriesPrintJobsModel.mapSeriesJobs = this.printingMapSeriesPrintJobsModel.mapSeriesJobs.filter(job => job.mapSeriesTitle !== mapSeriesTitle + "...");
     },
 
     /**
@@ -658,7 +658,7 @@ export default declare({
         const objectWidth = extentOfSelectedObject.xmax - extentOfSelectedObject.xmin;
         const objectHeight = extentOfSelectedObject.ymax - extentOfSelectedObject.ymin;
 
-        let mapFrameWidth, mapFrameHeight;
+        let mapFrameWidth; let mapFrameHeight;
 
         // The highest value of width/height will be preserved and the other one will be calculated according to
         // the widthToHeightRatio.
@@ -672,7 +672,7 @@ export default declare({
                 mapFrameWidth = correctionFactor * mapFrameWidth;
             }
         } else {
-            mapFrameHeight = objectHeight
+            mapFrameHeight = objectHeight;
             mapFrameWidth = mapFrameHeight * widthToHeightRatio;
             // Sometimes the resulting MapFrame wont be big enough for the extent of the Object, so it has to be corrected.
             if (mapFrameWidth < objectWidth) {
@@ -693,7 +693,7 @@ export default declare({
 
     _calcLegendExtent() {
         if (!this.mapSeriesMainFrames?.length > 0)
-            return
+            return;
 
         // Ratio needs to be calculated before running calcExtent, because otherwise the function alters the extent somehow?!
         const widthToHeightRatio = this.mapSeriesMainFrames[0].geometry.extent.width / this.mapSeriesMainFrames[0].geometry.extent.height;
@@ -702,12 +702,12 @@ export default declare({
         const width = mapSeriesFramesExtent.xmax - mapSeriesFramesExtent.xmin;
         const height = mapSeriesFramesExtent.ymax - mapSeriesFramesExtent.ymin;
 
-        let legendWidth, legendHeight;
+        let legendWidth; let legendHeight;
         if (width >= height) {
             legendWidth = width;
             legendHeight = legendWidth / widthToHeightRatio;
         } else {
-            legendHeight = height
+            legendHeight = height;
             legendWidth = legendHeight * widthToHeightRatio;
         }
 
@@ -851,13 +851,13 @@ export default declare({
         );
 
         // Build polygon features (frames) and separate centroid point features for perfectly centered labels
-        const frameFeatures = this.mapSeriesMainFrames.map((f, idx) => ({
+        const frameFeatures = this.mapSeriesMainFrames.map((f, idx) => {return {
             geometry: f.geometry.toJSON(),
             attributes: {
                 OBJECTID: idx + 1,
                 tile_id: idx + 1
             }
-        }));
+        };});
 
         const spatialRef = frameFeatures[0]?.geometry?.spatialReference;
         const overviewSymbolCfg = this._printingEnhancedProperties.printingOverviewSymbol;

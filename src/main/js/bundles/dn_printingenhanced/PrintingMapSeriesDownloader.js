@@ -14,10 +14,9 @@
  * limitations under the License.
  */
 import {Evented_Mixin} from "apprt-core/Events";
-import {apprtFetch, ContentType} from "apprt-fetch";
+import {apprtFetch, apprtFetchJson, ContentType} from "apprt-fetch";
 import {createFormData, delay, mapWithConcurrency} from "./utils";
 import {applyLegendEnabled} from "./LegendLayers";
-import { apprtFetchJson } from "apprt-fetch";
 
 export default function () {
     return {
@@ -303,5 +302,5 @@ export default function () {
             mapSeriesJob.errorMsg = message || "";
             mapSeriesJob.emit("failed");
         }
-    }
+    };
 }

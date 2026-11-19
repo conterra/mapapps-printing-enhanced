@@ -109,7 +109,7 @@ export default function () {
                 singleRequestBlueprint.body.Layout_Template = pagelayout;
                 singleRequestBlueprint.body.Web_Map_as_JSON = this._createCustomTextElementNumberForPage(singleRequestBlueprint.body.Web_Map_as_JSON, idx + 1);
                 allPrintingRequests.push(singleRequestBlueprint);
-            })
+            });
             return allPrintingRequests;
         },
 
@@ -192,5 +192,5 @@ export default function () {
             webmapAsJSON.layoutOptions.customTextElements.push({ "pagenumber": pageNumberToAdd.toString() || "{pageNumber}" });
             return JSON.stringify(webmapAsJSON);
         }
-    }
+    };
 }

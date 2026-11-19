@@ -100,7 +100,7 @@
                 ></v-select>
             </v-flex>
             <v-flex
-                    md12>
+                md12>
                 <v-radio-group class="printSizeRadionGroup" v-model="pagePrintSizeValue" row hide-details>
                     <v-radio v-for="printSize in pagePrintSizeValues" :key="printSize.value" :name="printSize.value"
                              :label="printSize.text" :value="printSize.value"
@@ -109,7 +109,7 @@
                 </v-radio-group>
             </v-flex>
             <v-flex
-                    md12>
+                md12>
                 <v-radio-group class="printOrientationRadionGroup" v-model="pagePrintOrientationValue" row hide-details>
                     <v-radio v-for="printOrientation in pagePrintOrientationValues" :key="printOrientation.value"
                              :name="printOrientation.value" :label="printOrientation.text" :value="printOrientation.value"
@@ -205,10 +205,10 @@
     </v-container>
 </template>
 <script>
-import Bindable from "apprt-vue/mixins/Bindable";
-import LegendOptions from "./LegendOptions.vue";
+    import Bindable from "apprt-vue/mixins/Bindable";
+    import LegendOptions from "./LegendOptions.vue";
 
-export default {
+    export default {
         components: {
             "legend-options": LegendOptions
         },
@@ -217,7 +217,7 @@ export default {
             i18n: {
                 type: Object,
                 default: function () {
-                    return {}
+                    return {};
                 }
             },
             author: {
@@ -304,10 +304,13 @@ export default {
                 type: String,
                 default: undefined
             },
-            doNotPrintEmptyTiles: false,
+            doNotPrintEmptyTiles: {
+                type: Boolean,
+                default: false
+            },
             mapSeriesJobs: {
-              type: Array,
-              default: () => []
+                type: Array,
+                default: () => []
             }
         },
         data() {
@@ -315,7 +318,7 @@ export default {
                 advancedOptions: [0],
                 selectRectangleActive: undefined,
                 selectGeometryActive: undefined
-            }
+            };
         },
         methods: {
             useGeometrySelection() {
@@ -325,19 +328,19 @@ export default {
                 this.$emit('cancel-geometry-selection');
             },
             useRectangleDraw() {
-              this.$emit('use-rectangle-draw');
+                this.$emit('use-rectangle-draw');
             },
             cancelRectangleDraw() {
-              this.$emit('cancel-rectangle-draw');
+                this.$emit('cancel-rectangle-draw');
             },
             useMapViewExtent() {
-              this.$emit('cancel-geometry-selection');
-              this.$emit('cancel-rectangle-draw');
-              this.$emit('use-map-view-extent');
+                this.$emit('cancel-geometry-selection');
+                this.$emit('cancel-rectangle-draw');
+                this.$emit('use-map-view-extent');
             },
             deactivateAllTools() {
-              this.selectRectangleActive = undefined;
-              this.selectGeometryActive = undefined;
+                this.selectRectangleActive = undefined;
+                this.selectGeometryActive = undefined;
             }
         },
         computed: {
@@ -415,7 +418,7 @@ export default {
             },
             doNotPrintEmptyTilesValue: {
                 get: function () {
-                    return this.doNotPrintEmptyTiles
+                    return this.doNotPrintEmptyTiles;
                 },
                 set: function (value) {
                     this.$emit('update:doNotPrintEmptyTiles', value);
@@ -425,19 +428,19 @@ export default {
         watch: {
             selectGeometryActive: function (isActive) {
                 if(isActive === undefined){
-                    this.cancelGeometrySelection()
+                    this.cancelGeometrySelection();
                 } else {
                     if(this.selectRectangleActive !== undefined)
-                        this.selectRectangleActive = undefined;
+                    {this.selectRectangleActive = undefined;}
                     this.useGeometrySelection();
                 }
             },
             selectRectangleActive: function (isActive) {
                 if(isActive === undefined){
-                    this.cancelRectangleDraw()
+                    this.cancelRectangleDraw();
                 } else {
                     if(this.selectGeometryActive !== undefined)
-                        this.selectGeometryActive = undefined;
+                    {this.selectGeometryActive = undefined;}
                     this.useRectangleDraw();
                 }
             }

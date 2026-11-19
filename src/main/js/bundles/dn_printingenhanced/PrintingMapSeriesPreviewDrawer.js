@@ -58,7 +58,7 @@ export default class PrintingMapSeriesPreviewDrawer {
         let mainSeriesFrames = this._createAllMapFramesForMapSeries(mapSeriesExtent, geometryParams);
 
         if (mapSeriesExtentType === "object-geometry" && doNotPrintEmptyTiles && mainSeriesFrames?.length > 0) {
-           mainSeriesFrames = await this._filterEmptyTiles(mainSeriesFrames, selectedObjectGeometry);
+            mainSeriesFrames = await this._filterEmptyTiles(mainSeriesFrames, selectedObjectGeometry);
         } else {
             this.removeOmittedFramesFromGraphicsLayer();
         }
@@ -98,10 +98,8 @@ export default class PrintingMapSeriesPreviewDrawer {
             console.error(err);
             filteredMainSeriesFrames = mainSeriesFrames;
             this._logService.error(this._i18n.get().ui.errors.filterEmptyTilesError);
-        })
+        });
 
-        console.log(filteredMainSeriesFrames.length);
-        console.log("number of omitted frames: " + omittedSeriesFrames.length);
         this.removeOmittedFramesFromGraphicsLayer();
         this._addOmittedFramesToGraphicsLayer(omittedSeriesFrames);
         return filteredMainSeriesFrames;
@@ -129,9 +127,9 @@ export default class PrintingMapSeriesPreviewDrawer {
                 geometries: [selectedObjectGeometry.toJSON()]
             }),
             handleAs: "json"
-        }
+        };
 
-        const separator = this._properties.geometryServerURL.endsWith("/") ? "" : "/"
+        const separator = this._properties.geometryServerURL.endsWith("/") ? "" : "/";
         const response = apprtFetch(this._properties.geometryServerURL + separator + "relation", {
             method: "POST",
             body: createFormData(data),
@@ -147,24 +145,24 @@ export default class PrintingMapSeriesPreviewDrawer {
         let selectedObjectGeometryType;
         switch (geometry.type){
             case "point":
-                selectedObjectGeometryType = "esriGeometryPoint"
+                selectedObjectGeometryType = "esriGeometryPoint";
                 break;
             case "multipoint":
-                selectedObjectGeometryType = "esriGeometryMultipoint"
+                selectedObjectGeometryType = "esriGeometryMultipoint";
                 break;
             case "polyline":
-                selectedObjectGeometryType = "esriGeometryPolyline"
+                selectedObjectGeometryType = "esriGeometryPolyline";
                 break;
             case "polygon":
-                selectedObjectGeometryType = "esriGeometryPolygon"
-                break
+                selectedObjectGeometryType = "esriGeometryPolygon";
+                break;
         }
         return selectedObjectGeometryType;
     }
 
     _createAllMapFramesForMapSeries(mapSeriesExtent, geometryParams) {
         if(!mapSeriesExtent || !mapSeriesExtent.width > 0 || !mapSeriesExtent.height > 0 ){
-            console.warn("mapSeriesExent must extent width and height must be higher than 0 ")
+            console.warn("mapSeriesExent must extent width and height must be higher than 0 ");
             return [];
         }
         if (!geometryParams || !(geometryParams.width > 0) || !(geometryParams.height > 0)) {
@@ -207,7 +205,7 @@ export default class PrintingMapSeriesPreviewDrawer {
         const topLeftPoint = {
             x: mapSeriesExtent.xmin - halfWidthAroundFeature,
             y: mapSeriesExtent.ymax + halfHeightAroundFeature
-        }
+        };
         let allMapFrames = [];
 
         for (let row = 0 ; row < numberOfRows ; row++) {
@@ -215,7 +213,7 @@ export default class PrintingMapSeriesPreviewDrawer {
                 const newTopLeftPoint = {
                     x: topLeftPoint.x + (col * stepX),
                     y: topLeftPoint.y - (row * stepY)
-                }
+                };
                 const singleMainFrame = {
                     row: row,
                     col: col,
@@ -229,7 +227,7 @@ export default class PrintingMapSeriesPreviewDrawer {
 
     _createSingleMainFramePolygonForMapSeries(topLeftPoint, geometryParams) {
         if(!geometryParams || !geometryParams.width > 0 || !geometryParams.height > 0 ){
-            console.warn("geometryParams must exists and its width and height must be higher than 0 ")
+            console.warn("geometryParams must exists and its width and height must be higher than 0 ");
         }
         const mapWidgetModel = this._mapWidgetModel;
         const view = mapWidgetModel.view;
@@ -306,12 +304,10 @@ export default class PrintingMapSeriesPreviewDrawer {
 
         const properties = this._printingEnhancedProperties;
         const symbol = properties.printingPreviewSymbol;
-        const mainFrameGraphics = this[_mainFrameGraphics] = mainFrames.map((frame) => {
-            return new Graphic({
-                geometry: frame.geometry,
-                symbol: symbol
-            })
-        });
+        const mainFrameGraphics = this[_mainFrameGraphics] = mainFrames.map((frame) => new Graphic({
+            geometry: frame.geometry,
+            symbol: symbol
+        }));
         this[_graphicsLayer].addMany(mainFrameGraphics);
         /*if (properties.enablePrintPreviewMovement) {
             this._eventService.postEvent("dn_printingenhanced/PRINTSETTINGS", {geometry: mainFrames.geometry});
@@ -324,12 +320,10 @@ export default class PrintingMapSeriesPreviewDrawer {
 
         const properties = this._printingEnhancedProperties;
         const symbol = properties.printingPreviewOmittedTilesSymbol;
-        const omittedFrameGraphics = this[_omittedFrameGraphics] = omittedFrames.map((frame) => {
-            return new Graphic({
-                geometry: frame.geometry,
-                symbol: symbol
-            })
-        });
+        const omittedFrameGraphics = this[_omittedFrameGraphics] = omittedFrames.map((frame) => new Graphic({
+            geometry: frame.geometry,
+            symbol: symbol
+        }));
         this[_graphicsLayer].addMany(omittedFrameGraphics);
     }
 

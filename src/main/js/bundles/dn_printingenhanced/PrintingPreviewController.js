@@ -195,10 +195,6 @@ export default declare({
         });
     },
 
-    setDisabled(disabled) {
-        this._isDisabled = disabled;
-    },
-
     setCustomTextElements(event) {
         this._customTextElements = event.getProperty("customTextElements");
     },
