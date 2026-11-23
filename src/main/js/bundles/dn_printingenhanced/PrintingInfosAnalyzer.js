@@ -59,33 +59,55 @@ export default class PrintingInfosAnalyzer {
     }
 
     async _fetchTemplateInfosSync(url) {
-        const result = await geoprocessor.execute(url, {});
-        return result.results[0].value;
+        try {
+            const result = await geoprocessor.execute(url, {});
+            return result.results[0].value;
+        } catch (error) {
+            console.error("Could not fetch print templateInfosSync: " + error);
+            if (this._logService) {
+                this._logService.error(this._i18n.get().ui.errors.error + error);
+            }
+        }
     }
 
     async _fetchTemplateInfosAsync(url) {
-        const properties = this._printingEnhancedProperties._properties;
-        const outputParamName = properties.layoutTemplatesInfoTaskResultParameter || "Output_JSON";
+        try {
+            const properties = this._printingEnhancedProperties._properties;
+            const outputParamName = properties.layoutTemplatesInfoTaskResultParameter || "Output_JSON";
 
-        const jobInfo = await geoprocessor.submitJob(url, {});
-        const options = {
-            interval: 1000,
-            statusCallback: (j) => {
-                console.info("Get Layout Templates Info Task Job Status: ", j.jobStatus);
-            }
-        };
-
-        return new Promise((resolve, reject) => {
-            jobInfo.waitForJobCompletion(options).then(() => {
-                if (jobInfo.jobStatus === "job-succeeded") {
-                    jobInfo.fetchResultData(outputParamName).then((results) => {
-                        resolve(results.value);
-                    });
-                } else if (jobInfo.jobStatus === "job-failed") {
-                    reject(jobInfo.messages[0]);
+            const jobInfo = await geoprocessor.submitJob(url, {});
+            const options = {
+                interval: 1000,
+                statusCallback: (j) => {
+                    console.info("Get Layout Templates Info Task Job Status: ", j.jobStatus);
                 }
+            };
+
+            return new Promise((resolve, reject) => {
+                jobInfo.waitForJobCompletion(options).then(() => {
+                    if (jobInfo.jobStatus === "job-succeeded") {
+                        jobInfo.fetchResultData(outputParamName).then((results) => {
+                            resolve(results.value);
+                        });
+                    } else if (jobInfo.jobStatus === "job-failed") {
+                        reject(jobInfo.messages[0]);
+                    }
+                });
             });
-        });
+        } catch (error) {
+            console.error("Could not fetch print templateInfosAsync: " + error);
+            if (this._logService) {
+                this._logService.error(this._i18n.get().ui.errors.error + error);
+            }
+        }
+    }
+
+    /**
+     * Allows external callers (e.g. fallback in WidgetFactory) to inject printInfos
+     * so that all consumers that call getPrintInfos() receive the cached data.
+     */
+    setPrintInfos(printInfos) {
+        this[_printInfos] = printInfos;
     }
 
     _isAsync() {

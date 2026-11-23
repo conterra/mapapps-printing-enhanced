@@ -22,6 +22,7 @@ import d_aspect from "dojo/aspect";
 import {replace} from "apprt-core/string-replace";
 
 const _templateOptions = Symbol("_templateOptions");
+const _templateOptionsWatchHandles = Symbol("_templateOptionsWatchHandles");
 const _printInfos = Symbol("_printInfos");
 const _printServiceUrl = Symbol("_printServiceUrl");
 const _connect = Symbol("_connect");
@@ -30,7 +31,6 @@ const _lastPopupState = Symbol("_lastPopupState");
 const _view = Symbol("_view");
 
 export default declare({
-
     drawPrintPreview: false,
 
     activate() {
@@ -39,6 +39,8 @@ export default declare({
         const printViewModel = esriPrintWidget.viewModel;
         const properties = this._printingEnhancedProperties._properties;
         this.drawPrintPreview = properties.enablePrintPreview && properties.scaleEnabled;
+        this.esriPrintWidget = esriPrintWidget;
+        this._isDisabled = false;
 
         // get print infos
         const url = this[_printServiceUrl] = esriPrintWidget.printServiceUrl;
@@ -53,10 +55,12 @@ export default declare({
         }
 
         // watch for changes
-        this._watchForTemplateOptionsChanges(esriPrintWidget);
+        this.refreshTemplateOptionsReference(esriPrintWidget);
 
         // handle print preview before and after printing
         d_aspect.before(printViewModel, "print", (printTemplate) => {
+            if (this._isDisabled === true) return;
+
             // show print preview
             this._printingPreviewDrawer.showGraphicsLayer(false);
 
@@ -67,17 +71,19 @@ export default declare({
                     printTemplate.layoutOptions.customTextElements = [];
                 }
                 const customTextElements = printTemplate.layoutOptions.customTextElements;
-                if (this._user) {
-                    properties.customTextElements.forEach((element) => {
+                properties.customTextElements.forEach((element) => {
+                    if ("elementFieldName" in element) {
+                        return;
+                    }
+                    if (this._user) {
                         Object.getOwnPropertyNames(element).forEach(propName => {
                             element[propName] = replace(element[propName], this._user);
                         });
-                        customTextElements.push(element);
-                    });
-                } else {
-                    properties.customTextElements.forEach((element) => {
-                        customTextElements.push(element);
-                    });
+                    }
+                    customTextElements.push(element);
+                });
+                if (this._customTextElements?.length) {
+                    customTextElements.push(...this._customTextElements);
                 }
             }
             // set sketching properties to view
@@ -100,6 +106,7 @@ export default declare({
         });
 
         d_aspect.after(printViewModel, "print", (promise) => {
+            if (this._isDisabled === true) return promise;
             async(() => {
                 const view = printViewModel.view;
 
@@ -121,9 +128,23 @@ export default declare({
 
     deactivate() {
         this._printingPreviewDrawer.removeGraphicFromGraphicsLayer();
+        this._removeTemplateOptionsWatchHandles();
         this[_connect].disconnect();
         this[_observers].destroy();
         this[_lastPopupState]?.reset();
+    },
+
+    setDisabled(disabled) {
+        this._isDisabled = disabled;
+    },
+
+    isDisabled() {
+        return this._isDisabled;
+    },
+
+    removePreviewGraphic() {
+        this._printingPreviewDrawer.removeGraphicFromGraphicsLayer();
+        this._printingPreviewDrawer.resetGraphic();
     },
 
     setMapWidgetModel(mapWidgetModel) {
@@ -148,6 +169,7 @@ export default declare({
         this._printingToggleTool = tool;
         const connect = this[_connect] = new Connect();
         connect.connect(tool, "onActivate", () => {
+            if (this._isDisabled === true) return;
             this._handleDrawTemplateDimensions();
             this[_lastPopupState] = this._disablePopups();
         });
@@ -162,6 +184,7 @@ export default declare({
         this._printingEnhancedToggleTool = tool;
         const connect = this[_connect] = new Connect();
         connect.connect(tool, "onActivate", () => {
+            if (this._isDisabled === true) return;
             this._handleDrawTemplateDimensions();
             this[_lastPopupState] = this._disablePopups();
         });
@@ -170,6 +193,10 @@ export default declare({
             this._printingPreviewDrawer.resetGraphic();
             this[_lastPopupState]?.reset();
         });
+    },
+
+    setCustomTextElements(event) {
+        this._customTextElements = event.getProperty("customTextElements");
     },
 
     setUserService(userService) {
@@ -184,26 +211,49 @@ export default declare({
         }
     },
 
-    _watchForTemplateOptionsChanges(esriPrintWidget) {
-        const templateOptions = this[_templateOptions] = esriPrintWidget.templateOptions;
-        this[_observers].add(templateOptions.watch("layout", () => {
-            this._handleDrawTemplateDimensions(true);
-        }));
-        this[_observers].add(templateOptions.watch("scale", () => {
-            this._handleDrawTemplateDimensions();
-        }));
-        this[_observers].add(templateOptions.watch("scaleEnabled", () => {
-            this._handleDrawTemplateDimensions();
-        }));
-        this[_observers].add(templateOptions.watch("width", () => {
-            this._handleDrawTemplateDimensions();
-        }));
-        this[_observers].add(templateOptions.watch("height", () => {
-            this._handleDrawTemplateDimensions();
-        }));
-        this[_observers].add(templateOptions.watch("dpi", () => {
-            this._handleDrawTemplateDimensions();
-        }));
+    _removeTemplateOptionsWatchHandles() {
+        this[_templateOptionsWatchHandles]?.forEach((watchHandle) => {
+            watchHandle?.remove();
+        });
+        this[_templateOptionsWatchHandles] = [];
+    },
+
+    refreshTemplateOptionsReference(esriPrintWidget = this.esriPrintWidget) {
+        const templateOptions = esriPrintWidget?.templateOptions;
+        if (!templateOptions) {
+            return templateOptions;
+        }
+        if (templateOptions === this[_templateOptions]) {
+            return templateOptions;
+        }
+
+        this._removeTemplateOptionsWatchHandles();
+        this[_templateOptions] = templateOptions;
+        this[_templateOptionsWatchHandles] = [
+            templateOptions.watch("layout", () => {
+                if (
+                    templateOptions.layout !== this._printingEnhancedProperties.layoutNames?.legend
+                ) {
+                    this._handleDrawTemplateDimensions(true);
+                }
+            }),
+            templateOptions.watch("scale", () => {
+                this._handleDrawTemplateDimensions();
+            }),
+            templateOptions.watch("scaleEnabled", () => {
+                this._handleDrawTemplateDimensions();
+            }),
+            templateOptions.watch("width", () => {
+                this._handleDrawTemplateDimensions();
+            }),
+            templateOptions.watch("height", () => {
+                this._handleDrawTemplateDimensions();
+            }),
+            templateOptions.watch("dpi", () => {
+                this._handleDrawTemplateDimensions();
+            })
+        ];
+        return templateOptions;
     },
 
     _watchForExtentChange(view) {
@@ -215,19 +265,45 @@ export default declare({
                 this._handleDrawTemplateDimensions();
             }
         }));
+        this._watchForViewCenterChangeWhileMoving(view);
+    },
+
+    _watchForViewCenterChangeWhileMoving(view) {
+        let isAnimationFrameRequested = false;
+        this[_observers].add(view.watch("center", () => {
+            if (isAnimationFrameRequested || view.stationary) {
+                return;
+            }
+            isAnimationFrameRequested = true;
+            requestAnimationFrame(() => {
+                isAnimationFrameRequested = false;
+                this._printingPreviewDrawer?.moveFrameToViewCenter();
+            });
+        }));
     },
 
     _handleDrawTemplateDimensions(zoomTo) {
-        this._printingPreviewDrawer.removeGraphicFromGraphicsLayer();
+        if (this._isDisabled === true) return;
+        const templateOptions = this.refreshTemplateOptionsReference();
+        if (!templateOptions) {
+            return;
+        }
         const properties = this._printingEnhancedProperties._properties;
         async(async () => {
-            if (((this._printingToggleTool && this._printingToggleTool.active) ||
-                this._printingEnhancedToggleTool.active) && this.drawPrintPreview) {
+            if (
+                this._isDisabled !== true &&
+                ((this._printingToggleTool && this._printingToggleTool.active) ||
+                    (this._printingEnhancedToggleTool &&
+                        this._printingEnhancedToggleTool.active)) &&
+                this.drawPrintPreview
+            ) {
                 const geometry = await this._printingPreviewDrawer
-                    .drawTemplateDimensions(this[_printInfos], this[_templateOptions], properties.defaultPageUnit);
-                if (geometry && zoomTo && this[_templateOptions].scaleEnabled) {
+                    .drawTemplateDimensions(this[_printInfos], templateOptions, properties.defaultPageUnit);
+                if (geometry && zoomTo && templateOptions.scaleEnabled) {
                     this._zoomToTemplateExtent(geometry);
                 }
+            } else {
+                this._printingPreviewDrawer.removeGraphicFromGraphicsLayer();
             }
         }, 100);
     },
@@ -270,5 +346,4 @@ export default declare({
             }
         };
     }
-
 });

@@ -22,7 +22,11 @@
         "apprt-fetch": "^4.20.0",
         "printing": "^4.20.0",
         "map-widget": "^4.20.0",
-        "coordinatetransformer": "^4.20.0"
+        "coordinatetransformer": "^4.20.0",
+        "filesaver": "^4.20.0",
+        "mapdraw-api": "^4.20.0",
+        "ct": "^4.20.0",
+        "dojo": "^1.17.0"
     },
     "cssThemesExtension": [
         {
@@ -43,7 +47,7 @@
                 "minimizeOnClose": true,
                 "windowClass": "noPadding",
                 "marginBox": {
-                    "w": 340,
+                    "w": 360,
                     "h": 425
                 }
             }
@@ -56,13 +60,13 @@
             "window": {
                 "resizable": true,
                 "marginBox": {
-                    "w": 340,
+                    "w": 360,
                     "h": 425,
                     "t": 125,
                     "l": 25
                 },
                 "minSize": {
-                    "w": 340,
+                    "w": 360,
                     "h": 350
                 }
             }
@@ -77,7 +81,7 @@
                 "resizable": false,
                 "draggable": false,
                 "marginBox": {
-                    "w": 340,
+                    "w": 360,
                     "h": 425,
                     "t": 125,
                     "l": 25
@@ -115,6 +119,10 @@
                     {
                         "topic": "dn_printingenhanced/PRINTSETTINGS",
                         "method": "setPrintSettings"
+                    },
+                    {
+                        "topic": "dn_printingenhanced/CUSTOM_TEXTELEMENTS",
+                        "method": "setCustomTextElements"
                     }
                 ]
             },
@@ -189,18 +197,60 @@
                     "format": true,
                     "widthAndHeight": true,
                     "dpi": true,
-                    "layout": true,
                     "printPreviewCheckbox": false,
                     "scaleEnabled": false,
                     "scale": true,
                     "copyright": false,
                     "legendEnabled": false,
-                    "attributionEnabled": false
+                    "attributionEnabled": false,
+                    "mapSeriesTab": false,
+                    "doNotPrintEmptyTiles": true
                 },
+                "deriveLayoutFromPageSize": false,
                 "enablePrintPreview": true,
                 "enablePrintPreviewMovement": true,
+                "livePrintPreviewUpdate": true,
                 "layoutTemplatesInfoTaskName": "Get%20Layout%20Templates%20Info%20Task",
                 "defaultPageUnit": "CENTIMETER",
+                "filenameIfNoneIsGiven": "${ui.filenameIfNoneIsGiven}",
+                "legend": {
+                    "legendModes": ["integratedLegend", "noLegend"],
+                    "legendTitleAppendText": "${ui.legendTitleAppendText}",
+                    "legendPrintRequestDelayInMs": 2500,
+                    "legendTemplateOptionsRestoreDelayInMs": 300
+                },
+                "printSizes": [
+                    {
+                        "value": "a4",
+                        "text": "A4",
+                        "isDefault": true
+                    },
+                    {
+                        "value": "a3",
+                        "text": "A3",
+                        "isDefault": false
+                    }
+                ],
+                "printOrientations": [
+                    {
+                        "value": "portrait",
+                        "text": "${ui.portraitLabel}",
+                        "isDefault": true
+                    },
+                    {
+                        "value": "landscape",
+                        "text": "${ui.landscapeLabel}",
+                        "isDefault": false
+                    }
+                ],
+                "layoutNames": {
+                    "a4_portrait": "A4 Portrait",
+                    "a4_landscape": "A4 Landscape",
+                    "a3_portrait": "A3 Portrait",
+                    "a3_landscape": "A3 Landscape",
+                    "legend": "A4_hoch_legende",
+                    "mapOnly": "MAP_ONLY"
+                },
                 "dpiValues": [
                     {
                         "value": 96,
@@ -237,6 +287,61 @@
                         "width": "2px"
                     }
                 },
+                "printingOverviewSymbol": {
+                    "type": "esriSFS",
+                    "style": "esriSFSSolid",
+                    "color": [
+                        255,
+                        0,
+                        0,
+                        64
+                    ],
+                    "outline": {
+                        "type": "esriSLS",
+                        "style": "esriSLSSolid",
+                        "color": [
+                            255,
+                            0,
+                            0,
+                            255
+                        ],
+                        "width": 2
+                    }
+                },
+                "printingOverviewLabelSymbol": {
+                    "type": "esriTS",
+                    "color": [
+                        0,
+                        0,
+                        0,
+                        255
+                    ],
+                    "font": {
+                        "family": "Arial",
+                        "size": 18,
+                        "style": "normal",
+                        "weight": "bold"
+                    }
+                },
+                "printingPreviewOmittedTilesSymbol": {
+                    "type": "simple-fill",
+                    "color": [
+                        102,
+                        102,
+                        102,
+                        0.15
+                    ],
+                    "style": "solid",
+                    "outline": {
+                        "color": [
+                            102,
+                            102,
+                            102,
+                            0.7
+                        ],
+                        "width": "2px"
+                    }
+                },
                 "printingOutsidePreviewSymbol": {
                     "type": "simple-fill",
                     "color": [
@@ -263,7 +368,8 @@
                 ],
                 "customTextElements": [],
                 "graphicsLayerId": "printing-enhanced-graphics",
-                "graphicsLayerTitle": "${ui.graphicsLayerTitle}"
+                "graphicsLayerTitle": "${ui.graphicsLayerTitle}",
+                "mapSeriesTileOverlap": 0.05
             }
         },
         {
@@ -329,11 +435,18 @@
             "name": "PrintingEnhancedWidgetFactory",
             "provides": [
                 "dijit.Widget",
+                "ct.framework.api.EventHandler",
                 "dn_printingenhanced.Widget"
             ],
             "instanceFactory": true,
             "properties": {
-                "widgetRole": "printingEnhancedWidget"
+                "widgetRole": "printingEnhancedWidget",
+                "Event-Topics": [
+                    {
+                        "topic": "dn_printingenhanced/MAP_SERIES_EXTENT_SET",
+                        "method": "onMapSeriesExtentSet"
+                    }
+                ]
             },
             "references": [
                 {
@@ -354,8 +467,298 @@
                     "providing": "dn_printingenhanced.PrintingEnhancedProperties"
                 },
                 {
+                    "name": "_eventService",
+                    "providing": "ct.framework.api.EventService"
+                },
+                {
+                    "name": "_printingMapSeriesPreviewController",
+                    "providing": "dn_printingenhanced.PrintingMapSeriesPreviewController"
+                },
+                {
+                    "name": "_printingMapSeriesPrintJobsModel",
+                    "providing": "dn_printingenhanced.PrintingMapSeriesPrintJobsModel"
+                },
+                {
+                    "name": "printingEnhancedToggleTool",
+                    "providing": "ct.tools.Tool",
+                    "filter": "(id=printingEnhancedToggleTool)",
+                    "cardinality": "0..1"
+                },
+                {
+                    "name": "_logService",
+                    "providing": "ct.framework.api.LogService"
+                },
+                {
+                    "name": "mapWidgetModel",
+                    "providing": "map-widget.MapWidgetModel"
+                }
+            ]
+        },
+        {
+            "name": "PrintingMapSeriesPreviewController",
+            "immediate": true,
+            "provides": [
+                "ct.framework.api.EventHandler",
+                "dn_printingenhanced.PrintingMapSeriesPreviewController"
+            ],
+            "properties": {
+                "Event-Topics": [
+                    {
+                        "topic": "dn_printingenhanced/CUSTOM_TEXTELEMENTS",
+                        "method": "setCustomTextElements"
+                    },
+                    {
+                        "topic": "dn_printingenhanced/DRAW_MAP_SERIES_FRAMES",
+                        "method": "handleDrawMapSeriesFrames"
+                    }
+                ],
+                "askToPrintManyFramesThreshold": 100,
+                "scaleModifications": [
+                    {
+                        "toScale": 2000,
+                        "roundUpTo": 0,
+                        "extentFactor": 1.1
+                    },
+                    {
+                        "toScale": 10000,
+                        "roundUpTo": 500,
+                        "extentFactor": 1.1
+                    },
+                    {
+                        "toScale": 100000,
+                        "roundUpTo": 1000,
+                        "extentFactor": 1.1
+                    },
+                    {
+                        "toScale": 5000000,
+                        "roundUpTo": 10000,
+                        "extentFactor": 1.1
+                    }
+                ],
+                "selectionLayers": {
+                    "layerIds": []
+                }
+            },
+            "references": [
+                {
+                    "name": "_printingWidget",
+                    "providing": "dijit.Widget",
+                    "filter": "(widgetRole=printing)"
+                },
+                {
+                    "name": "_printingEnhancedProperties",
+                    "providing": "dn_printingenhanced.PrintingEnhancedProperties"
+                },
+                {
+                    "name": "_printingInfosAnalyzer",
+                    "providing": "dn_printingenhanced.PrintingInfosAnalyzer"
+                },
+                {
+                    "name": "_printingMapSeriesPreviewDrawer",
+                    "providing": "dn_printingenhanced.PrintingMapSeriesPreviewDrawer"
+                },
+                {
+                    "name": "_printingMapSeriesRequestsProvider",
+                    "providing": "dn_printingenhanced.PrintingMapSeriesRequestsProvider"
+                },
+                {
+                    "name": "_printingMapSeriesDownloader",
+                    "providing": "dn_printingenhanced.PrintingMapSeriesDownloader"
+                },
+                {
+                    "name": "_downloadAndZipHelper",
+                    "providing": "dn_printingenhanced.DownloadAndZipHelper"
+                },
+                {
+                    "name": "printingMapSeriesPrintJobsModel",
+                    "providing": "dn_printingenhanced.PrintingMapSeriesPrintJobsModel"
+                },
+                {
+                    "name": "_rectangleDrawer",
+                    "providing": "dn_printingenhanced.RectangleDrawer"
+                },
+                {
+                    "name": "printingToggleTool",
+                    "providing": "ct.tools.Tool",
+                    "filter": "(id=printingToggleTool)",
+                    "cardinality": "0..1"
+                },
+                {
+                    "name": "printingEnhancedToggleTool",
+                    "providing": "ct.tools.Tool",
+                    "filter": "(id=printingEnhancedToggleTool)",
+                    "cardinality": "0..1"
+                },
+                {
+                    "name": "userService",
+                    "providing": "ct.framework.api.UserAdmin",
+                    "cardinality": "0..1"
+                },
+                {
                     "name": "_mapWidgetModel",
                     "providing": "map-widget.MapWidgetModel"
+                },
+                {
+                    "name": "_logService",
+                    "providing": "ct.framework.api.LogService"
+                },
+                {
+                    "name": "_objectSelectionHandler",
+                    "providing": "dn_printingenhanced.ObjectSelectionHandler"
+                },
+                {
+                    "name": "_eventService",
+                    "providing": "ct.framework.api.EventService"
+                },
+                {
+                    "name": "_windowManager",
+                    "providing": "ct.framework.api.WindowManager"
+                }
+            ]
+        },
+        {
+            "name": "PrintingMapSeriesPreviewDrawer",
+            "immediate": true,
+            "provides": [
+                "dn_printingenhanced.PrintingMapSeriesPreviewDrawer"
+            ],
+            "properties": {
+                "geometryServerURL": "define in app.json",
+                "maxNumberOfDrawnFrames": 1000
+            },
+            "references": [
+                {
+                    "name": "_mapWidgetModel",
+                    "providing": "map-widget.MapWidgetModel"
+                },
+                {
+                    "name": "_printingEnhancedProperties",
+                    "providing": "dn_printingenhanced.PrintingEnhancedProperties"
+                },
+                {
+                    "name": "_printingPreviewDrawer",
+                    "providing": "dn_printingenhanced.PrintingPreviewDrawer"
+                },
+                {
+                    "name": "_eventService",
+                    "providing": "ct.framework.api.EventService"
+                },
+                {
+                    "name": "_logService",
+                    "providing": "ct.framework.api.LogService"
+                }
+            ]
+        },
+        {
+            "name": "PrintingMapSeriesRequestsProvider",
+            "immediate": true,
+            "provides": [
+                "dn_printingenhanced.PrintingMapSeriesRequestsProvider"
+            ],
+            "references": [
+                {
+                    "name": "_printingWidget",
+                    "providing": "dijit.Widget",
+                    "filter": "(widgetRole=printing)"
+                },
+                {
+                    "name": "_printingRequestBlueprintProvider",
+                    "providing": "dn_printingenhanced.PrintingRequestBlueprintProvider"
+                }
+            ]
+        },
+        {
+            "name": "PrintingRequestBlueprintProvider",
+            "provides": "dn_printingenhanced.PrintingRequestBlueprintProvider",
+            "immediate": true,
+            "properties": {
+                "printingURLtoIntercept": "@@printtask.service.url@@",
+                "cancelRequestOnIntercept": true,
+                "blueprintRequestTimeoutInMs": 30000
+            },
+            "references": []
+        },
+        {
+            "name": "PrintingMapSeriesDownloader",
+            "immediate": true,
+            "provides": [
+                "dn_printingenhanced.PrintingMapSeriesDownloader"
+            ],
+            "properties": {
+                "numberOfConcurrentDownloads": 4,
+                "printingRequestTimeout": 600000,
+                "legendFileNamePrefix": "Legende",
+                "fileNameSuffixOverviewPage": "Übersichtsseite"
+            },
+            "references": [
+                {
+                    "name": "_downloadAndZipHelper",
+                    "providing": "dn_printingenhanced.DownloadAndZipHelper"
+                },
+                {
+                    "name": "_eventService",
+                    "providing": "ct.framework.api.EventService"
+                },
+                {
+                    "name": "_printingRequestBlueprintProvider",
+                    "providing": "dn_printingenhanced.PrintingRequestBlueprintProvider"
+                },
+                {
+                    "name": "mapWidgetModel",
+                    "providing": "map-widget.MapWidgetModel",
+                    "cardinality": "0..1"
+                },
+                {
+                    "name": "_dynamicLegendToggleTool",
+                    "providing": "ct.tools.Tool",
+                    "filter": "(id=dynamiclegendToggleTool)",
+                    "cardinality": "0..1"
+                },
+                {
+                    "name": "_logService",
+                    "providing": "ct.framework.api.LogService"
+                }
+            ]
+        },
+        {
+            "name": "PrintingMapSeriesPrintJobsModel",
+            "provides": "dn_printingenhanced.PrintingMapSeriesPrintJobsModel",
+            "immediate": true
+        },
+        {
+            "name": "RectangleDrawer",
+            "provides": "dn_printingenhanced.RectangleDrawer",
+            "immediate": true,
+            "references": [
+                {
+                    "name": "_drawingFactory",
+                    "providing": "mapdraw-api.DrawingFactory"
+                },
+                {
+                    "name": "_mapWidgetModel",
+                    "providing": "map-widget.MapWidgetModel"
+                }
+            ]
+        },
+        {
+            "name": "ObjectSelectionHandler",
+            "provides": "dn_printingenhanced.ObjectSelectionHandler",
+            "immediate": true,
+            "references": [
+                {
+                    "name": "_mapWidgetModel",
+                    "providing": "map-widget.MapWidgetModel"
+                }
+            ]
+        },
+        {
+            "name": "DownloadAndZipHelper",
+            "provides": "dn_printingenhanced.DownloadAndZipHelper",
+            "immediate": true,
+            "references": [
+                {
+                    "name": "_fileSaver",
+                    "providing": "filesaver.FileSaver"
                 }
             ]
         },

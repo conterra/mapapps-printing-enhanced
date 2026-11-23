@@ -57,24 +57,46 @@
                 "visibleUiElements": {
                     "layoutTab": true,
                     "mapOnlyTab": true,
+                    "mapSeriesTab": true,
                     "title": true,
                     "fileName": true,
                     "author": true,
                     "format": true,
                     "widthAndHeight": true,
                     "dpi": true,
-                    "layout": true,
                     "printPreviewCheckbox": false,
                     "scaleEnabled": false,
                     "scale": true,
                     "copyright": false,
-                    "legendEnabled": false,
-                    "attributionEnabled": false
+                    "legendEnabled": true,
+                    "attributionEnabled": false,
+                    "doNotPrintEmptyTiles": true
                 },
+                "deriveLayoutFromPageSize": true,
                 "enablePrintPreview": true,
-                "enablePrintPreviewMovement": true,
+                "enablePrintPreviewMovement": false,
+                "livePrintPreviewUpdate": true,
                 "layoutTemplatesInfoTaskName": "Get%20Layout%20Templates%20Info%20Task",
+                "legend": {
+                    "legendModes": ["noLegend", "integratedLegend", "legendOwnPage"],
+                    "legendTitleAppendText": "${ui.legendTitleAppendText}",
+                    "legendPrintRequestDelayInMs": 2500,
+                    "legendTemplateOptionsRestoreDelayInMs": 300
+                },
+                "filenameIfNoneIsGiven": "${ui.filenameIfNoneIsGiven}",
                 "defaultPageUnit": "CENTIMETER",
+                "layoutNames": {
+                    "a4_portrait": "A4 Portrait",
+                    "a4_portrait_singlepage": "A4 Portrait",
+                    "a4_landscape": "A4 Landscape",
+                    "a4_landscape_singlepage": "A4 Landscape",
+                    "a3_portrait": "A3 Portrait",
+                    "a3_portrait_singlepage": "A3 Portrait",
+                    "a3_landscape": "A3 Landscape",
+                    "a3_landscape_singlepage": "A3 Landscape",
+                    "legend": "A4 Portrait",
+                    "mapOnly": "MAP_ONLY"
+                },
                 "dpiValues": [
                     {
                         "value": 96,
@@ -189,8 +211,28 @@
                     },
                     {
                         "testString": "testString"
+                    },
+                    {
+                        "elementFieldName": "contentText",
+                        "title": "${ui.contentLabel}"
+                    },
+                    {
+                        "elementFieldName": "editText",
+                        "title": "${ui.editLabel}"
                     }
                 ]
+            },
+            "PrintingMapSeriesPreviewController": {
+                "selectionLayers": {
+                    "layerIds": ["rhineCenterline", "koelnPrecincts", "koelnBoroughs", "koelnDistricts"]
+                }
+            },
+            "PrintingMapSeriesPreviewDrawer": {
+                "geometryServerURL": "https://utility.arcgisonline.com/arcgis/rest/services/Geometry/GeometryServer",
+                "maxNumberOfDrawnFrames": 1000
+            },
+            "PrintingMapSeriesDownloader": {
+                "numberOfConcurrentDownloads": 4
             }
         },
         "agssearch": {
@@ -255,6 +297,7 @@
                             "visible": true,
                             "layers": [
                                 {
+                                    "id": "koelnDistricts",
                                     "title": "${map.koeln1.districts.title}",
                                     "url": "https://services.arcgis.com/ObdAEOfl1Z5LP2D0/arcgis/rest/services/Köln/FeatureServer/8",
                                     "type": "AGS_FEATURE",
@@ -271,6 +314,7 @@
                                     }
                                 },
                                 {
+                                    "id": "koelnBoroughs",
                                     "title": "${map.koeln1.boroughs.title}",
                                     "url": "https://services.arcgis.com/ObdAEOfl1Z5LP2D0/arcgis/rest/services/Köln/FeatureServer/7",
                                     "type": "AGS_FEATURE",
@@ -318,6 +362,7 @@
                                     }
                                 },
                                 {
+                                    "id": "koelnPrecincts",
                                     "title": "${map.koeln1.precints.title}",
                                     "url": "https://services.arcgis.com/ObdAEOfl1Z5LP2D0/arcgis/rest/services/Köln/FeatureServer/6",
                                     "type": "AGS_FEATURE",
@@ -551,6 +596,25 @@
                                     }
                                 }
                             ]
+                        },
+                        {
+                            "id": "rhineCenterline",
+                            "title": "${map.rhine.title}",
+                            "url": "resource('${app}:/assets/rhine-centerline.geojson')",
+                            "type": "GEOJSON",
+                            "copyright": "OpenStreetMap contributors",
+                            "renderer": {
+                                "type": "simple",
+                                "symbol": {
+                                    "type": "simple-line",
+                                    "color": [0, 92, 175, 1],
+                                    "width": 3,
+                                    "style": "solid"
+                                }
+                            },
+                            "popupTemplate": {
+                                "title": "{name}"
+                            }
                         }
                     ]
                 },
@@ -605,7 +669,7 @@
                             "selection-ui-tool",
                             "sketchToggleTool",
                             "measuring_tools",
-                            "printingToggleTool"
+                            "printingEnhancedToggleTool"
                         ],
                         "registerWidget": {
                             "widgetRole": "drawer_button"
