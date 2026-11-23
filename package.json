@@ -1,7 +1,7 @@
 {
-    "name": "mapapps-4-developers",
-    "description": "test build",
-    "version": "0.0.1",
+    "name": "mapapps-printing-enhanced",
+    "version": "2.3.4-SNAPSHOT",
+    "private": true,
     "license": "Apache-2.0",
     "scripts": {
       "check-licenses": "tsx ./src/support/js/check-licenses.ts",
@@ -12,7 +12,9 @@
       "e2e-test:ui": "playwright test --ui"
     },
     "dependencies": {
-        "jszip": "3.10.1",
+        "jszip": "3.10.1"
+    },
+    "peerDependencies": {
         "@arcgis/core": "4.33.14",
         "vue": "2.7.16"
     },
@@ -47,5 +49,5 @@
         "vite": "7.3.5",
         "vue-template-compiler": "2.7.16"
     },
-    "packageManager": "pnpm@11.8.0"
+    "packageManager": "pnpm@11.28.9"
 }

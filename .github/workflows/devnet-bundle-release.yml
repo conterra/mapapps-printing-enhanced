@@ -31,3 +31,4 @@ jobs:
          demo_user: ${{secrets.DEMO_USER}}
          demo_user_pw: ${{secrets.DEMO_USER_PW}}
          demo_url: ${{secrets.DEMO_URL}}
+         generate_sbom: true

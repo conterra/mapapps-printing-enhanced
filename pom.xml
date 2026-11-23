@@ -120,7 +120,7 @@
                     <configuration>
                         <nodeVersion>v22.17.1</nodeVersion>
                         <!-- Keep this in sync with the package manager version in package.json -->
-                        <pnpmVersion>11.8.0</pnpmVersion>
+                        <pnpmVersion>11.28.9</pnpmVersion>
                     </configuration>
                 </plugin>
                 <plugin>
@@ -628,6 +628,52 @@
             </properties>
         </profile>
         <profile>
+            <id>generate-sbom</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.github.eirslett</groupId>
+                        <artifactId>frontend-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <?m2e ignore?>
+                                <id>pnpm sbom</id>
+                                <phase>generate-resources</phase>
+                                <goals>
+                                    <goal>pnpm</goal>
+                                </goals>
+                                <configuration>
+                                    <arguments>sbom --prod --exclude-peers --sbom-format cyclonedx --sbom-authors "con terra GmbH" --sbom-supplier "con terra GmbH" --out ${project.build.directory}/${project.artifactId}-sbom.cdx.json</arguments>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>build-helper-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>attach sbom</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>attach-artifact</goal>
+                                </goals>
+                                <configuration>
+                                    <artifacts>
+                                        <artifact>
+                                            <file>${project.build.directory}/${project.artifactId}-sbom.cdx.json</file>
+                                            <type>json</type>
+                                            <classifier>sbom</classifier>
+                                        </artifact>
+                                    </artifacts>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
             <id>compress</id>
             <properties>
                 <gulp.task>compress</gulp.task>
@@ -832,6 +878,25 @@
                                         <replacement>
                                             <token>^${replace.source.version}</token>
                                             <value>^${replace.target.version}</value>
+                                        </replacement>
+                                    </replacements>
+                                </configuration>
+                            </execution>
+                            <!-- keep the package.json version (used as SBOM component version) in sync -->
+                            <execution>
+                                <id>Set package.json version from ${replace.source.version} to ${replace.target.version}</id>
+                                <phase>validate</phase>
+                                <goals>
+                                    <goal>replace</goal>
+                                </goals>
+                                <configuration>
+                                    <file>${basedir}/package.json</file>
+                                    <regex>false</regex>
+                                    <replacements>
+                                        <replacement>
+                                            <!-- only the top-level "version" field, never dependency versions -->
+                                            <token>"version": "${replace.source.version}"</token>
+                                            <value>"version": "${replace.target.version}"</value>
                                         </replacement>
                                     </replacements>
                                 </configuration>
