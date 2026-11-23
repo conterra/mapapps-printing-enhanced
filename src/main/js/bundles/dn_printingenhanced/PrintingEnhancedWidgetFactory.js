@@ -222,7 +222,7 @@ export default class PrintingEnhancedWidgetFactory {
             "scaleEnabled": false,
             "scale": true,
             "copyright": false,
-            "legendEnabled": true,
+            "legendEnabled": false,
             "attributionEnabled": false
         };
         vm.visibleUiElements = { ...defaultVisibleUiElements, ...properties.visibleUiElements };
