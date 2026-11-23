@@ -1,6 +1,6 @@
 {
     "name": "mapapps-printing-enhanced",
-    "version": "2.3.4-SNAPSHOT",
+    "version": "2.4.0",
     "private": true,
     "license": "Apache-2.0",
     "scripts": {
